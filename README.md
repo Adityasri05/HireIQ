@@ -118,3 +118,36 @@ HireIQ/
 * **Direct Bcrypt Security**: Avoided standard passlib library initialization bugs on Python 3.13 by implementing direct, high-performance bcrypt hashing, ensuring stable API performance.
 * **Hybrid Mock Fallbacks**: Includes a schema-compliant mock data generator in the base agent class. If the system API key experiences network latency or exhaustion, all dashboards, radars, and live interview rooms remain fully populated and premium, preventing display failures.
 * **Premium UX/UI**: Leveraged custom HSL Tailored Hires palettes, deep dark spaces, clean border boundaries, glowing gradients, and Framer Motion spring micro-animations.
+
+---
+
+## 🚀 Production Deployment to Railway
+
+HIREIQ is designed for out-of-the-box deployment to **Railway** using a double-service monorepo configuration (Next.js frontend + FastAPI backend).
+
+### 1. Deploy the Backend Service (FastAPI)
+
+1. Log into your [Railway Dashboard](https://railway.app) and click **New Project** $\rightarrow$ **Deploy from GitHub repo**.
+2. Select your `HireIQ` repository.
+3. Once the service is created, go to its **Settings** and modify:
+   * **Root Directory**: Set this to `backend`.
+   * **Custom Start Command**: Railway will automatically detect the `Procfile` containing:
+     ```bash
+     web: uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+     ```
+4. Go to **Variables** and add:
+   * `GOOGLE_API_KEY`: *Your Google Gemini API Key*
+   * `JWT_SECRET`: *A secure random string*
+   * `DATABASE_URL`: *(Optional)* Defaults to self-contained SQLite file storage, perfect for zero-maintenance hackathon testing!
+5. Generate a **Public Domain** under settings (e.g., `https://backend-production-xxxx.up.railway.app`). Copy this URL.
+
+---
+
+### 2. Deploy the Frontend Service (Next.js)
+
+1. In the same Railway project, click **New** $\rightarrow$ **GitHub Repo** and select `HireIQ` again.
+2. Once created, go to **Settings** and keep the **Root Directory** as `/` (default).
+3. Go to **Variables** and add:
+   * `NEXT_PUBLIC_API_URL`: Paste the public backend domain URL you copied in the previous step.
+4. Railway will automatically compile the Next.js static files and launch the server. Generate a **Public Domain** for the frontend service to access your app online!
+

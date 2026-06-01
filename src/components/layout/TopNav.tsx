@@ -2,6 +2,7 @@
 
 import { Bell, Search, User } from "lucide-react";
 import { useState, useEffect } from "react";
+import { API_BASE_URL } from "@/utils/api";
 
 export function TopNav() {
   const [candidateName, setCandidateName] = useState<string>("Alex D.");
@@ -20,7 +21,7 @@ export function TopNav() {
 
     async function loadLatestResume() {
       try {
-        const response = await fetch("http://localhost:8000/api/resumes/latest");
+        const response = await fetch(`${API_BASE_URL}/api/resumes/latest`);
         if (!response.ok) return;
         
         const data = await response.json();

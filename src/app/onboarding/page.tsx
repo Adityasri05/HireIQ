@@ -1,5 +1,8 @@
 "use client";
 
+import { API_BASE_URL } from "@/utils/api";
+
+
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -70,7 +73,7 @@ export default function Onboarding() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/api/resumes/upload", {
+      const response = await fetch(`${API_BASE_URL}/api/resumes/upload`, {
         method: "POST",
         body: formData,
       });
@@ -123,7 +126,7 @@ export default function Onboarding() {
     if (files && files.length > 0) {
       const file = files[0];
       const lowerName = file.name.toLowerCase();
-      if (lowerName.endswith(".pdf") || lowerName.endswith(".docx") || lowerName.endswith(".txt")) {
+      if (lowerName.endsWith(".pdf") || lowerName.endsWith(".docx") || lowerName.endsWith(".txt")) {
         await processFile(file);
       } else {
         setError("Unsupported file format. Please upload PDF, DOCX or TXT.");
@@ -134,7 +137,7 @@ export default function Onboarding() {
   const handleCompleteSetup = async () => {
     try {
       // Save onboarding profiles to backend user model
-      const response = await fetch("http://localhost:8000/api/users/me", {
+      const response = await fetch(`${API_BASE_URL}/api/users/me`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

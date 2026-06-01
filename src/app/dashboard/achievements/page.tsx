@@ -1,5 +1,8 @@
 "use client";
 
+import { API_BASE_URL } from "@/utils/api";
+
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
@@ -82,7 +85,7 @@ export default function Achievements() {
     async function loadAchievements() {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:8000/api/gamification/profile");
+        const response = await fetch(`${API_BASE_URL}/api/gamification/profile`);
         if (!response.ok) {
           throw new Error("Failed to load gamification profile.");
         }

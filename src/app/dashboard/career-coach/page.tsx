@@ -1,5 +1,8 @@
 "use client";
 
+import { API_BASE_URL } from "@/utils/api";
+
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GraduationCap, Map, BookOpen, CheckCircle, Code, Server, PlayCircle, Trophy, Loader2 } from "lucide-react";
@@ -52,7 +55,7 @@ export default function CareerCoach() {
     async function loadRoadmap() {
       setIsLoading(true);
       try {
-        const response = await fetch(`http://localhost:8000/api/career-coach/roadmap?horizon=${activeHorizon}`);
+        const response = await fetch(`${API_BASE_URL}/api/career-coach/roadmap?horizon=${activeHorizon}`);
         if (!response.ok) {
           throw new Error("Failed to load learning roadmap.");
         }

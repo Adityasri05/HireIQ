@@ -1,5 +1,8 @@
 "use client";
 
+import { API_BASE_URL } from "@/utils/api";
+
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { UploadCloud, FileSearch, Target, TrendingDown, BookOpen, AlertCircle, Loader2 } from "lucide-react";
@@ -44,7 +47,7 @@ export default function JDAnalyzer() {
       // 1. Fetch latest resume skills
       let candidateSkills = { "Python": 90, "React": 85, "TypeScript": 80, "FastAPI": 85 };
       try {
-        const resumeRes = await fetch("http://localhost:8000/api/resumes/latest");
+        const resumeRes = await fetch(`${API_BASE_URL}/api/resumes/latest`);
         if (resumeRes.ok) {
           const resJson = await resumeRes.json();
           if (resJson.skill_confidence) {
@@ -56,7 +59,7 @@ export default function JDAnalyzer() {
       }
 
       // 2. Perform Gap Analysis via backend agent
-      const response = await fetch("http://localhost:8000/api/jd/analyze", {
+      const response = await fetch(`${API_BASE_URL}/api/jd/analyze`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +77,7 @@ export default function JDAnalyzer() {
       const jdData = await response.json();
       
       // Perform skill gap comparison on backend
-      const gapResponse = await fetch(`http://localhost:8000/api/jd/${jdData.id}/gap-analysis`);
+      const gapResponse = await fetch(`${API_BASE_URL}/api/jd/${jdData.id}/gap-analysis`);
       if (!gapResponse.ok) {
         throw new Error("Failed to compile skill gap analysis.");
       }

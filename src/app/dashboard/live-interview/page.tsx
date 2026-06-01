@@ -1,5 +1,8 @@
 "use client";
 
+import { API_BASE_URL } from "@/utils/api";
+
+
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -96,7 +99,7 @@ export default function LiveInterview() {
       // 1. Fetch latest resume to inject as context
       let resumeId = null;
       try {
-        const resumeRes = await fetch("http://localhost:8000/api/resumes/latest");
+        const resumeRes = await fetch(`${API_BASE_URL}/api/resumes/latest`);
         if (resumeRes.ok) {
           const resumeData = await resumeRes.json();
           resumeId = resumeData.id;
@@ -106,7 +109,7 @@ export default function LiveInterview() {
       }
 
       // 2. Start the AI Adaptive Interview
-      const response = await fetch("http://localhost:8000/api/interviews/start", {
+      const response = await fetch(`${API_BASE_URL}/api/interviews/start`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -138,7 +141,7 @@ export default function LiveInterview() {
 
     setInterviewStatus("submitting");
     try {
-      const response = await fetch(`http://localhost:8000/api/interviews/${interviewId}/answer`, {
+      const response = await fetch(`${API_BASE_URL}/api/interviews/${interviewId}/answer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -193,7 +196,7 @@ export default function LiveInterview() {
   const handleEndInterview = async () => {
     if (!interviewId) return;
     try {
-      await fetch(`http://localhost:8000/api/interviews/${interviewId}/end`, {
+      await fetch(`${API_BASE_URL}/api/interviews/${interviewId}/end`, {
         method: "POST"
       });
       setInterviewStatus("completed");

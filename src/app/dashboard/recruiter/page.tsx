@@ -1,5 +1,8 @@
 "use client";
 
+import { API_BASE_URL } from "@/utils/api";
+
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Users, Filter, Search, MoreVertical, TrendingUp, ShieldCheck, Mail, Loader2 } from "lucide-react";
@@ -23,7 +26,7 @@ export default function RecruiterWorkspace() {
     async function loadCandidates() {
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:8000/api/recruiter/candidates");
+        const response = await fetch(`${API_BASE_URL}/api/recruiter/candidates`);
         if (!response.ok) throw new Error("Failed to load candidates");
         
         const data = await response.json();

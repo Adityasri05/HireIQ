@@ -1,5 +1,8 @@
 "use client";
 
+import { API_BASE_URL } from "@/utils/api";
+
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -22,7 +25,7 @@ export default function Signup() {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:8000/api/auth/register", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +44,7 @@ export default function Signup() {
       }
 
       // Automatically log in on signup success
-      const loginResponse = await fetch("http://localhost:8000/api/auth/login", {
+      const loginResponse = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

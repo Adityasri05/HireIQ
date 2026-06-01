@@ -1,5 +1,8 @@
 "use client";
 
+import { API_BASE_URL } from "@/utils/api";
+
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
@@ -89,7 +92,7 @@ export default function Dashboard() {
       }
 
       try {
-        const response = await fetch("http://localhost:8000/api/resumes/latest");
+        const response = await fetch(`${API_BASE_URL}/api/resumes/latest`);
         if (!response.ok) {
           setIsLoading(false);
           return;

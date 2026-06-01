@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "@/utils/api";
 import { 
   UploadCloud, 
   ShieldCheck, 
@@ -60,7 +61,7 @@ export default function ResumeIntelligence() {
   useEffect(() => {
     async function loadLatestResume() {
       try {
-        const response = await fetch("http://localhost:8000/api/resumes/latest");
+        const response = await fetch(`${API_BASE_URL}/api/resumes/latest`);
         if (!response.ok) return; // Silent return if none found yet
         
         const resData = await response.json();
@@ -122,7 +123,7 @@ export default function ResumeIntelligence() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/api/resumes/upload", {
+      const response = await fetch(`${API_BASE_URL}/api/resumes/upload`, {
         method: "POST",
         body: formData,
       });

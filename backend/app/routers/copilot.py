@@ -1,0 +1,55 @@
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from app.database import get_db
+from app.models.user import User
+from app.models.evaluation import Evaluation
+from app.models.resume import Resume
+from app.schemas.schemas import CopilotChatRequest, CopilotChatResponse
+from app.utils.auth_utils import get_current_user
+from app.agents.copilot_agent import chat
+
+router = APIRouter(prefix="/api/copilot", tags=["AI Copilot"])
+
+
+@router.post("/chat", response_model=CopilotChatResponse)
+async def copilot_chat(
+    req: CopilotChatRequest,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Chat with the AI Copilot using full candidate context."""
+    # Build context
+    eval_result = await db.execute(
+        select(Evaluation).where(Evaluation.user_id == user.id).order_by(Evaluation.created_at.desc()).limit(3)
+    )
+    recent_evals = eval_result.scalars().all()
+
+    resume_result = await db.execute(
+        select(Resume).where(Resume.user_id == user.id).order_by(Resume.created_at.desc()).limit(1)
+    )
+    resume = resume_result.scalar_one_or_none()
+
+    context = {
+        "name": user.name,
+        "target_role": user.target_role,
+        "career_goals": user.career_goals,
+        "hireiq_score": recent_evals[0].hireiq_score if recent_evals else None,
+        "skills": resume.skills if resume else [],
+        "recent_scores": [
+            {
+                "hireiq": e.hireiq_score,
+                "technical": e.technical_score,
+                "communication": e.communication_score,
+                "recommendation": e.recommendation,
+            }
+            for e in recent_evals
+        ],
+        "weaknesses": recent_evals[0].detailed_breakdown.get("weaknesses", []) if recent_evals and recent_evals[0].detailed_breakdown else [],
+    }
+
+    result = await chat(req.message, context)
+    return CopilotChatResponse(
+        response=result.get("response", "I'm here to help! Could you rephrase your question?"),
+        suggestions=result.get("suggestions", []),
+    )

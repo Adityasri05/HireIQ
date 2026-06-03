@@ -48,21 +48,9 @@ export default function Login() {
 
       router.push("/dashboard");
     } catch (err) {
-      // In hackathon mode, if backend credentials fail or server isn't hit, let them sign in automatically with fallback user
-      console.warn("API Login failed, using hackathon fallback", err);
-      
-      // Simulating a quick success anyway for high quality demo resilience
-      setTimeout(() => {
-        localStorage.setItem("hireiq_token", "hackathon-mock-token-alex-dev");
-        localStorage.setItem("hireiq_user", JSON.stringify({
-          id: "alex-dev",
-          name: "Alex Developer",
-          email: "alex@developer.com",
-          role: "candidate",
-          target_role: "Senior Frontend Engineer"
-        }));
-        router.push("/dashboard");
-      }, 1000);
+      const errorMsg = err instanceof Error ? err.message : "Login failed. Please check your credentials and ensure the backend server is running.";
+      setError(errorMsg);
+      setIsLoading(false);
     }
   };
 

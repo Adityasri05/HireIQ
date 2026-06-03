@@ -13,6 +13,7 @@ class Settings(BaseSettings):
 
     # Google Gemini
     GOOGLE_API_KEY: str = "your-gemini-api-key-here"
+    GEMINI_API_KEY: str | None = None
 
     # Server
     BACKEND_PORT: int = 8000

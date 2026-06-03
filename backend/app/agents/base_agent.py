@@ -7,10 +7,24 @@ settings = get_settings()
 
 # Initialize Gemini Client if API key is not a placeholder
 client = None
-if settings.GOOGLE_API_KEY and not settings.GOOGLE_API_KEY.startswith("your-"):
+api_key = None
+
+# Try settings.GEMINI_API_KEY first
+if settings.GEMINI_API_KEY and not settings.GEMINI_API_KEY.startswith("your-"):
+    api_key = settings.GEMINI_API_KEY
+# Try settings.GOOGLE_API_KEY next
+elif settings.GOOGLE_API_KEY and not settings.GOOGLE_API_KEY.startswith("your-"):
+    api_key = settings.GOOGLE_API_KEY
+# Fallback to direct environment variables
+else:
+    import os
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+
+if api_key and not api_key.startswith("your-"):
     try:
-        client = genai.Client(api_key=settings.GOOGLE_API_KEY)
-    except Exception:
+        client = genai.Client(api_key=api_key)
+    except Exception as e:
+        print(f"[Gemini Client Init Error] {e}")
         client = None
 
 MODEL_ID = "gemini-2.5-flash-lite"
@@ -71,7 +85,8 @@ async def call_gemini(system_prompt: str, user_prompt: str, json_output: bool = 
                     # Fall back to mock on json parse failure
                     return _generate_mock_response(system_prompt, user_prompt)
             return text
-        except Exception:
+        except Exception as e:
+            print(f"[Gemini API Error] {e}")
             # Fall back to mock on API error
             if json_output:
                 return _generate_mock_response(system_prompt, user_prompt)
@@ -81,112 +96,530 @@ async def call_gemini(system_prompt: str, user_prompt: str, json_output: bool = 
         if json_output:
             return _generate_mock_response(system_prompt, user_prompt)
         return "Mock response: API Key not configured."
+    else:
+        # Fall back to mock on missing client (no API key configured)
+        if json_output:
+            return _generate_mock_response(system_prompt, user_prompt)
+        return "Mock response: API Key not configured."
+
+
+# ============================================================================
+# DEEP RESUME TEXT EXTRACTION HELPERS
+# ============================================================================
+
+def _extract_name(lines: list[str], resume_text: str) -> str:
+    """Extract candidate name from resume text using multiple heuristics."""
+    # Strategy 1: First non-empty line that looks like a name
+    for line in lines[:5]:
+        clean = line.strip()
+        # Skip lines with email, phone, urls, or common section headers
+        if not clean or len(clean) > 50:
+            continue
+        if any(x in clean.lower() for x in ['@', 'http', 'www.', 'phone', 'email', 'address', 'objective', 'summary', 'resume']):
+            continue
+        if re.match(r'^[\d\s\(\)\-\+]+$', clean):  # phone numbers
+            continue
+        # Check if it looks like a name (2-4 words, mostly letters)
+        words = clean.split()
+        if 1 <= len(words) <= 4 and all(re.match(r'^[A-Za-z\.\-\']+$', w) for w in words):
+            return clean
+    
+    # Strategy 2: Look for "Name:" prefix
+    name_match = re.search(r'(?:name|candidate)\s*[:]\s*(.+)', resume_text, re.IGNORECASE)
+    if name_match:
+        return name_match.group(1).strip()
+    
+    # Strategy 3: Find first capitalized multi-word sequence
+    cap_match = re.search(r'^([A-Z][a-z]+ (?:[A-Z]\.?\s*)?[A-Z][a-z]+)', resume_text, re.MULTILINE)
+    if cap_match:
+        return cap_match.group(1).strip()
+    
+    return "Candidate"
+
+
+def _extract_email(resume_text: str) -> str:
+    """Extract email address."""
+    match = re.search(r'[\w\.\-+]+@[\w\.\-]+\.\w+', resume_text)
+    return match.group(0) if match else ""
+
+
+def _extract_phone(resume_text: str) -> str:
+    """Extract phone number."""
+    match = re.search(r'(?:\+?\d{1,3}[\s\-]?)?\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{4}', resume_text)
+    return match.group(0) if match else ""
+
+
+def _extract_target_role(resume_text: str, lines: list[str]) -> str:
+    """Extract the candidate's current/target role from resume."""
+    # Common role patterns
+    ROLE_PATTERNS = [
+        r'(?:senior|junior|lead|staff|principal|associate|intern)?\s*(?:software|web|mobile|full[\s-]?stack|front[\s-]?end|back[\s-]?end|cloud|data|machine\s*learning|ml|ai|devops|sre|platform|systems?|embedded|ios|android|qa|test|security|network|database)\s*(?:engineer|developer|architect|scientist|analyst|consultant|specialist|manager|administrator|intern)',
+        r'(?:software|web|full[\s-]?stack|front[\s-]?end|back[\s-]?end)\s+(?:engineer|developer)',
+        r'(?:data\s+(?:scientist|analyst|engineer))',
+        r'(?:devops|sre|cloud|platform)\s+engineer',
+        r'(?:machine\s*learning|ml|ai)\s+engineer',
+        r'(?:project|product|engineering|technical)\s+manager',
+        r'(?:ui/?ux|ux|ui)\s+(?:designer|developer|engineer)',
+        r'(?:business|systems?|data)\s+analyst',
+        r'(?:technical|solutions?)\s+architect',
+    ]
+    
+    # Check first 10 lines (often has title near name)
+    for line in lines[:10]:
+        for pattern in ROLE_PATTERNS:
+            match = re.search(pattern, line, re.IGNORECASE)
+            if match:
+                return match.group(0).strip().title()
+    
+    # Check under "Objective" or "Summary" sections
+    objective_match = re.search(r'(?:objective|summary|profile|about)\s*:?\s*\n(.+)', resume_text, re.IGNORECASE)
+    if objective_match:
+        obj_text = objective_match.group(1)
+        for pattern in ROLE_PATTERNS:
+            match = re.search(pattern, obj_text, re.IGNORECASE)
+            if match:
+                return match.group(0).strip().title()
+    
+    # Check entire text
+    for pattern in ROLE_PATTERNS:
+        match = re.search(pattern, resume_text, re.IGNORECASE)
+        if match:
+            return match.group(0).strip().title()
+    
+    return "Software Engineer"
+
+
+def _extract_skills(resume_text: str) -> list[str]:
+    """Extract technical skills from resume text."""
+    KNOWN_SKILLS = [
+        # Languages
+        "Python", "Java", "JavaScript", "TypeScript", "C++", "C#", "C", "Go", "Golang", 
+        "Rust", "Ruby", "PHP", "Kotlin", "Swift", "Scala", "R", "Perl", "Dart", "Lua",
+        "MATLAB", "Shell", "Bash", "PowerShell", "Assembly",
+        # Frontend
+        "React", "Angular", "Vue", "Vue.js", "Svelte", "Next.js", "Nuxt.js", "Gatsby",
+        "HTML", "HTML5", "CSS", "CSS3", "SASS", "LESS", "Tailwind CSS", "Bootstrap",
+        "Material UI", "Chakra UI", "jQuery", "Redux", "Zustand", "MobX",
+        # Backend
+        "Node.js", "Express", "Express.js", "FastAPI", "Flask", "Django", "Spring", 
+        "Spring Boot", "ASP.NET", ".NET", "Laravel", "Rails", "Ruby on Rails", 
+        "NestJS", "Koa", "Hapi",
+        # Databases
+        "SQL", "MySQL", "PostgreSQL", "MongoDB", "SQLite", "Redis", "Cassandra",
+        "DynamoDB", "Elasticsearch", "Neo4j", "CouchDB", "MariaDB", "Oracle",
+        "MS SQL Server", "Firebase", "Supabase", "Prisma",
+        # Cloud & DevOps
+        "AWS", "Azure", "GCP", "Google Cloud", "Docker", "Kubernetes", "Terraform",
+        "Ansible", "Jenkins", "GitHub Actions", "GitLab CI", "CircleCI", "Travis CI",
+        "CI/CD", "Nginx", "Apache", "Linux", "Unix",
+        # Data/ML
+        "TensorFlow", "PyTorch", "Keras", "Scikit-learn", "Pandas", "NumPy",
+        "Spark", "Hadoop", "Kafka", "Airflow", "Tableau", "Power BI",
+        "Machine Learning", "Deep Learning", "NLP", "Computer Vision",
+        # Tools
+        "Git", "GitHub", "GitLab", "Bitbucket", "Jira", "Confluence", "Slack",
+        "VS Code", "IntelliJ", "Figma", "Postman", "Swagger",
+        # APIs & Protocols
+        "REST", "REST API", "REST APIs", "GraphQL", "gRPC", "WebSocket", "OAuth",
+        "JWT", "SOAP", "Microservices",
+        # Mobile
+        "React Native", "Flutter", "SwiftUI", "Jetpack Compose", "Xamarin",
+        # Testing
+        "Jest", "Mocha", "Cypress", "Selenium", "JUnit", "Pytest", "RSpec",
+        "Puppeteer", "Playwright",
+        # Other
+        "Agile", "Scrum", "Kanban", "SOLID", "Design Patterns", "Data Structures",
+        "Algorithms", "System Design", "OOP", "Functional Programming",
+    ]
+    
+    found_skills = []
+    text_lower = resume_text.lower()
+    
+    for skill in KNOWN_SKILLS:
+        # Use word boundary matching for accuracy
+        pattern = r'\b' + re.escape(skill) + r'\b'
+        if re.search(pattern, resume_text, re.IGNORECASE):
+            # Normalize duplicates like "REST API" vs "REST APIs"
+            normalized = skill.rstrip('s') if skill.endswith('APIs') else skill
+            if normalized not in found_skills and skill not in found_skills:
+                found_skills.append(skill)
+    
+    return found_skills if found_skills else ["Problem Solving", "Communication", "Teamwork"]
+
+
+def _extract_experience(resume_text: str) -> list[dict]:
+    """Extract work experience entries from resume text."""
+    experiences = []
+    
+    # Find the experience section
+    exp_section_match = re.search(
+        r'(?:work\s*)?experience[s]?\s*:?\s*\n([\s\S]*?)(?=\n(?:education|skills|projects?|certific|awards?|publications?|interests?|references?|$))',
+        resume_text, re.IGNORECASE
+    )
+    
+    exp_text = exp_section_match.group(1) if exp_section_match else resume_text
+    
+    # Pattern: "Company Name" — "Role" — "Date range"
+    # or "Role" at "Company" — "Date range"
+    
+    # Look for date ranges like "Jan 2020 - Present", "2019 - 2022", "06/2020 - 12/2021"
+    date_pattern = r'(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s*)?(?:\d{4})\s*[-–—to]+\s*(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s*)?(?:\d{4}|[Pp]resent|[Cc]urrent|[Nn]ow)'
+    
+    # Split by date ranges to find experience blocks
+    date_matches = list(re.finditer(date_pattern, exp_text))
+    
+    for i, dm in enumerate(date_matches):
+        duration = dm.group(0).strip()
+        
+        # Get text before the date (should contain role/company)
+        start_pos = date_matches[i-1].end() if i > 0 else 0
+        context_before = exp_text[start_pos:dm.start()].strip()
+        
+        # Get text after the date (should contain highlights/bullets)
+        end_pos = date_matches[i+1].start() if i + 1 < len(date_matches) else dm.end() + 500
+        context_after = exp_text[dm.end():min(end_pos, len(exp_text))].strip()
+        
+        # Parse role and company from context_before
+        context_lines = [l.strip() for l in context_before.split('\n') if l.strip()]
+        
+        role = ""
+        company = ""
+        
+        if len(context_lines) >= 2:
+            # Usually: Company on one line, Role on next (or vice versa)
+            company = context_lines[-2] if len(context_lines) >= 2 else context_lines[-1]
+            role = context_lines[-1]
+        elif len(context_lines) == 1:
+            # "Role at Company" or "Company - Role"
+            line = context_lines[0]
+            sep_match = re.search(r'(.+?)\s*[-–—|,]\s*(.+)', line)
+            if sep_match:
+                part1, part2 = sep_match.group(1).strip(), sep_match.group(2).strip()
+                # Heuristic: the part with more capital words is likely the company
+                role, company = part1, part2
+            else:
+                role = line
+                company = ""
+        
+        # Clean up role and company
+        role = re.sub(r'^\W+|\W+$', '', role).strip()
+        company = re.sub(r'^\W+|\W+$', '', company).strip()
+        
+        # Extract bullet points after the date
+        highlights = []
+        bullets = re.findall(r'[•\-\*]\s*(.+)', context_after)
+        for bullet in bullets[:4]:
+            highlights.append(bullet.strip())
+        
+        if not highlights:
+            # Try sentences
+            sentences = re.split(r'[.\n]', context_after)
+            for sent in sentences[:3]:
+                sent = sent.strip()
+                if len(sent) > 20:
+                    highlights.append(sent)
+        
+        if role or company:
+            experiences.append({
+                "role": role or "Software Engineer",
+                "company": company or "Company",
+                "duration": duration,
+                "highlights": highlights if highlights else [f"Worked as {role}"]
+            })
+    
+    # If no structured experience found, try simpler patterns
+    if not experiences:
+        # Look for "Role at Company" patterns
+        role_company_matches = re.finditer(
+            r'([A-Z][a-zA-Z\s]+(?:Engineer|Developer|Manager|Analyst|Designer|Architect|Consultant|Scientist|Lead|Director|Intern))\s*(?:at|@|-|–|,)\s*([A-Z][a-zA-Z\s&.,]+?)(?:\n|$)',
+            resume_text
+        )
+        for m in role_company_matches:
+            experiences.append({
+                "role": m.group(1).strip(),
+                "company": m.group(2).strip(),
+                "duration": "N/A",
+                "highlights": [f"Worked as {m.group(1).strip()} at {m.group(2).strip()}"]
+            })
+    
+    return experiences[:5]  # Cap at 5 entries
+
+
+def _extract_education(resume_text: str) -> list[dict]:
+    """Extract education entries from resume text."""
+    education = []
+    
+    # Find the education section
+    edu_section_match = re.search(
+        r'education[s]?\s*:?\s*\n([\s\S]*?)(?=\n(?:experience|skills|projects?|certific|awards?|publications?|interests?|references?|work|$))',
+        resume_text, re.IGNORECASE
+    )
+    
+    edu_text = edu_section_match.group(1) if edu_section_match else resume_text
+    
+    # Match degree patterns
+    degree_patterns = [
+        r'((?:Bachelor|Master|Doctor|Ph\.?D|B\.?S\.?|M\.?S\.?|B\.?A\.?|M\.?A\.?|B\.?Tech|M\.?Tech|B\.?E\.?|M\.?E\.?|MBA|BCA|MCA|B\.?Sc|M\.?Sc|Associate|Diploma)[\w\s.,]*?)(?:\s*[-–—|,from]\s*|\s+(?:in|of|from|at)\s+)',
+        r'((?:Bachelor|Master|Doctor|Ph\.?D|B\.?S\.?|M\.?S\.?|B\.?A\.?|M\.?A\.?|B\.?Tech|M\.?Tech|B\.?E\.?|M\.?E\.?|MBA|BCA|MCA|B\.?Sc|M\.?Sc|Associate|Diploma)[\w\s.,]+)',
+    ]
+    
+    for pattern in degree_patterns:
+        degree_matches = re.finditer(pattern, edu_text, re.IGNORECASE)
+        for dm in degree_matches:
+            degree = dm.group(1).strip()
+            
+            # Try to find institution near the degree
+            context = edu_text[max(0, dm.start()-100):dm.end()+200]
+            
+            # Common institution patterns: "University of X", "X Institute", "X College"
+            inst_match = re.search(
+                r'((?:University|Institute|College|School|Academy|Polytechnic|IIT|NIT|IIIT|MIT|Stanford|Harvard|Oxford|Cambridge)[\w\s.,\-]*?)(?:\n|$|[,\-–]|\d{4})',
+                context, re.IGNORECASE
+            )
+            institution = inst_match.group(1).strip() if inst_match else ""
+            
+            # Also try "at University" or "from University" pattern
+            if not institution:
+                at_match = re.search(r'(?:at|from)\s+([A-Z][a-zA-Z\s&.,]+?)(?:\n|$|[\-–]|\d{4})', context, re.IGNORECASE)
+                institution = at_match.group(1).strip() if at_match else "University"
+            
+            # Extract year
+            year_match = re.search(r'(\d{4})', context[dm.end()-dm.start():])
+            year = year_match.group(1) if year_match else ""
+            
+            education.append({
+                "degree": degree,
+                "institution": institution,
+                "year": year
+            })
+    
+    # Deduplicate
+    seen = set()
+    unique_edu = []
+    for e in education:
+        key = e["degree"].lower()[:30]
+        if key not in seen:
+            seen.add(key)
+            unique_edu.append(e)
+    
+    return unique_edu[:3]
+
+
+def _extract_projects(resume_text: str, skills: list[str]) -> list[dict]:
+    """Extract project entries from resume text."""
+    projects = []
+    
+    # Find the projects section
+    proj_section_match = re.search(
+        r'projects?\s*:?\s*\n([\s\S]*?)(?=\n(?:education|experience|skills|certific|awards?|publications?|interests?|references?|work|$))',
+        resume_text, re.IGNORECASE
+    )
+    
+    if proj_section_match:
+        proj_text = proj_section_match.group(1)
+        
+        # Split by project headers (lines that start with capital letter and are short)
+        lines = proj_text.split('\n')
+        current_project = None
+        current_desc_lines = []
+        
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            
+            # Check if this line is a project title (short, starts with capital, no bullet)
+            is_title = (
+                len(stripped) < 80 and 
+                stripped[0].isupper() and 
+                not stripped.startswith(('•', '-', '*', '–')) and
+                not any(kw in stripped.lower() for kw in ['responsible', 'developed', 'built', 'created', 'implemented', 'designed', 'managed', 'led'])
+            )
+            
+            if is_title and current_project:
+                # Save previous project
+                desc = " ".join(current_desc_lines).strip()
+                proj_skills = [s for s in skills if s.lower() in desc.lower() or s.lower() in current_project.lower()]
+                projects.append({
+                    "name": current_project,
+                    "description": desc[:200] if desc else f"Project using {', '.join(proj_skills[:3])}",
+                    "technologies": proj_skills[:5] if proj_skills else skills[:3],
+                    "complexity_score": min(8, 5 + len(proj_skills))
+                })
+                current_desc_lines = []
+                current_project = stripped
+            elif is_title and not current_project:
+                current_project = stripped
+            else:
+                current_desc_lines.append(re.sub(r'^[•\-\*–]\s*', '', stripped))
+        
+        # Save last project
+        if current_project:
+            desc = " ".join(current_desc_lines).strip()
+            proj_skills = [s for s in skills if s.lower() in desc.lower() or s.lower() in current_project.lower()]
+            projects.append({
+                "name": current_project,
+                "description": desc[:200] if desc else f"Project using {', '.join(proj_skills[:3])}",
+                "technologies": proj_skills[:5] if proj_skills else skills[:3],
+                "complexity_score": min(8, 5 + len(proj_skills))
+            })
+    
+    return projects[:5]
+
+
+def _extract_certifications(resume_text: str) -> list[str]:
+    """Extract certifications from resume text."""
+    certs = []
+    
+    # Find certifications section
+    cert_section_match = re.search(
+        r'certific(?:ation|ate)s?\s*:?\s*\n([\s\S]*?)(?=\n(?:education|experience|skills|projects?|awards?|publications?|interests?|references?|work|$))',
+        resume_text, re.IGNORECASE
+    )
+    
+    if cert_section_match:
+        cert_text = cert_section_match.group(1)
+        cert_lines = cert_text.split('\n')
+        for line in cert_lines:
+            stripped = re.sub(r'^[•\-\*–\d.)\s]+', '', line).strip()
+            if stripped and len(stripped) > 5 and len(stripped) < 200:
+                certs.append(stripped)
+    
+    # Also look for common cert keywords anywhere
+    cert_patterns = [
+        r'(AWS\s+Certified[\w\s\-]+)',
+        r'(Google\s+Cloud[\w\s\-]+)',
+        r'(Azure[\w\s\-]+(?:Certified|Associate|Expert))',
+        r'(Certified\s+[\w\s]+(?:Developer|Engineer|Architect|Professional|Associate))',
+        r'(PMP|CISSP|CCNA|CCNP|CompTIA[\w\s\+]+)',
+    ]
+    for pattern in cert_patterns:
+        matches = re.finditer(pattern, resume_text, re.IGNORECASE)
+        for m in matches:
+            cert = m.group(1).strip()
+            if cert not in certs:
+                certs.append(cert)
+    
+    return certs[:10]
+
+
+def _extract_summary(resume_text: str, name: str, role: str, skills: list[str]) -> str:
+    """Extract or generate a professional summary."""
+    # Try to find existing summary in resume
+    summary_match = re.search(
+        r'(?:summary|profile|objective|about\s*me)\s*:?\s*\n([\s\S]*?)(?=\n(?:education|experience|skills|projects?|certific|work|\n\n|$))',
+        resume_text, re.IGNORECASE
+    )
+    
+    if summary_match:
+        summary_text = summary_match.group(1).strip()
+        # Clean up bullets and extra whitespace
+        summary_text = re.sub(r'[•\-\*]\s*', '', summary_text)
+        summary_text = re.sub(r'\s+', ' ', summary_text).strip()
+        if len(summary_text) > 30:
+            return summary_text[:500]
+    
+    # Generate from extracted data
+    top_skills = ", ".join(skills[:5]) if skills else "modern technologies"
+    return f"{name} is a {role} with expertise in {top_skills}. Experienced in building robust software solutions and working in collaborative team environments."
 
 
 def _generate_mock_response(system_prompt: str, user_prompt: str) -> dict:
-    """Generate realistic mock data based on the type of agent requested in the system prompt."""
+    """Generate realistic mock data based on the type of agent requested in the system prompt.
+    For resume intelligence, deeply extracts information from the actual resume text."""
     prompt_lower = system_prompt.lower()
 
     if "resume intelligence" in prompt_lower:
         # Extract raw resume text from user_prompt
-        resume_text = user_prompt.replace("Analyze this resume:", "").strip()
+        resume_text = user_prompt
+        if "Analyze this resume:" in user_prompt:
+            resume_text = user_prompt.split("Analyze this resume:", 1)[1].strip()
+        elif "Analyze this resume:\n" in user_prompt:
+            resume_text = user_prompt.split("Analyze this resume:\n", 1)[1].strip()
+        
         lines = [l.strip() for l in resume_text.splitlines() if l.strip()]
         
-        # Heuristic 1: Extract candidate name (first line that is short and contains no email/digits)
-        candidate_name = None
-        for line in lines[:3]:
-            clean_line = re.sub(r"[^\w\s-]", "", line).strip()
-            if clean_line and len(clean_line) < 30 and not any(c.isdigit() for c in clean_line) and "analyze" not in clean_line.lower():
-                if clean_line.lower().startswith("name "):
-                    clean_line = clean_line[5:].strip()
-                candidate_name = clean_line
-                break
-        if not candidate_name:
-            name_match = re.search(r"([A-Z][a-z]+ [A-Z][a-z]+)", resume_text)
-            candidate_name = name_match.group(1) if name_match else "Alex Developer"
-
-        # Heuristic 2: Extract target role
-        COMMON_ROLES = [
-            "Senior Frontend Engineer", "Frontend Engineer",
-            "Senior Backend Engineer", "Backend Engineer",
-            "Senior Full Stack Developer", "Full Stack Developer", "Full Stack Engineer",
-            "Data Scientist", "DevOps Engineer", "Cloud Architect",
-            "Software Engineer", "Software Developer", "Systems Engineer"
-        ]
-        target_role = "Software Engineer"
-        for role in COMMON_ROLES:
-            if re.search(rf"\b{re.escape(role)}\b", resume_text, re.IGNORECASE):
-                target_role = role
-                break
-
-        # Heuristic 3: Extract skills
-        TECH_LIST = [
-            "Python", "React", "TypeScript", "FastAPI", "SQL", "Docker", "Kubernetes", "AWS", 
-            "Node.js", "Next.js", "Java", "C++", "Golang", "Git", "CI/CD", "HTML", "CSS", 
-            "PostgreSQL", "MongoDB", "Vue", "Angular", "Redis", "Elasticsearch", "Flask", "Django"
-        ]
-        skills = []
-        for tech in TECH_LIST:
-            if re.search(rf"\b{re.escape(tech)}\b", resume_text, re.IGNORECASE):
-                skills.append(tech)
-        if not skills:
-            skills = ["Python", "React", "TypeScript", "FastAPI", "SQL", "Docker", "Git", "CI/CD"]
-
-        # Heuristic 4: Extract education degree
-        education_degree = "Bachelor of Science in Computer Science"
-        education_institution = "State Technical University"
-        education_year = "2022"
-        for line in lines:
-            if any(kw in line.lower() for kw in ["bachelor", "b.s", "b.tech", "master", "m.s", "m.tech", "phd", "degree"]):
-                education_degree = line
-                break
-
-        # Heuristic 5: Summary
-        summary = f"Highly motivated {target_role} skilled in {', '.join(skills[:5])}. Experienced in developing clean code and robust systems architectures."
-
-        # Create structured output
+        print(f"[MockAgent] Analyzing resume text ({len(resume_text)} chars, {len(lines)} lines)")
+        
+        # Deep extraction from actual resume text
+        candidate_name = _extract_name(lines, resume_text)
+        target_role = _extract_target_role(resume_text, lines)
+        skills = _extract_skills(resume_text)
+        experience = _extract_experience(resume_text)
+        education = _extract_education(resume_text)
+        projects = _extract_projects(resume_text, skills)
+        certifications = _extract_certifications(resume_text)
+        summary = _extract_summary(resume_text, candidate_name, target_role, skills)
+        
+        print(f"[MockAgent] Extracted: name='{candidate_name}', role='{target_role}', {len(skills)} skills, {len(experience)} experiences, {len(education)} education entries")
+        
+        # Build skill confidence based on frequency in resume
         skill_confidence = {}
         for skill in skills:
-            skill_confidence[skill] = 85 if skill in ["Python", "React", "TypeScript", "FastAPI"] else 75
-
+            # Count mentions
+            count = len(re.findall(re.escape(skill), resume_text, re.IGNORECASE))
+            if count >= 3:
+                skill_confidence[skill] = min(95, 80 + count * 2)
+            elif count >= 2:
+                skill_confidence[skill] = 75
+            else:
+                skill_confidence[skill] = 60
+        
+        # Calculate resume score based on content richness
+        score = 50
+        if len(skills) > 5: score += 10
+        if len(experience) > 0: score += 10
+        if len(education) > 0: score += 5
+        if len(projects) > 0: score += 10
+        if len(certifications) > 0: score += 5
+        if len(resume_text) > 500: score += 5
+        if len(resume_text) > 1000: score += 5
+        score = min(score, 95)
+        
+        # Build project complexity from extracted projects
+        project_complexity = {"overall": 7}
+        if projects:
+            breakdown = {}
+            for p in projects:
+                breakdown[p["name"]] = p.get("complexity_score", 7)
+            project_complexity["breakdown"] = breakdown
+            project_complexity["overall"] = sum(p.get("complexity_score", 7) for p in projects) // len(projects)
+        
+        # If no experience found, create minimal entry from resume text
+        if not experience:
+            experience = [{
+                "role": target_role,
+                "company": "Listed in resume",
+                "duration": "See resume",
+                "highlights": ["Details available in uploaded resume"]
+            }]
+        
+        # If no education found, create minimal entry
+        if not education:
+            education = [{"degree": "Degree (see resume)", "institution": "Listed in resume", "year": ""}]
+        
+        # If no projects found, create from skills
+        if not projects:
+            projects = [{
+                "name": f"{skills[0] if skills else 'Software'} Project",
+                "description": f"Project utilizing {', '.join(skills[:3]) if skills else 'various technologies'}",
+                "technologies": skills[:4] if skills else ["Python"],
+                "complexity_score": 7
+            }]
+        
         return {
             "name": candidate_name,
             "target_role": target_role,
             "skills": skills,
-            "projects": [
-                {
-                    "name": f"Advanced {skills[0]} Project" if skills else "Cloud Platform Architecture",
-                    "description": f"Designed and deployed a highly scalable application leveraging {', '.join(skills[:3])}.",
-                    "technologies": skills[:4],
-                    "complexity_score": 8
-                },
-                {
-                    "name": f"Interactive {skills[1] if len(skills)>1 else 'Web'} Dashboard",
-                    "description": "Built a real-time analytics dashboard with dynamic widgets and responsive design.",
-                    "technologies": skills[1:4],
-                    "complexity_score": 7
-                }
-            ],
-            "education": [
-                {"degree": education_degree, "institution": education_institution, "year": education_year}
-            ],
-            "certifications": ["AWS Certified Solutions Architect", "Google Cloud Associate Engineer"],
-            "experience": [
-                {
-                    "role": target_role,
-                    "company": "TechSolutions Inc.",
-                    "duration": "2 years",
-                    "highlights": [
-                        f"Optimized application performance by 40% using {skills[0] if skills else 'modern engines'}.",
-                        f"Led engineering development utilizing {', '.join(skills[:2])}."
-                    ]
-                }
-            ],
-            "resume_score": 85,
+            "projects": projects,
+            "education": education,
+            "certifications": certifications if certifications else [],
+            "experience": experience,
+            "resume_score": score,
             "skill_confidence": skill_confidence,
-            "project_complexity": {"overall": 8, "breakdown": {f"Advanced {skills[0]} Project" if skills else "Cloud Platform Architecture": 8}},
-            "leadership_indicators": ["Led engineering development", "Mentored junior developers"],
-            "business_impact_score": 82,
+            "project_complexity": project_complexity,
+            "leadership_indicators": _extract_leadership(resume_text),
+            "business_impact_score": min(score - 5, 85),
             "summary": summary
         }
 
@@ -336,3 +769,39 @@ def _generate_mock_response(system_prompt: str, user_prompt: str) -> dict:
             "message": "Fallback mock response because API key is not configured.",
             "data": {}
         }
+
+
+def _extract_leadership(resume_text: str) -> list[str]:
+    """Extract leadership indicators from resume text."""
+    indicators = []
+    LEADERSHIP_KEYWORDS = [
+        r'led\s+(?:a\s+)?team',
+        r'managed\s+(?:a\s+)?team',
+        r'mentored',
+        r'supervised',
+        r'coordinated',
+        r'directed',
+        r'spearheaded',
+        r'founded',
+        r'co-founded',
+        r'team\s+lead',
+        r'tech\s+lead',
+        r'project\s+lead',
+        r'leadership',
+        r'promoted\s+to',
+    ]
+    for pattern in LEADERSHIP_KEYWORDS:
+        match = re.search(pattern, resume_text, re.IGNORECASE)
+        if match:
+            # Get the surrounding sentence
+            start = max(0, match.start() - 50)
+            end = min(len(resume_text), match.end() + 100)
+            context = resume_text[start:end].strip()
+            # Find the sentence containing the match
+            sentences = re.split(r'[.\n]', context)
+            for sent in sentences:
+                if re.search(pattern, sent, re.IGNORECASE):
+                    indicators.append(sent.strip()[:100])
+                    break
+    
+    return indicators if indicators else ["No explicit leadership indicators found"]

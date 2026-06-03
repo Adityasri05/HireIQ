@@ -179,12 +179,12 @@ export default function ResumeIntelligence() {
       });
 
       setData({
-        name: parsed.name || "Alex Developer",
-        target_role: parsed.target_role || "Senior Frontend Engineer",
-        experience_years: parsed.experience?.[0]?.duration ? `${parsed.experience[0].duration} Experience` : "5+ Years Experience",
-        education_degree: parsed.education?.[0]?.degree || "B.S. Computer Science",
-        trust_score: parsed.resume_score || 85,
-        summary: parsed.summary || "No professional summary provided.",
+        name: parsed.name || "Candidate",
+        target_role: parsed.target_role || "Software Engineer",
+        experience_years: parsed.experience?.[0]?.duration ? `${parsed.experience[0].duration} Experience` : "Experience from resume",
+        education_degree: parsed.education?.[0]?.degree || "Degree from resume",
+        trust_score: parsed.resume_score || 70,
+        summary: parsed.summary || "Resume analysis completed. See skill verification below.",
         skills: skillsList.length > 0 ? skillsList : DEFAULT_RESUME.skills
       });
     } catch (err) {

@@ -67,19 +67,9 @@ export default function Signup() {
 
       router.push("/onboarding");
     } catch (err) {
-      console.warn("API Signup failed, using hackathon fallback", err);
-      
-      // Mock success for beautiful robust onboarding demo UX
-      setTimeout(() => {
-        localStorage.setItem("hireiq_token", "hackathon-mock-token-alex-dev");
-        localStorage.setItem("hireiq_user", JSON.stringify({
-          id: "alex-dev",
-          name: name || "Alex Developer",
-          email: email || "alex@developer.com",
-          role: "candidate"
-        }));
-        router.push("/onboarding");
-      }, 1000);
+      const errorMsg = err instanceof Error ? err.message : "Signup failed. Please ensure the backend server is running.";
+      setError(errorMsg);
+      setIsLoading(false);
     }
   };
 

@@ -39,36 +39,28 @@ async def get_current_user(
     token: Optional[str] = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db),
 ) -> User:
-    user_id = None
-    if token is not None:
-        try:
-            payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
-            user_id = payload.get("sub")
-        except JWTError:
-            pass
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials. Please log in again.",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    if token is None:
+        raise credentials_exception
+    
+    try:
+        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
 
-    if user_id:
-        result = await db.execute(select(User).where(User.id == user_id))
-        user = result.scalar_one_or_none()
-        if user:
-            return user
-
-    # Fallback/Hackathon Mode: Fetch or create a default demo user so frontend integrations function seamlessly
-    result = await db.execute(select(User).where(User.email == "alex@developer.com"))
+    result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if user is None:
-        user = User(
-            id="alex-dev",
-            name="Alex Developer",
-            email="alex@developer.com",
-            hashed_password=hash_password("password123"),
-            target_role="Senior Frontend Engineer",
-            experience_level="Senior",
-            career_goals="Land a senior engineering role at a top-tier tech company",
-        )
-        db.add(user)
-        await db.commit()
-        await db.refresh(user)
+        raise credentials_exception
+    
     return user
 
 

@@ -28,9 +28,15 @@ export function TopNav() {
         if (!response.ok) return;
         
         const data = await response.json();
-        if (data.parsed_content && data.parsed_content.name) {
-          const parsedName = data.parsed_content.name;
-          if (parsedName !== "Candidate's Full Name") {
+        let parsed = data.parsed_content;
+        if (parsed) {
+          if (typeof parsed === "string") {
+            try {
+              parsed = JSON.parse(parsed);
+            } catch (e) {}
+          }
+          if (parsed.name && parsed.name !== "Candidate's Full Name") {
+            const parsedName = parsed.name;
             setCandidateName(parsedName);
             
             // Sync local storage user model

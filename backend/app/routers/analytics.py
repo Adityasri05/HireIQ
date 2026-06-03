@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
@@ -63,9 +64,16 @@ async def get_dashboard(
     )
     resume = resume_result.scalar_one_or_none()
     skill_data = []
-    if resume and resume.skill_confidence:
-        for skill, confidence in resume.skill_confidence.items():
-            skill_data.append({"subject": skill, "A": confidence, "fullMark": 100})
+    if resume:
+        skill_conf = resume.skill_confidence
+        if isinstance(skill_conf, str):
+            try:
+                skill_conf = json.loads(skill_conf)
+            except Exception:
+                skill_conf = {}
+        if isinstance(skill_conf, dict):
+            for skill, confidence in skill_conf.items():
+                skill_data.append({"subject": skill, "A": confidence, "fullMark": 100})
 
     # Get score trends from past evaluations
     trend_result = await db.execute(
@@ -80,9 +88,68 @@ async def get_dashboard(
         for i, e in enumerate(trend_evals)
     ]
 
-    hireiq_score = latest_eval.hireiq_score if latest_eval else 0
-    hire_prob = latest_eval.hire_probability if latest_eval else 0
-    recommendation = latest_eval.recommendation if latest_eval else "N/A"
+    # Initialize dashboard metrics
+    hireiq_score = 0
+    hire_prob = 0
+    technical_score = 0
+    communication_score = 0
+    pressure_score = 0
+    recommendation = "N/A"
+    
+    predictions = None
+    risks = None
+    benchmarks = None
+    learning_velocity = None
+
+    if latest_eval:
+        hireiq_score = latest_eval.hireiq_score
+        hire_prob = latest_eval.hire_probability
+        technical_score = latest_eval.technical_score
+        communication_score = latest_eval.communication_score
+        pressure_score = latest_eval.pressure_score
+        recommendation = latest_eval.recommendation or "N/A"
+        
+        predictions = latest_eval.detailed_breakdown.get("predictions") if latest_eval.detailed_breakdown else None
+        risks = latest_eval.detailed_breakdown.get("risks") if latest_eval.detailed_breakdown else None
+        benchmarks = latest_eval.detailed_breakdown.get("benchmarks") if latest_eval.detailed_breakdown else None
+        learning_velocity = latest_eval.detailed_breakdown.get("learning_velocity") if latest_eval.detailed_breakdown else None
+    elif resume:
+        # Seed dashboard with initial resume evaluation score
+        hireiq_score = resume.resume_score or 75.0
+        hire_prob = min(99.0, max(10.0, hireiq_score * 1.05))
+        technical_score = hireiq_score
+        communication_score = hireiq_score * 0.95
+        pressure_score = hireiq_score * 0.9
+        recommendation = "Strong Hire" if hireiq_score >= 80 else "Hire" if hireiq_score >= 65 else "Borderline"
+        
+        # Seed dynamic predictions & benchmarks
+        predictions = {
+            "offer_probability": round(hire_prob),
+            "success_90_day": round(hireiq_score * 0.96),
+            "retention_probability": round(hire_prob * 1.02),
+            "leadership_potential": "High" if hireiq_score >= 80 else "Medium",
+            "promotion_potential": "High" if hireiq_score >= 80 else "Medium",
+            "learning_velocity": "Exponential Developer" if hireiq_score >= 80 else "Linear Growth"
+        }
+        benchmarks = {
+            "technical_rank": round(100 - technical_score),
+            "communication_rank": round(100 - communication_score),
+            "system_design_rank": 20,
+            "problem_solving_rank": 15
+        }
+        learning_velocity = {
+            "level": "High" if hireiq_score >= 80 else "Medium",
+            "growth_rate": 15.0,
+            "profile": f"Adaptive {user.target_role or 'Developer'}",
+            "trend": [
+                {"month": "Month 1", "score": round(hireiq_score * 0.85)},
+                {"month": "Month 2", "score": round(hireiq_score * 0.95)},
+                {"month": "Month 3", "score": round(hireiq_score)}
+            ]
+        }
+        risks = [
+            {"category": "Experience Depth", "description": "Candidate demonstrates theoretical knowledge but practical bounds need verification."}
+        ]
 
     readiness = "Strong Hire" if hireiq_score >= 85 else "Hire" if hireiq_score >= 70 else "Borderline" if hireiq_score >= 55 else "Needs Improvement"
 
@@ -90,17 +157,17 @@ async def get_dashboard(
         hireiq_score=round(hireiq_score, 1),
         hire_probability=round(hire_prob, 1),
         readiness=readiness,
-        technical_score=round(latest_eval.technical_score, 1) if latest_eval else 0,
-        communication_score=round(latest_eval.communication_score, 1) if latest_eval else 0,
-        pressure_score=round(latest_eval.pressure_score, 1) if latest_eval else 0,
+        technical_score=round(technical_score, 1),
+        communication_score=round(communication_score, 1),
+        pressure_score=round(pressure_score, 1),
         interviews_completed=interview_count,
         recent_interviews=recent_interviews,
         skill_data=skill_data,
         trend_data=trend_data,
-        predictions=latest_eval.detailed_breakdown.get("predictions") if latest_eval and latest_eval.detailed_breakdown else None,
-        risks=latest_eval.detailed_breakdown.get("risks") if latest_eval and latest_eval.detailed_breakdown else None,
-        benchmarks=latest_eval.detailed_breakdown.get("benchmarks") if latest_eval and latest_eval.detailed_breakdown else None,
-        learning_velocity=latest_eval.detailed_breakdown.get("learning_velocity") if latest_eval and latest_eval.detailed_breakdown else None,
+        predictions=predictions,
+        risks=risks,
+        benchmarks=benchmarks,
+        learning_velocity=learning_velocity,
     )
 
 

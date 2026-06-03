@@ -68,7 +68,14 @@ export default function ResumeIntelligence() {
         
         const resData = await response.json();
         if (resData.parsed_content) {
-          const parsed = resData.parsed_content;
+          let parsed = resData.parsed_content;
+          if (typeof parsed === "string") {
+            try {
+              parsed = JSON.parse(parsed);
+            } catch (e) {
+              console.error("Failed to parse parsed_content", e);
+            }
+          }
           
           // Map backend structure to frontend structure
           const skillsList: SkillVerified[] = (parsed.skills || []).map((sk: string) => {
@@ -137,7 +144,14 @@ export default function ResumeIntelligence() {
       }
 
       const resData = await response.json();
-      const parsed = resData.parsed_content;
+      let parsed = resData.parsed_content;
+      if (typeof parsed === "string") {
+        try {
+          parsed = JSON.parse(parsed);
+        } catch (e) {
+          console.error("Failed to parse parsed_content", e);
+        }
+      }
 
       // Map backend structure to frontend structure
       const skillsList: SkillVerified[] = (parsed.skills || []).map((sk: string) => {

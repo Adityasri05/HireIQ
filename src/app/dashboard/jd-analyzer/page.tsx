@@ -86,18 +86,23 @@ export default function JDAnalyzer() {
 
       const rawGap = await gapResponse.json();
       
+      let gap = rawGap.gap_analysis || {};
+      if (typeof gap === "string") {
+        try {
+          gap = JSON.parse(gap);
+        } catch (e) {
+          gap = {};
+        }
+      }
+      
       // Map API data structure to frontend component layout
       setGapData({
-        match_score: rawGap.match_score || 78,
-        matching_skills: rawGap.matching_skills || [],
-        missing_skills: rawGap.missing_skills || [
-          { skill: "GraphQL", importance: "high", learning_difficulty: "medium", estimated_time: "2 weeks" }
-        ],
-        skills_to_improve: rawGap.skills_to_improve || [
-          { skill: "AWS / Cloud Architecture", current_level: 40, required_level: 75, gap: 35 }
-        ],
-        priority_ranking: rawGap.priority_ranking || [],
-        summary: rawGap.summary || "Skill gaps identified in advanced backend system architectures."
+        match_score: rawGap.match_score !== undefined && rawGap.match_score !== null ? rawGap.match_score : (gap.match_score || 78),
+        matching_skills: gap.matching_skills || [],
+        missing_skills: gap.missing_skills || [],
+        skills_to_improve: gap.skills_to_improve || [],
+        priority_ranking: gap.priority_ranking || [],
+        summary: gap.summary || "Skill gaps matching completed."
       });
 
       setShowInput(false);

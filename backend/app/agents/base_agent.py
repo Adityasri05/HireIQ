@@ -88,48 +88,106 @@ def _generate_mock_response(system_prompt: str, user_prompt: str) -> dict:
     prompt_lower = system_prompt.lower()
 
     if "resume intelligence" in prompt_lower:
-        # Try to parse user name from user prompt
-        name_match = re.search(r"([A-Z][a-z]+ [A-Z][a-z]+)", user_prompt)
-        candidate_name = name_match.group(1) if name_match else "Alex Developer"
+        # Extract raw resume text from user_prompt
+        resume_text = user_prompt.replace("Analyze this resume:", "").strip()
+        lines = [l.strip() for l in resume_text.splitlines() if l.strip()]
+        
+        # Heuristic 1: Extract candidate name (first line that is short and contains no email/digits)
+        candidate_name = None
+        for line in lines[:3]:
+            clean_line = re.sub(r"[^\w\s-]", "", line).strip()
+            if clean_line and len(clean_line) < 30 and not any(c.isdigit() for c in clean_line) and "analyze" not in clean_line.lower():
+                if clean_line.lower().startswith("name "):
+                    clean_line = clean_line[5:].strip()
+                candidate_name = clean_line
+                break
+        if not candidate_name:
+            name_match = re.search(r"([A-Z][a-z]+ [A-Z][a-z]+)", resume_text)
+            candidate_name = name_match.group(1) if name_match else "Alex Developer"
+
+        # Heuristic 2: Extract target role
+        COMMON_ROLES = [
+            "Senior Frontend Engineer", "Frontend Engineer",
+            "Senior Backend Engineer", "Backend Engineer",
+            "Senior Full Stack Developer", "Full Stack Developer", "Full Stack Engineer",
+            "Data Scientist", "DevOps Engineer", "Cloud Architect",
+            "Software Engineer", "Software Developer", "Systems Engineer"
+        ]
+        target_role = "Software Engineer"
+        for role in COMMON_ROLES:
+            if re.search(rf"\b{re.escape(role)}\b", resume_text, re.IGNORECASE):
+                target_role = role
+                break
+
+        # Heuristic 3: Extract skills
+        TECH_LIST = [
+            "Python", "React", "TypeScript", "FastAPI", "SQL", "Docker", "Kubernetes", "AWS", 
+            "Node.js", "Next.js", "Java", "C++", "Golang", "Git", "CI/CD", "HTML", "CSS", 
+            "PostgreSQL", "MongoDB", "Vue", "Angular", "Redis", "Elasticsearch", "Flask", "Django"
+        ]
+        skills = []
+        for tech in TECH_LIST:
+            if re.search(rf"\b{re.escape(tech)}\b", resume_text, re.IGNORECASE):
+                skills.append(tech)
+        if not skills:
+            skills = ["Python", "React", "TypeScript", "FastAPI", "SQL", "Docker", "Git", "CI/CD"]
+
+        # Heuristic 4: Extract education degree
+        education_degree = "Bachelor of Science in Computer Science"
+        education_institution = "State Technical University"
+        education_year = "2022"
+        for line in lines:
+            if any(kw in line.lower() for kw in ["bachelor", "b.s", "b.tech", "master", "m.s", "m.tech", "phd", "degree"]):
+                education_degree = line
+                break
+
+        # Heuristic 5: Summary
+        summary = f"Highly motivated {target_role} skilled in {', '.join(skills[:5])}. Experienced in developing clean code and robust systems architectures."
+
+        # Create structured output
+        skill_confidence = {}
+        for skill in skills:
+            skill_confidence[skill] = 85 if skill in ["Python", "React", "TypeScript", "FastAPI"] else 75
+
         return {
             "name": candidate_name,
-            "target_role": "Senior Frontend Engineer",
-            "skills": ["Python", "React", "TypeScript", "FastAPI", "SQL", "Docker", "Git", "CI/CD"],
+            "target_role": target_role,
+            "skills": skills,
             "projects": [
                 {
-                    "name": "E-Commerce Cloud Architecture",
-                    "description": "Designed and deployed a highly scalable, multi-tenant e-commerce platform using microservices.",
-                    "technologies": ["Python", "FastAPI", "Docker", "AWS"],
+                    "name": f"Advanced {skills[0]} Project" if skills else "Cloud Platform Architecture",
+                    "description": f"Designed and deployed a highly scalable application leveraging {', '.join(skills[:3])}.",
+                    "technologies": skills[:4],
                     "complexity_score": 8
                 },
                 {
-                    "name": "Interactive Next.js Dashboard",
+                    "name": f"Interactive {skills[1] if len(skills)>1 else 'Web'} Dashboard",
                     "description": "Built a real-time analytics dashboard with dynamic widgets and responsive design.",
-                    "technologies": ["TypeScript", "Next.js", "Tailwind CSS"],
+                    "technologies": skills[1:4],
                     "complexity_score": 7
                 }
             ],
             "education": [
-                {"degree": "Bachelor of Science in Computer Science", "institution": "State Technical University", "year": "2022"}
+                {"degree": education_degree, "institution": education_institution, "year": education_year}
             ],
             "certifications": ["AWS Certified Solutions Architect", "Google Cloud Associate Engineer"],
             "experience": [
                 {
-                    "role": "Full Stack Engineer",
+                    "role": target_role,
                     "company": "TechSolutions Inc.",
                     "duration": "2 years",
                     "highlights": [
-                        "Optimized backend API performance by 40% with caching.",
-                        "Led frontend redesign utilizing modern responsive components."
+                        f"Optimized application performance by 40% using {skills[0] if skills else 'modern engines'}.",
+                        f"Led engineering development utilizing {', '.join(skills[:2])}."
                     ]
                 }
             ],
             "resume_score": 85,
-            "skill_confidence": {"Python": 90, "React": 85, "TypeScript": 80, "FastAPI": 85, "SQL": 75, "Docker": 70},
-            "project_complexity": {"overall": 8, "breakdown": {"E-Commerce Cloud Architecture": 8, "Interactive Next.js Dashboard": 7}},
-            "leadership_indicators": ["Led frontend redesign", "Mentored junior developers"],
+            "skill_confidence": skill_confidence,
+            "project_complexity": {"overall": 8, "breakdown": {f"Advanced {skills[0]} Project" if skills else "Cloud Platform Architecture": 8}},
+            "leadership_indicators": ["Led engineering development", "Mentored junior developers"],
             "business_impact_score": 82,
-            "summary": f"Highly motivated Full Stack Engineer with 2+ years of experience building high-performance web applications. Skilled in modern Python backends and TypeScript frontends."
+            "summary": summary
         }
 
     elif "job description intelligence" in prompt_lower:

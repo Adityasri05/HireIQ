@@ -152,7 +152,7 @@ class EvaluationResponse(BaseModel):
     company_context: Optional[dict] = None
     war_room: Optional[dict] = None
     predictions: Optional[dict] = None
-    risks: Optional[dict] = None
+    risks: Optional[list] = None
     benchmarks: Optional[dict] = None
     learning_velocity: Optional[dict] = None
 
@@ -196,7 +196,7 @@ class DashboardResponse(BaseModel):
     skill_data: list
     trend_data: list
     predictions: Optional[dict] = None
-    risks: Optional[dict] = None
+    risks: Optional[list] = None
     benchmarks: Optional[dict] = None
     learning_velocity: Optional[dict] = None
 

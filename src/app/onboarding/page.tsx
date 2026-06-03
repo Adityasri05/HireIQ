@@ -87,9 +87,15 @@ export default function Onboarding() {
       const resData = await response.json();
       
       // Update local storage user model with newly extracted name from resume
-      if (resData.parsed_content && resData.parsed_content.name) {
-        const parsedName = resData.parsed_content.name;
-        if (parsedName !== "Candidate's Full Name") {
+      let parsed = resData.parsed_content;
+      if (parsed) {
+        if (typeof parsed === "string") {
+          try {
+            parsed = JSON.parse(parsed);
+          } catch (e) {}
+        }
+        if (parsed.name && parsed.name !== "Candidate's Full Name") {
+          const parsedName = parsed.name;
           const stored = localStorage.getItem("hireiq_user");
           if (stored) {
             const parsedUser = JSON.parse(stored);

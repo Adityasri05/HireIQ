@@ -52,6 +52,8 @@ interface MetricSummary {
 
 export default function Dashboard() {
   const [userName, setUserName] = useState<string>("Alex");
+  const [candidateRole, setCandidateRole] = useState<string>("Senior Frontend Engineer");
+  const [topSkillsList, setTopSkillsList] = useState<string[]>(["React", "TypeScript", "Docker"]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTelemetryTab, setActiveTelemetryTab] = useState<"twin" | "predictions" | "benchmarks">("twin");
   
@@ -85,13 +87,16 @@ export default function Dashboard() {
     async function loadDashboardData() {
       setIsLoading(true);
       
-      // Determine user name
+      // Determine user name and target role
       const storedUser = localStorage.getItem("hireiq_user");
       if (storedUser) {
         try {
           const userObj = JSON.parse(storedUser);
           if (userObj.name) {
             setUserName(userObj.name.split(" ")[0]);
+          }
+          if (userObj.target_role) {
+            setCandidateRole(userObj.target_role);
           }
         } catch {}
       }
@@ -106,7 +111,12 @@ export default function Dashboard() {
         const data = await response.json();
         setDashboardData(data);
         
-        if (data.hireiq_score) {
+        if (data.skill_data && data.skill_data.length > 0) {
+          const skills = data.skill_data.map((item: any) => item.subject);
+          setTopSkillsList(skills);
+        }
+        
+        if (data.hireiq_score !== undefined && data.hireiq_score !== null) {
           const score = data.hireiq_score;
           const prob = data.hire_probability;
           
@@ -118,14 +128,23 @@ export default function Dashboard() {
           ]);
 
           // Populating actual topic masteries in radar points
-          const radarPoints: SkillMetric[] = [
-            { subject: 'Technical Accuracy', A: Math.round(data.technical_score || score), fullMark: 100 },
-            { subject: 'Communication Clarity', A: Math.round(data.communication_score || score * 0.95), fullMark: 100 },
-            { subject: 'System Design', A: Math.round(data.benchmarks?.system_design_rank ? 100 - data.benchmarks.system_design_rank : 75), fullMark: 100 },
-            { subject: 'Problem Solving', A: Math.round(data.benchmarks?.problem_solving_rank ? 100 - data.benchmarks.problem_solving_rank : 85), fullMark: 100 },
-            { subject: 'Pressure Handling', A: Math.round(data.pressure_score || score * 0.9), fullMark: 100 },
-            { subject: 'Learning Velocity', A: data.learning_velocity?.growth_rate ? Math.round(data.learning_velocity.growth_rate * 4) : 85, fullMark: 100 }
-          ];
+          let radarPoints: SkillMetric[] = [];
+          if (data.skill_data && data.skill_data.length >= 3) {
+            radarPoints = data.skill_data.slice(0, 6).map((item: any) => ({
+              subject: item.subject,
+              A: Math.round(item.A),
+              fullMark: 100
+            }));
+          } else {
+            radarPoints = [
+              { subject: 'Technical Accuracy', A: Math.round(data.technical_score || score), fullMark: 100 },
+              { subject: 'Communication Clarity', A: Math.round(data.communication_score || score * 0.95), fullMark: 100 },
+              { subject: 'System Design', A: Math.round(data.benchmarks?.system_design_rank ? 100 - data.benchmarks.system_design_rank : 75), fullMark: 100 },
+              { subject: 'Problem Solving', A: Math.round(data.benchmarks?.problem_solving_rank ? 100 - data.benchmarks.problem_solving_rank : 85), fullMark: 100 },
+              { subject: 'Pressure Handling', A: Math.round(data.pressure_score || score * 0.9), fullMark: 100 },
+              { subject: 'Learning Velocity', A: data.learning_velocity?.growth_rate ? Math.round(data.learning_velocity.growth_rate * 4) : 85, fullMark: 100 }
+            ];
+          }
           setSkillsRadar(radarPoints);
 
           if (data.trend_data && data.trend_data.length > 0) {
@@ -304,9 +323,9 @@ export default function Dashboard() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="p-4 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl space-y-2">
                       <h5 className="text-xs font-bold text-[#A855F7] uppercase tracking-wider">Problem-Solving Profile</h5>
-                      <p className="text-sm text-white font-medium">{learningVelocity.profile || "Exponential Developer / High Adaptability"}</p>
+                      <p className="text-sm text-white font-medium">{learningVelocity.profile || `Adaptive ${candidateRole}`}</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
-                        Demonstrated rapid code correction and complexity scaling under progressive constraints. Highly flexible at shifting algorithm design architectures.
+                        Demonstrated strong technical logic and capability using {topSkillsList.slice(0, 4).join(", ") || "core frameworks"}. Highly flexible at shifting algorithm design architectures.
                       </p>
                     </div>
 
@@ -314,7 +333,7 @@ export default function Dashboard() {
                       <h5 className="text-xs font-bold text-[#22C55E] uppercase tracking-wider">Communication Vector</h5>
                       <p className="text-sm text-white font-medium">Structured & Clear Architectural Flow</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
-                        Answers maintain a high ratio of clear structural explanation alongside code snippets, reflecting strong architectural coordination and active listening.
+                        Answers maintain a high ratio of clear structural explanation alongside code snippets, reflecting strong architectural coordination and active communication as a {candidateRole}.
                       </p>
                     </div>
 
@@ -322,7 +341,7 @@ export default function Dashboard() {
                       <h5 className="text-xs font-bold text-[#3B82F6] uppercase tracking-wider">Learning Velocity Coefficient</h5>
                       <p className="text-sm text-white font-medium">High Growth Rate verified (+{learningVelocity.growth_rate || 18.5}%)</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
-                        Your adaptive score slope displays a steady exponential projection, indicating minimal support overhead during high-pace scaling tasks.
+                        Your adaptive score slope displays a steady exponential projection, indicating minimal support overhead during high-pace scaling tasks in {topSkillsList[0] || "relevant technical scopes"}.
                       </p>
                     </div>
 
@@ -330,7 +349,7 @@ export default function Dashboard() {
                       <h5 className="text-xs font-bold text-[#F59E0B] uppercase tracking-wider">Historical Performance Vector</h5>
                       <p className="text-sm text-white font-medium">Steady Progression</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
-                        Mastery levels increased uniformly across consecutive mocks. Core coding errors reduced by 72% between first and last iterations.
+                        Mastery levels increased uniformly across consecutive mocks. Core engineering errors reduced significantly in {topSkillsList[1] || "system design"} between first and last iterations.
                       </p>
                     </div>
                   </div>

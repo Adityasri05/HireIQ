@@ -7,6 +7,7 @@ Analyze the provided resume text and extract structured information. Be thorough
 Return a JSON object with EXACTLY this structure:
 {
   "name": "Candidate's Full Name",
+  "target_role": "Target/Current Professional Role",
   "skills": ["skill1", "skill2", ...],
   "projects": [
     {"name": "Project Name", "description": "Brief description", "technologies": ["tech1"], "complexity_score": 1-10}

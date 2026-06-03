@@ -95,6 +95,11 @@ async def get_candidate_report(
                 "hire_probability": round(e.hire_probability, 1),
                 "recommendation": e.recommendation,
                 "detailed_breakdown": e.detailed_breakdown,
+                "war_room": e.war_room,
+                "predictions": e.predictions,
+                "risks": e.risks,
+                "benchmarks": e.benchmarks,
+                "learning_velocity": e.learning_velocity,
             }
             for e in evaluations
         ],

@@ -90,8 +90,10 @@ def _generate_mock_response(system_prompt: str, user_prompt: str) -> dict:
     if "resume intelligence" in prompt_lower:
         # Try to parse user name from user prompt
         name_match = re.search(r"([A-Z][a-z]+ [A-Z][a-z]+)", user_prompt)
-        candidate_name = name_match.group(1) if name_match else "Candidate"
+        candidate_name = name_match.group(1) if name_match else "Alex Developer"
         return {
+            "name": candidate_name,
+            "target_role": "Senior Frontend Engineer",
             "skills": ["Python", "React", "TypeScript", "FastAPI", "SQL", "Docker", "Git", "CI/CD"],
             "projects": [
                 {

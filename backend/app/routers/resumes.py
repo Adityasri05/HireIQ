@@ -65,6 +65,11 @@ async def upload_resume(
         user.name = extracted_name.strip()
         db.add(user)
 
+    extracted_role = analysis.get("target_role")
+    if extracted_role and extracted_role.strip():
+        user.target_role = extracted_role.strip()
+        db.add(user)
+
     await db.commit()
     await db.refresh(resume)
     return ResumeResponse.model_validate(resume)

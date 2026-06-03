@@ -27,10 +27,10 @@ export default function Login() {
       const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/json",
         },
-        body: new URLSearchParams({
-          username: email,
+        body: JSON.stringify({
+          email: email,
           password: password,
         }),
       });

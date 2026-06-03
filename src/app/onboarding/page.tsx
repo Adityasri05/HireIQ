@@ -153,6 +153,9 @@ export default function Onboarding() {
         throw new Error("Failed to save user target profiles.");
       }
 
+      const updatedUser = await response.json();
+      localStorage.setItem("hireiq_user", JSON.stringify(updatedUser));
+
       router.push("/dashboard");
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : "An error occurred while saving setup.";

@@ -96,11 +96,6 @@ async def call_gemini(system_prompt: str, user_prompt: str, json_output: bool = 
         if json_output:
             return _generate_mock_response(system_prompt, user_prompt)
         return "Mock response: API Key not configured."
-    else:
-        # Fall back to mock on missing client (no API key configured)
-        if json_output:
-            return _generate_mock_response(system_prompt, user_prompt)
-        return "Mock response: API Key not configured."
 
 
 # ============================================================================

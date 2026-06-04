@@ -28,3 +28,20 @@ export function getAuthHeaders(contentType: string | null = "application/json"):
   }
   return headers;
 }
+
+// Auto-initialize guest credentials on module load in the browser
+if (typeof window !== "undefined") {
+  if (!localStorage.getItem("hireiq_token")) {
+    localStorage.setItem("hireiq_token", "guest-token-12345");
+    localStorage.setItem("hireiq_user", JSON.stringify({
+      id: "guest-id",
+      name: "Alex D.",
+      email: "guest@hireiq.ai",
+      role: "candidate",
+      target_role: "Frontend Engineer",
+      experience_level: "Fresher",
+      career_goals: "Master frontend frameworks and build premium user interfaces."
+    }));
+  }
+}
+

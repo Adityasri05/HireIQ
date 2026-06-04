@@ -12,7 +12,7 @@ import {
   GraduationCap,
   Users,
   Trophy,
-  LogOut
+  RotateCcw
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -49,10 +49,10 @@ export function Sidebar() {
     loadLatestResume();
   }, []);
 
-  const handleLogout = () => {
+  const handleReset = () => {
     localStorage.removeItem("hireiq_token");
     localStorage.removeItem("hireiq_user");
-    window.location.href = "/";
+    window.location.href = "/onboarding";
   };
 
   return (
@@ -95,11 +95,11 @@ export function Sidebar() {
         </div>
         
         <button 
-          onClick={handleLogout}
-          className="flex items-center justify-center space-x-2 w-full py-2 bg-[rgba(239,68,68,0.08)] hover:bg-[rgba(239,68,68,0.15)] border border-[rgba(239,68,68,0.2)] rounded-lg text-xs text-[#EF4444] transition-colors"
+          onClick={handleReset}
+          className="flex items-center justify-center space-x-2 w-full py-2 bg-[rgba(168,85,247,0.08)] hover:bg-[rgba(168,85,247,0.15)] border border-[rgba(168,85,247,0.2)] rounded-lg text-xs text-[#A855F7] transition-colors font-medium"
         >
-          <LogOut className="w-3.5 h-3.5" />
-          <span>Log Out</span>
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span>Reset Assessment</span>
         </button>
       </div>
     </aside>

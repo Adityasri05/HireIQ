@@ -28,42 +28,6 @@ const PIPELINE_STEPS = [
 
 export default function LandingPage() {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      return !!localStorage.getItem("hireiq_token");
-    }
-    return false;
-  });
-  const [userName, setUserName] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("hireiq_user");
-      if (storedUser) {
-        try {
-          const userObj = JSON.parse(storedUser);
-          if (userObj.name) {
-            return userObj.name.split(" ")[0];
-          }
-        } catch {}
-      }
-    }
-    return null;
-  });
-
-  const handleStart = () => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-    } else {
-      router.push("/onboarding");
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("hireiq_token");
-    localStorage.removeItem("hireiq_user");
-    setIsAuthenticated(false);
-    setUserName(null);
-    router.refresh();
-  };
 
   return (
     <div className="min-h-screen bg-[#09090B] text-white overflow-hidden selection:bg-[#7C3AED] selection:text-white flex flex-col justify-between">
@@ -82,39 +46,12 @@ export default function LandingPage() {
         </Link>
 
         <nav className="flex items-center space-x-4">
-          {isAuthenticated ? (
-            <div className="flex items-center space-x-4">
-              <span className="text-sm text-gray-400 hidden sm:inline">Signed in as <strong className="text-white">{userName}</strong></span>
-              <Link 
-                href="/dashboard"
-                className="px-4 py-2 bg-[rgba(124,58,237,0.1)] hover:bg-[rgba(124,58,237,0.2)] border border-[rgba(124,58,237,0.2)] rounded-lg text-sm text-[#A855F7] font-semibold transition-all"
-              >
-                Dashboard
-              </Link>
-              <button 
-                onClick={handleLogout}
-                className="p-2 text-gray-400 hover:text-[#EF4444] transition-colors rounded-lg"
-                title="Log Out"
-              >
-                <LogOut className="w-5 h-5" />
-              </button>
-            </div>
-          ) : (
-            <div className="flex items-center space-x-3">
-              <Link 
-                href="/login"
-                className="px-4 py-2 hover:bg-[rgba(255,255,255,0.05)] rounded-lg text-sm text-gray-300 hover:text-white transition-all"
-              >
-                Log In
-              </Link>
-              <Link 
-                href="/signup"
-                className="px-5 py-2.5 bg-[#7C3AED] hover:bg-[#6D28D9] rounded-lg text-sm text-white font-medium transition-all shadow-[0_0_15px_rgba(124,58,237,0.2)] hover:shadow-[0_0_20px_rgba(124,58,237,0.3)]"
-              >
-                Sign Up
-              </Link>
-            </div>
-          )}
+          <Link 
+            href="/dashboard"
+            className="px-5 py-2.5 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#6D28D9] hover:to-[#9333EA] rounded-lg text-sm text-white font-medium transition-all shadow-[0_0_15px_rgba(124,58,237,0.2)] hover:shadow-[0_0_20px_rgba(124,58,237,0.3)]"
+          >
+            Go to Dashboard
+          </Link>
         </nav>
       </header>
 
@@ -154,16 +91,18 @@ export default function LandingPage() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
           >
             <button 
-              onClick={handleStart}
+              onClick={() => router.push("/dashboard")}
               className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#6D28D9] hover:to-[#9333EA] text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] flex items-center justify-center space-x-2 group"
             >
-              <span>{isAuthenticated ? "Go to Dashboard" : "Start AI Interview"}</span>
+              <span>Go to Dashboard</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
             
-            <button className="w-full sm:w-auto px-8 py-4 glass hover:bg-[rgba(255,255,255,0.05)] rounded-xl font-medium transition-all flex items-center justify-center space-x-2">
-              <PlayCircle className="w-5 h-5 text-gray-400" />
-              <span>Watch Demo</span>
+            <button 
+              onClick={() => router.push("/onboarding")}
+              className="w-full sm:w-auto px-8 py-4 glass hover:bg-[rgba(255,255,255,0.05)] rounded-xl font-medium transition-all flex items-center justify-center space-x-2"
+            >
+              <span>Restart Setup / Upload Resume</span>
             </button>
           </motion.div>
         </div>

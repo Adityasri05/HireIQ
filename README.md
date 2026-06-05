@@ -153,11 +153,16 @@ HIREVIUM is designed for out-of-the-box deployment to **Railway** using a double
 
 
 
-## Demo Video
+## Demo Pictures
 
 
 
-https://github.com/user-attachments/assets/419801dd-a54d-4a48-9aaa-d6fb620bb375
+
+<img width="960" height="448" alt="Screenshot 2026-06-05 204642" src="https://github.com/user-attachments/assets/c7a1c18e-7902-48cf-970a-d53b6d1107b5" />
 
 
+
+
+
+<img width="960" height="449" alt="Screenshot 2026-06-05 204657" src="https://github.com/user-attachments/assets/f39fa47c-2705-4f22-84d0-05aa61332d45" />
 

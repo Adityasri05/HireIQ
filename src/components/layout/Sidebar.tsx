@@ -14,7 +14,6 @@ import {
   GraduationCap,
   Users,
   Trophy,
-  RotateCcw,
   LogOut
 } from "lucide-react";
 
@@ -52,11 +51,6 @@ export function Sidebar() {
     loadLatestResume();
   }, []);
 
-  const handleReset = () => {
-    localStorage.removeItem("hireiq_token");
-    localStorage.removeItem("hireiq_user");
-    window.location.href = "/onboarding";
-  };
 
   const handleSignOut = async () => {
     try {
@@ -108,14 +102,6 @@ export function Sidebar() {
           <p className="text-xl font-bold text-white">{iqScore}<span className="text-sm text-gray-500">/100</span></p>
         </div>
         
-        <button 
-          onClick={handleReset}
-          className="flex items-center justify-center space-x-2 w-full py-2 bg-[rgba(168,85,247,0.08)] hover:bg-[rgba(168,85,247,0.15)] border border-[rgba(168,85,247,0.2)] rounded-lg text-xs text-[#A855F7] transition-colors font-medium"
-        >
-          <RotateCcw className="w-3.5 h-3.5" />
-          <span>Reset Assessment</span>
-        </button>
-
         <button 
           onClick={handleSignOut}
           className="flex items-center justify-center space-x-2 w-full py-2 bg-[rgba(239,68,68,0.08)] hover:bg-[rgba(239,68,68,0.15)] border border-[rgba(239,68,68,0.2)] rounded-lg text-xs text-[#EF4444] transition-colors font-medium"

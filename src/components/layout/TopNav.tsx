@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Search, User, Check, Trash2, FileText, Trophy, GraduationCap, ChevronDown, RefreshCw, LogOut } from "lucide-react";
+import { Bell, Search, User, Check, Trash2, FileText, Trophy, GraduationCap, ChevronDown, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import { API_BASE_URL, getAuthHeaders } from "@/utils/api";
 import { auth } from "@/utils/firebase";
@@ -140,11 +140,6 @@ export function TopNav() {
     setNotifications([]);
   };
 
-  const handleReset = () => {
-    localStorage.removeItem("hireiq_token");
-    localStorage.removeItem("hireiq_user");
-    window.location.href = "/onboarding";
-  };
 
   const handleSignOut = async () => {
     try {
@@ -324,15 +319,8 @@ export function TopNav() {
                 </Link>
               </div>
 
-              {/* Reset Section */}
-              <div className="p-2 border-t border-[rgba(255,255,255,0.08)] bg-[#0F0F13] space-y-1">
-                <button 
-                  onClick={handleReset}
-                  className="flex items-center space-x-2.5 w-full px-3 py-2 text-xs text-[#EF4444] hover:text-[#FF6B6B] rounded-lg hover:bg-[rgba(239,68,68,0.08)] transition-colors text-left font-medium"
-                >
-                  <RefreshCw className="w-4 h-4" />
-                  <span>Reset & Restart Setup</span>
-                </button>
+              {/* Sign Out Section */}
+              <div className="p-2 border-t border-[rgba(255,255,255,0.08)] bg-[#0F0F13]">
                 <button 
                   onClick={handleSignOut}
                   className="flex items-center space-x-2.5 w-full px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors text-left font-medium"

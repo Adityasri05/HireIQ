@@ -82,14 +82,14 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090B] text-white overflow-hidden selection:bg-[#7C3AED] selection:text-white flex flex-col justify-between relative">
+    <div className="min-h-screen bg-background text-white overflow-hidden selection:bg-primary selection:text-white flex flex-col justify-between relative">
       {/* Background Gradients */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] opacity-20 pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#7C3AED] blur-[120px] rounded-full"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary blur-[120px] rounded-full"></div>
       </div>
 
       {/* Premium Sticky Navigation Header */}
-      <header className="fixed top-0 left-0 w-full h-20 border-b border-[rgba(255,255,255,0.05)] bg-[#09090B]/60 backdrop-blur-lg z-50 flex items-center px-6 md:px-12 justify-between">
+      <header className="fixed top-0 left-0 w-full h-20 border-b border-border/65 bg-background/60 backdrop-blur-lg z-50 flex items-center px-6 md:px-12 justify-between">
         <Link href="/" className="flex items-center space-x-2.5">
           <img src="/logo.png" alt="Hirevium Logo" className="w-9 h-9 object-contain" />
           <span className="text-2xl font-bold tracking-tighter text-gradient-primary">HIREVIUM</span>
@@ -98,13 +98,13 @@ export default function LandingPage() {
         <nav className="flex items-center space-x-4">
           {isLoggedIn ? (
             <>
-              <div className="hidden md:flex items-center space-x-2 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-lg">
+              <div className="hidden md:flex items-center space-x-2 bg-white/5 border border-border px-3.5 py-1.5 rounded-lg">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 <span className="text-xs text-gray-300 font-medium">Logged in as {user?.name || "User"}</span>
               </div>
               <Link 
                 href="/dashboard"
-                className="px-5 py-2.5 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#6D28D9] hover:to-[#9333EA] rounded-lg text-sm text-white font-medium transition-all shadow-[0_0_15px_rgba(124,58,237,0.2)] hover:shadow-[0_0_20px_rgba(124,58,237,0.3)]"
+                className="px-5 py-2.5 bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-secondary-hover rounded-lg text-sm text-white font-medium transition-all shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)] hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]"
               >
                 Go to Dashboard
               </Link>
@@ -126,13 +126,13 @@ export default function LandingPage() {
               </button>
               <button
                 onClick={() => openAuthDrawer("signup")}
-                className="px-4 py-2.5 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#6D28D9] hover:to-[#9333EA] rounded-lg text-sm text-white font-semibold transition-all shadow-[0_0_15px_rgba(124,58,237,0.2)] hover:shadow-[0_0_20px_rgba(124,58,237,0.3)] cursor-pointer"
+                className="px-4 py-2.5 bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-secondary-hover rounded-lg text-sm text-white font-semibold transition-all shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)] hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] cursor-pointer"
               >
                 Sign Up
               </button>
               <Link 
                 href="/dashboard"
-                className="hidden sm:block px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm text-gray-300 hover:text-white font-medium transition-all"
+                className="hidden sm:block px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-border rounded-lg text-sm text-gray-300 hover:text-white font-medium transition-all"
               >
                 Explore as Guest
               </Link>
@@ -150,8 +150,8 @@ export default function LandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-6 border-[rgba(124,58,237,0.3)]">
-              <span className="w-2 h-2 rounded-full bg-[#A855F7] animate-pulse"></span>
+            <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-6 border-primary/30">
+              <span className="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
               <span className="text-sm text-gray-300">Hirevium Engine v2.0 is Live</span>
             </div>
             
@@ -179,7 +179,7 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
               <button 
                 onClick={() => router.push("/dashboard")}
-                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#6D28D9] hover:to-[#9333EA] text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] flex items-center justify-center space-x-2 group cursor-pointer"
+                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-secondary-hover text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)] flex items-center justify-center space-x-2 group cursor-pointer"
               >
                 <span>Go to Dashboard</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -189,7 +189,7 @@ export default function LandingPage() {
                 href="https://drive.google.com/file/d/1RSe8G2MIO35S5cvdgyJYIchHwMMtlLNC/view?usp=drivesdk"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto px-8 py-4 glass hover:bg-[rgba(255,255,255,0.05)] rounded-xl font-medium transition-all flex items-center justify-center space-x-2 cursor-pointer"
+                className="w-full sm:w-auto px-8 py-4 glass hover:bg-white/5 rounded-xl font-medium transition-all flex items-center justify-center space-x-2 cursor-pointer"
               >
                 <PlayCircle className="w-5 h-5 text-gray-400" />
                 <span>Video Demo</span>
@@ -199,9 +199,9 @@ export default function LandingPage() {
             {!isLoggedIn && (
               <p className="text-xs text-gray-400">
                 Running in Guest Mode.{" "}
-                <button onClick={() => openAuthDrawer("signin")} className="text-[#A855F7] hover:text-[#9333EA] hover:underline font-semibold cursor-pointer">Sign In</button>
+                <button onClick={() => openAuthDrawer("signin")} className="text-secondary hover:text-secondary-hover hover:underline font-semibold cursor-pointer">Sign In</button>
                 {" "}or{" "}
-                <button onClick={() => openAuthDrawer("signup")} className="text-[#A855F7] hover:text-[#9333EA] hover:underline font-semibold cursor-pointer">Sign Up</button>
+                <button onClick={() => openAuthDrawer("signup")} className="text-secondary hover:text-secondary-hover hover:underline font-semibold cursor-pointer">Sign Up</button>
                 {" "}to save progress permanently.
               </p>
             )}
@@ -215,7 +215,7 @@ export default function LandingPage() {
           transition={{ duration: 1, delay: 0.8 }}
           className="mt-24 mb-32 relative"
         >
-          <div className="absolute top-1/2 left-0 w-full h-1 bg-[rgba(255,255,255,0.05)] -translate-y-1/2 rounded-full hidden md:block"></div>
+          <div className="absolute top-1/2 left-0 w-full h-1 bg-white/5 -translate-y-1/2 rounded-full hidden md:block"></div>
           
           <div className="grid grid-cols-2 md:grid-cols-6 gap-6 relative">
             {PIPELINE_STEPS.map((step, index) => {
@@ -226,9 +226,9 @@ export default function LandingPage() {
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 1 + index * 0.15, type: "spring" }}
-                    className="w-16 h-16 rounded-2xl glass-glow bg-[#111827] border border-[rgba(124,58,237,0.3)] flex items-center justify-center relative z-10 mb-4"
+                    className="w-16 h-16 rounded-2xl glass-glow bg-card border border-primary/30 flex items-center justify-center relative z-10 mb-4"
                   >
-                    <Icon className={`w-7 h-7 ${index === 5 ? 'text-[#22C55E]' : 'text-[#A855F7]'}`} />
+                    <Icon className={`w-7 h-7 ${index === 5 ? 'text-[#22C55E]' : 'text-secondary'}`} />
                   </motion.div>
                   <p className="text-center text-sm font-medium text-gray-300 max-w-[100px]">
                     {step.title}
@@ -244,13 +244,13 @@ export default function LandingPage() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 py-16 border-y border-[rgba(255,255,255,0.05)]"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 py-16 border-y border-border/65"
         >
           <div className="text-center space-y-2">
             <h3 className="text-4xl md:text-5xl font-bold text-white">10,000+</h3>
             <p className="text-gray-400 font-medium">Interviews Completed</p>
           </div>
-          <div className="text-center space-y-2 border-y md:border-y-0 md:border-x border-[rgba(255,255,255,0.05)] py-8 md:py-0">
+          <div className="text-center space-y-2 border-y md:border-y-0 md:border-x border-border/65 py-8 md:py-0">
             <h3 className="text-4xl md:text-5xl font-bold text-white">50,000+</h3>
             <p className="text-gray-400 font-medium">Questions Evaluated</p>
           </div>

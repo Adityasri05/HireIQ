@@ -259,7 +259,7 @@ export default function RecruiterWorkspace() {
           <p className="text-gray-400 mt-1">Manage candidates, analyze talent pipelines, and review AI hiring recommendations.</p>
         </div>
         <div className="flex items-center space-x-3">
-          <button className="px-4 py-2 glass hover:bg-[rgba(255,255,255,0.05)] rounded-lg text-sm text-white transition-colors flex items-center space-x-2">
+          <button className="px-4 py-2 glass hover:bg-white/5 rounded-lg text-sm text-white transition-colors flex items-center space-x-2">
             <Filter className="w-4 h-4" />
             <span>Filter</span>
           </button>
@@ -268,21 +268,21 @@ export default function RecruiterWorkspace() {
 
       {/* Recruiter Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="glass p-6 rounded-xl border border-[rgba(255,255,255,0.05)]">
+        <div className="glass p-6 rounded-xl border border-border/65">
           <p className="text-gray-400 text-sm mb-1">Active Pipeline</p>
           <div className="flex items-end space-x-3">
             <h3 className="text-3xl font-bold text-white">{filteredCandidates.length + 120}</h3>
             <span className="text-sm text-[#22C55E] flex items-center mb-1"><TrendingUp className="w-4 h-4 mr-1"/> +12%</span>
           </div>
         </div>
-        <div className="glass p-6 rounded-xl border border-[rgba(255,255,255,0.05)]">
+        <div className="glass p-6 rounded-xl border border-border/65">
           <p className="text-gray-400 text-sm mb-1">Strong Hires Identified</p>
           <div className="flex items-end space-x-3">
             <h3 className="text-3xl font-bold text-white">18</h3>
             <span className="text-sm text-gray-400 mb-1">This Month</span>
           </div>
         </div>
-        <div className="glass p-6 rounded-xl border border-[rgba(255,255,255,0.05)] bg-[rgba(34,197,94,0.05)] border-[#22C55E]/30">
+        <div className="glass p-6 rounded-xl border border-border/65 bg-[rgba(34,197,94,0.05)] border-[#22C55E]/30">
           <p className="text-gray-400 text-sm mb-1">Time to Screen (Avg)</p>
           <div className="flex items-end space-x-3">
             <h3 className="text-3xl font-bold text-white">4.2m</h3>
@@ -296,9 +296,9 @@ export default function RecruiterWorkspace() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="glass rounded-xl border border-[rgba(255,255,255,0.05)] overflow-hidden"
+          className="glass rounded-xl border border-border/65 overflow-hidden"
         >
-          <div className="p-6 border-b border-[rgba(255,255,255,0.05)] bg-[#111827] flex items-center justify-between">
+          <div className="p-6 border-b border-border/65 bg-card flex items-center justify-between">
             <h3 className="font-semibold text-white">Top Ranked Candidates</h3>
             <div className="relative w-64">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -307,7 +307,7 @@ export default function RecruiterWorkspace() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by name or skill..." 
-                className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.1)] rounded-lg pl-10 pr-4 py-1.5 text-sm text-gray-300 focus:outline-none focus:border-[#22C55E]"
+                className="w-full bg-background border border-border rounded-lg pl-10 pr-4 py-1.5 text-sm text-gray-300 focus:outline-none focus:border-[#22C55E]"
               />
             </div>
           </div>
@@ -320,7 +320,7 @@ export default function RecruiterWorkspace() {
               </div>
             ) : (
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-gray-400 uppercase bg-[#09090B]">
+                <thead className="text-xs text-gray-400 uppercase bg-background">
                   <tr>
                     <th className="px-6 py-4 font-medium">Candidate</th>
                     <th className="px-6 py-4 font-medium">Target Role</th>
@@ -335,13 +335,13 @@ export default function RecruiterWorkspace() {
                     <tr 
                       key={candidate.id} 
                       onClick={() => setSelectedCandId(candidate.id)}
-                      className={`hover:bg-[rgba(255,255,255,0.02)] cursor-pointer transition-colors ${
+                      className={`hover:bg-white/2 cursor-pointer transition-colors ${
                         selectedCandId === candidate.id ? "bg-[rgba(34,197,94,0.03)] border-l-2 border-[#22C55E]" : ""
                       }`}
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#3B82F6] to-[#A855F7] flex items-center justify-center text-xs font-bold text-white">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#3B82F6] to-secondary flex items-center justify-center text-xs font-bold text-white">
                             {candidate.name.substring(0, 2).toUpperCase()}
                           </div>
                           <div>
@@ -357,7 +357,7 @@ export default function RecruiterWorkspace() {
                       <td className="px-6 py-4">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium border ${
                           candidate.score > 90 ? "bg-[rgba(34,197,94,0.1)] text-[#22C55E] border-[rgba(34,197,94,0.2)]" :
-                          candidate.score > 80 ? "bg-[rgba(168,85,247,0.1)] text-[#A855F7] border-[rgba(168,85,247,0.2)]" :
+                          candidate.score > 80 ? "bg-[rgba(var(--secondary-rgb),0.1)] text-secondary border-[rgba(var(--secondary-rgb),0.2)]" :
                           "bg-[rgba(245,158,11,0.1)] text-[#F59E0B] border-[rgba(245,158,11,0.2)]"
                         }`}>
                           {candidate.status}
@@ -371,10 +371,10 @@ export default function RecruiterWorkspace() {
                       </td>
                       <td className="px-6 py-4 text-right" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-end space-x-2">
-                          <a href={`mailto:${candidate.email}`} className="p-1.5 text-gray-400 hover:text-white hover:bg-[rgba(255,255,255,0.05)] rounded transition-colors" title="Message Candidate">
+                          <a href={`mailto:${candidate.email}`} className="p-1.5 text-gray-400 hover:text-white hover:bg-white/5 rounded transition-colors" title="Message Candidate">
                             <Mail className="w-4 h-4" />
                           </a>
-                          <button className="p-1.5 text-gray-400 hover:text-white hover:bg-[rgba(255,255,255,0.05)] rounded transition-colors">
+                          <button className="p-1.5 text-gray-400 hover:text-white hover:bg-white/5 rounded transition-colors">
                             <MoreVertical className="w-4 h-4" />
                           </button>
                         </div>
@@ -406,7 +406,7 @@ export default function RecruiterWorkspace() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-[100vw] sm:w-[500px] md:w-[600px] bg-[#09090B] border-l border-[rgba(255,255,255,0.05)] shadow-2xl z-50 overflow-y-auto flex flex-col"
+              className="fixed top-0 right-0 h-full w-[100vw] sm:w-[500px] md:w-[600px] bg-background border-l border-border/65 shadow-2xl z-50 overflow-y-auto flex flex-col"
             >
               {isLoadingReport ? (
                 <div className="flex-1 flex flex-col items-center justify-center space-y-4 p-8">
@@ -416,13 +416,13 @@ export default function RecruiterWorkspace() {
               ) : reportDetails ? (
                 <>
                   {/* Header */}
-                  <div className="p-6 border-b border-[rgba(255,255,255,0.05)] bg-[#111827] flex items-center justify-between">
+                  <div className="p-6 border-b border-border/65 bg-card flex items-center justify-between">
                     <div>
                       <h2 className="text-xl font-bold text-white flex items-center space-x-2">
                         <span>{reportDetails.candidate.name}</span>
                         <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
                           (reportDetails.evaluations[0]?.hirevium_score || 75) > 90 ? "bg-[rgba(34,197,94,0.15)] text-[#22C55E]" :
-                          (reportDetails.evaluations[0]?.hirevium_score || 75) > 80 ? "bg-[rgba(168,85,247,0.15)] text-[#A855F7]" :
+                          (reportDetails.evaluations[0]?.hirevium_score || 75) > 80 ? "bg-[rgba(var(--secondary-rgb),0.15)] text-secondary" :
                           "bg-[rgba(245,158,11,0.15)] text-[#F59E0B]"
                         }`}>
                           {reportDetails.evaluations[0]?.recommendation || "Borderline"}
@@ -436,14 +436,14 @@ export default function RecruiterWorkspace() {
                     </div>
                     <button 
                       onClick={() => setSelectedCandId(null)}
-                      className="p-1.5 text-gray-400 hover:text-white hover:bg-[rgba(255,255,255,0.05)] rounded-lg transition-colors"
+                      className="p-1.5 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
                     >
                       <X className="w-5 h-5" />
                     </button>
                   </div>
 
                   {/* Tabs */}
-                  <div className="flex border-b border-[rgba(255,255,255,0.05)] bg-[#0C0C0E]">
+                  <div className="flex border-b border-border/65 bg-[#0C0C0E]">
                     <button 
                       onClick={() => setActiveTab("committee")}
                       className={`flex-1 py-3 text-sm font-semibold border-b-2 transition-colors ${
@@ -467,8 +467,8 @@ export default function RecruiterWorkspace() {
                     {activeTab === "committee" ? (
                       <>
                         {/* Panel description */}
-                        <div className="p-4 bg-[rgba(124,58,237,0.05)] border border-[#7C3AED]/20 rounded-lg flex items-start space-x-3">
-                          <Zap className="w-5 h-5 text-[#A855F7] mt-0.5 flex-shrink-0" />
+                        <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg flex items-start space-x-3">
+                          <Zap className="w-5 h-5 text-secondary mt-0.5 flex-shrink-0" />
                           <p className="text-xs text-gray-300 leading-relaxed">
                             <strong>AI Hiring War Room Verdict:</strong> Four specialized evaluators reviewed the candidate&apos;s answer trajectory, architectural accuracy, and response time metrics. Here is the committee consensus.
                           </p>
@@ -479,11 +479,11 @@ export default function RecruiterWorkspace() {
                           {Object.entries(reportDetails.evaluations[0]?.war_room || {}).map(([key, value]: [string, any]) => {
                             const nameMap: any = {
                               technical_lead: { name: "Technical Lead", color: "text-[#3B82F6]", border: "border-[#3B82F6]/20", bg: "bg-[#3B82F6]/5" },
-                              engineering_manager: { name: "Engineering Manager", color: "text-[#A855F7]", border: "border-[#A855F7]/20", bg: "bg-[#A855F7]/5" },
+                              engineering_manager: { name: "Engineering Manager", color: "text-secondary", border: "border-secondary/20", bg: "bg-secondary/5" },
                               recruiter: { name: "Lead Recruiter", color: "text-[#22C55E]", border: "border-[#22C55E]/20", bg: "bg-[#22C55E]/5" },
                               vp_engineering: { name: "VP of Engineering", color: "text-[#F59E0B]", border: "border-[#F59E0B]/20", bg: "bg-[#F59E0B]/5" }
                             };
-                            const design = nameMap[key] || { name: key, color: "text-white", border: "border-[rgba(255,255,255,0.05)]", bg: "bg-[rgba(255,255,255,0.02)]" };
+                            const design = nameMap[key] || { name: key, color: "text-white", border: "border-border/65", bg: "bg-white/2" };
                             return (
                               <div key={key} className={`p-4 rounded-xl border ${design.border} ${design.bg} space-y-3`}>
                                 <div className="flex items-center justify-between">
@@ -493,7 +493,7 @@ export default function RecruiterWorkspace() {
                                     <span className={`text-xs px-2 py-0.5 rounded font-medium border ${
                                       value.recommendation.includes("Strong") ? "bg-[rgba(34,197,94,0.1)] text-[#22C55E] border-[#22C55E]/20" :
                                       value.recommendation.includes("Needs") ? "bg-[rgba(245,158,11,0.1)] text-[#F59E0B] border-[#F59E0B]/20" :
-                                      "bg-[rgba(124,58,237,0.1)] text-[#A855F7] border-[#7C3AED]/20"
+                                      "bg-primary/10 text-secondary border-primary/20"
                                     }`}>
                                       {value.recommendation}
                                     </span>
@@ -513,9 +513,9 @@ export default function RecruiterWorkspace() {
                         {/* Metrics tab content */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           {/* Digital Twin Radar */}
-                          <div className="glass rounded-xl p-4 border border-[rgba(255,255,255,0.05)] flex flex-col items-center">
+                          <div className="glass rounded-xl p-4 border border-border/65 flex flex-col items-center">
                             <h4 className="font-semibold text-white text-xs mb-4 flex items-center space-x-2 self-start">
-                              <Compass className="w-4 h-4 text-[#A855F7]" />
+                              <Compass className="w-4 h-4 text-secondary" />
                               <span>Digital Twin Analysis</span>
                             </h4>
                             <div className="h-[180px] w-full max-w-[200px]">
@@ -536,7 +536,7 @@ export default function RecruiterWorkspace() {
                           </div>
 
                           {/* Success Predictions */}
-                          <div className="glass rounded-xl p-4 border border-[rgba(255,255,255,0.05)] space-y-4">
+                          <div className="glass rounded-xl p-4 border border-border/65 space-y-4">
                             <h4 className="font-semibold text-white text-xs flex items-center space-x-2">
                               <PieChart className="w-4 h-4 text-[#3B82F6]" />
                               <span>Success Predictions</span>
@@ -545,14 +545,14 @@ export default function RecruiterWorkspace() {
                               {[
                                 { title: "Offer Probability", value: reportDetails.evaluations[0]?.predictions?.offer_probability || 70, color: "bg-[#22C55E]" },
                                 { title: "90-Day Performance", value: reportDetails.evaluations[0]?.predictions?.success_90_day || 75, color: "bg-[#3B82F6]" },
-                                { title: "Retention Rate", value: reportDetails.evaluations[0]?.predictions?.retention_probability || 80, color: "bg-[#A855F7]" }
+                                { title: "Retention Rate", value: reportDetails.evaluations[0]?.predictions?.retention_probability || 80, color: "bg-secondary" }
                               ].map((pred) => (
                                 <div key={pred.title} className="space-y-1">
                                   <div className="flex justify-between text-xs text-gray-400">
                                     <span>{pred.title}</span>
                                     <span className="font-bold text-white">{pred.value}%</span>
                                   </div>
-                                  <div className="w-full bg-[#111827] h-2 rounded-full overflow-hidden border border-[rgba(255,255,255,0.05)]">
+                                  <div className="w-full bg-card h-2 rounded-full overflow-hidden border border-border/65">
                                     <div className={`${pred.color} h-full rounded-full`} style={{ width: `${pred.value}%` }} />
                                   </div>
                                 </div>
@@ -562,7 +562,7 @@ export default function RecruiterWorkspace() {
                         </div>
 
                         {/* Risks & Warnings warnings banner */}
-                        <div className="glass p-4 rounded-xl border border-[rgba(255,255,255,0.05)] space-y-3">
+                        <div className="glass p-4 rounded-xl border border-border/65 space-y-3">
                           <h4 className="font-semibold text-white text-xs flex items-center space-x-2">
                             <AlertTriangle className="w-4 h-4 text-[#F59E0B]" />
                             <span>Recruiter Alert Warning System</span>
@@ -580,7 +580,7 @@ export default function RecruiterWorkspace() {
                         </div>
 
                         {/* Talent Benchmarking percentile rank */}
-                        <div className="glass p-4 rounded-xl border border-[rgba(255,255,255,0.05)] space-y-3">
+                        <div className="glass p-4 rounded-xl border border-border/65 space-y-3">
                           <h4 className="font-semibold text-white text-xs flex items-center space-x-2">
                             <UserCheck className="w-4 h-4 text-[#22C55E]" />
                             <span>Global Talent Market Benchmarks</span>
@@ -589,11 +589,11 @@ export default function RecruiterWorkspace() {
                             Candidate scores mapped relative to the top 20% global engineering benchmarks:
                           </p>
                           <div className="grid grid-cols-2 gap-4 text-xs">
-                            <div className="p-3 bg-[#111827] rounded-lg border border-[rgba(255,255,255,0.03)] text-center">
+                            <div className="p-3 bg-card rounded-lg border border-[rgba(255,255,255,0.03)] text-center">
                               <p className="text-gray-400">Problem Solving</p>
                               <p className="text-lg font-bold text-white mt-1">Top {reportDetails.evaluations[0]?.benchmarks?.problem_solving_rank || 15}%</p>
                             </div>
-                            <div className="p-3 bg-[#111827] rounded-lg border border-[rgba(255,255,255,0.03)] text-center">
+                            <div className="p-3 bg-card rounded-lg border border-[rgba(255,255,255,0.03)] text-center">
                               <p className="text-gray-400">System Architecture</p>
                               <p className="text-lg font-bold text-white mt-1">Top {reportDetails.evaluations[0]?.benchmarks?.system_design_rank || 20}%</p>
                             </div>

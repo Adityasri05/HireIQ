@@ -89,7 +89,7 @@ export function Copilot() {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-r from-[#7C3AED] to-[#A855F7] text-white shadow-[0_8px_32px_rgba(124,58,237,0.4)] hover:shadow-[0_8px_32px_rgba(124,58,237,0.6)] transition-all z-40 ${
+        className={`fixed bottom-6 right-6 p-4 rounded-full bg-gradient-to-r from-primary to-secondary text-white shadow-[0_8px_32px_rgba(var(--primary-rgb),0.4)] hover:shadow-[0_8px_32px_rgba(var(--primary-rgb),0.6)] transition-all z-40 ${
           isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"
         }`}
       >
@@ -104,19 +104,19 @@ export function Copilot() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 400, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-screen w-80 md:w-96 bg-[#09090B] border-l border-[rgba(255,255,255,0.08)] shadow-2xl z-50 flex flex-col"
+            className="fixed top-0 right-0 h-screen w-80 md:w-96 bg-background border-l border-border shadow-2xl z-50 flex flex-col"
           >
             {/* Header */}
-            <div className="h-16 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between px-4 bg-[#111827]">
+            <div className="h-16 border-b border-border flex items-center justify-between px-4 bg-card">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center shadow-[0_0_10px_rgba(124,58,237,0.5)]">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]">
                   <Sparkles className="w-4 h-4 text-white" />
                 </div>
                 <span className="font-semibold text-white">AI Copilot</span>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-2 text-gray-400 hover:text-white hover:bg-[rgba(255,255,255,0.05)] rounded-full transition-colors"
+                className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-full transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -134,7 +134,7 @@ export function Copilot() {
                   <div
                     className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center ${
                       msg.role === "assistant"
-                        ? "bg-gradient-to-tr from-[#7C3AED] to-[#A855F7]"
+                        ? "bg-gradient-to-tr from-primary to-secondary"
                         : "bg-gray-700"
                     }`}
                   >
@@ -147,8 +147,8 @@ export function Copilot() {
                   <div
                     className={`p-3 rounded-2xl text-sm max-w-[80%] ${
                       msg.role === "assistant"
-                        ? "bg-[#111827] border border-[rgba(255,255,255,0.05)] text-gray-300 rounded-tl-none"
-                        : "bg-[#7C3AED] text-white rounded-tr-none"
+                        ? "bg-card border border-border/65 text-gray-300 rounded-tl-none"
+                        : "bg-primary text-white rounded-tr-none"
                     }`}
                   >
                     <p className="whitespace-pre-line leading-relaxed">{msg.content}</p>
@@ -158,10 +158,10 @@ export function Copilot() {
 
               {isLoading && (
                 <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex-shrink-0 flex items-center justify-center animate-spin">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex-shrink-0 flex items-center justify-center animate-spin">
                     <Loader2 className="w-4 h-4 text-white" />
                   </div>
-                  <div className="bg-[#111827] border border-[rgba(255,255,255,0.05)] p-3 rounded-2xl rounded-tl-none text-sm text-gray-400 italic">
+                  <div className="bg-card border border-border/65 p-3 rounded-2xl rounded-tl-none text-sm text-gray-400 italic">
                     Thinking...
                   </div>
                 </div>
@@ -177,7 +177,7 @@ export function Copilot() {
                     <button
                       key={idx}
                       onClick={() => handleSend(sug)}
-                      className="flex items-center justify-between w-full p-2 text-left text-xs bg-[rgba(124,58,237,0.08)] hover:bg-[rgba(124,58,237,0.15)] border border-[rgba(124,58,237,0.15)] rounded-lg text-[#A855F7] transition-all duration-200"
+                      className="flex items-center justify-between w-full p-2 text-left text-xs bg-primary/8 hover:bg-primary/15 border border-[rgba(var(--primary-rgb),0.15)] rounded-lg text-secondary transition-all duration-200"
                     >
                       <span>{sug}</span>
                       <ChevronRight className="w-3 h-3 flex-shrink-0 ml-2" />
@@ -188,7 +188,7 @@ export function Copilot() {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 border-t border-[rgba(255,255,255,0.08)] bg-[#111827]">
+            <div className="p-4 border-t border-border bg-card">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -202,12 +202,12 @@ export function Copilot() {
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask me anything..."
                   disabled={isLoading}
-                  className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.1)] rounded-xl pl-4 pr-12 py-3 text-sm text-white focus:outline-none focus:border-[#7C3AED] transition-all disabled:opacity-50"
+                  className="w-full bg-background border border-border rounded-xl pl-4 pr-12 py-3 text-sm text-white focus:outline-none focus:border-primary transition-all disabled:opacity-50"
                 />
                 <button
                   type="submit"
                   disabled={isLoading || !input.trim()}
-                  className="absolute right-2 p-1.5 bg-[#7C3AED] hover:bg-[#6D28D9] disabled:bg-gray-800 text-white rounded-lg transition-colors"
+                  className="absolute right-2 p-1.5 bg-primary hover:bg-primary-hover disabled:bg-gray-800 text-white rounded-lg transition-colors"
                 >
                   <Send className="w-4 h-4" />
                 </button>

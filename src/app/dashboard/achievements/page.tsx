@@ -57,9 +57,9 @@ export default function Achievements() {
       title: "Smooth Talker",
       description: "Scored 95%+ in Communication.",
       icon: Star,
-      color: "text-[#A855F7]",
-      bg: "bg-[#A855F7]/10",
-      border: "border-[#A855F7]/20"
+      color: "text-secondary",
+      bg: "bg-secondary/10",
+      border: "border-secondary/20"
     },
     {
       id: "ice_veins",
@@ -141,8 +141,8 @@ export default function Achievements() {
       </div>
 
       {isLoading ? (
-        <div className="glass rounded-xl p-12 border border-[rgba(255,255,255,0.05)] flex flex-col items-center justify-center space-y-4">
-          <Loader2 className="w-8 h-8 text-[#A855F7] animate-spin" />
+        <div className="glass rounded-xl p-12 border border-border/65 flex flex-col items-center justify-center space-y-4">
+          <Loader2 className="w-8 h-8 text-secondary animate-spin" />
           <p className="text-gray-400 text-sm italic">Loading your achievements profile...</p>
         </div>
       ) : (
@@ -152,7 +152,7 @@ export default function Achievements() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="glass p-6 rounded-2xl relative overflow-hidden border border-[rgba(255,255,255,0.05)]"
+              className="glass p-6 rounded-2xl relative overflow-hidden border border-border/65"
             >
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-full bg-[rgba(245,158,11,0.1)] flex items-center justify-center">
@@ -172,11 +172,11 @@ export default function Achievements() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="glass p-6 rounded-2xl relative overflow-hidden border border-[rgba(255,255,255,0.05)]"
+              className="glass p-6 rounded-2xl relative overflow-hidden border border-border/65"
             >
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-full bg-[rgba(168,85,247,0.1)] flex items-center justify-center">
-                  <Star className="w-6 h-6 text-[#A855F7]" />
+                <div className="w-12 h-12 rounded-full bg-[rgba(var(--secondary-rgb),0.1)] flex items-center justify-center">
+                  <Star className="w-6 h-6 text-secondary" />
                 </div>
                 <div>
                   <h3 className="text-gray-400 text-sm font-medium">Total XP</h3>
@@ -192,7 +192,7 @@ export default function Achievements() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="glass p-6 rounded-2xl relative overflow-hidden border border-[rgba(255,255,255,0.05)]"
+              className="glass p-6 rounded-2xl relative overflow-hidden border border-border/65"
             >
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-full bg-[rgba(34,197,94,0.1)] flex items-center justify-center">
@@ -206,7 +206,7 @@ export default function Achievements() {
                   </div>
                 </div>
               </div>
-              <div className="mt-4 w-full h-1.5 bg-[#111827] rounded-full overflow-hidden">
+              <div className="mt-4 w-full h-1.5 bg-card rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-[#22C55E] to-[#10B981] w-[65%]" />
               </div>
               <p className="text-xs text-gray-500 mt-2 text-right">350 XP to Level {level + 1}</p>
@@ -231,7 +231,7 @@ export default function Achievements() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.1 }}
-                    className={`glass p-6 rounded-2xl border ${isUnlocked ? achievement.border : 'border-[rgba(255,255,255,0.05)]'} relative overflow-hidden group hover:-translate-y-1 transition-transform`}
+                    className={`glass p-6 rounded-2xl border ${isUnlocked ? achievement.border : 'border-border/65'} relative overflow-hidden group hover:-translate-y-1 transition-transform`}
                   >
                     {!isUnlocked && (
                       <div className="absolute top-4 right-4">
@@ -244,7 +244,7 @@ export default function Achievements() {
                       </div>
                     )}
                     
-                    <div className={`w-14 h-14 rounded-xl ${isUnlocked ? achievement.bg : 'bg-[#111827]'} flex items-center justify-center mb-4 transition-colors`}>
+                    <div className={`w-14 h-14 rounded-xl ${isUnlocked ? achievement.bg : 'bg-card'} flex items-center justify-center mb-4 transition-colors`}>
                       <Icon className={`w-7 h-7 ${isUnlocked ? achievement.color : 'text-gray-600'}`} />
                     </div>
                     
@@ -256,7 +256,7 @@ export default function Achievements() {
                     </p>
 
                     {isUnlocked ? (
-                      <div className="text-xs text-gray-400 font-medium bg-[rgba(255,255,255,0.05)] inline-block px-3 py-1 rounded-full">
+                      <div className="text-xs text-gray-400 font-medium bg-white/5 inline-block px-3 py-1 rounded-full">
                         Unlocked {unlockDate}
                       </div>
                     ) : (
@@ -265,7 +265,7 @@ export default function Achievements() {
                           <span>Status</span>
                           <span className="text-[#EF4444] font-medium">Locked</span>
                         </div>
-                        <div className="w-full h-1.5 bg-[#111827] rounded-full overflow-hidden">
+                        <div className="w-full h-1.5 bg-card rounded-full overflow-hidden">
                           <div className="h-full bg-gray-800 w-[10%]" />
                         </div>
                       </div>

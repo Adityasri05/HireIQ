@@ -116,7 +116,7 @@ export default function CareerCoach() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white flex items-center space-x-3">
-            <GraduationCap className="w-8 h-8 text-[#A855F7]" />
+            <GraduationCap className="w-8 h-8 text-secondary" />
             <span>AI Career Coach</span>
           </h1>
           <p className="text-gray-400 mt-1">Your personalized learning roadmap based on recent interview performance.</p>
@@ -135,19 +135,19 @@ export default function CareerCoach() {
                 onClick={() => setActiveHorizon(h.id)}
                 className={`w-full p-4 rounded-xl border flex items-center justify-between transition-all ${
                   isSelected 
-                    ? "bg-[rgba(124,58,237,0.1)] border-[#A855F7] shadow-[0_0_15px_rgba(124,58,237,0.15)]" 
-                    : "glass border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.02)]"
+                    ? "bg-primary/10 border-secondary shadow-[0_0_15px_rgba(var(--primary-rgb),0.15)]" 
+                    : "glass border-border/65 hover:bg-white/2"
                 }`}
               >
                 <div className="flex items-center space-x-3">
-                  <Map className={`w-5 h-5 ${isSelected ? "text-[#A855F7]" : "text-gray-500"}`} />
+                  <Map className={`w-5 h-5 ${isSelected ? "text-secondary" : "text-gray-500"}`} />
                   <span className={`font-medium ${isSelected ? "text-white" : "text-gray-400"}`}>{h.label}</span>
                 </div>
               </button>
             );
           })}
 
-          <div className="mt-8 glass p-6 rounded-xl border border-[rgba(255,255,255,0.05)] text-center">
+          <div className="mt-8 glass p-6 rounded-xl border border-border/65 text-center">
             <Trophy className="w-8 h-8 text-[#F59E0B] mx-auto mb-3" />
             <h4 className="text-white font-semibold mb-1">Target Role Target</h4>
             <p className="text-xs text-gray-400 leading-relaxed max-w-[200px] mx-auto">{targetGoal}</p>
@@ -157,8 +157,8 @@ export default function CareerCoach() {
         {/* Actionable Roadmap */}
         <div className="lg:col-span-3 space-y-4">
           {isLoading ? (
-            <div className="glass rounded-xl p-12 border border-[rgba(255,255,255,0.05)] flex flex-col items-center justify-center space-y-4">
-              <Loader2 className="w-8 h-8 text-[#A855F7] animate-spin" />
+            <div className="glass rounded-xl p-12 border border-border/65 flex flex-col items-center justify-center space-y-4">
+              <Loader2 className="w-8 h-8 text-secondary animate-spin" />
               <p className="text-gray-400 text-sm italic">AI Career Coach generating personalized modules...</p>
             </div>
           ) : (
@@ -170,7 +170,7 @@ export default function CareerCoach() {
                 exit={{ opacity: 0, y: -10 }}
                 className="space-y-4"
               >
-                <div className="p-4 bg-[rgba(17,24,39,0.5)] border border-[rgba(255,255,255,0.05)] rounded-xl">
+                <div className="p-4 bg-[rgba(17,24,39,0.5)] border border-border/65 rounded-xl">
                   <h3 className="text-base font-bold text-white mb-1">{roadmap?.title}</h3>
                   <p className="text-xs text-gray-400 leading-relaxed">{roadmap?.description}</p>
                 </div>
@@ -179,26 +179,26 @@ export default function CareerCoach() {
                   roadmap.modules.map((mod, index) => (
                     <div 
                       key={mod.id || index}
-                      className="glass rounded-xl border border-[rgba(255,255,255,0.05)] overflow-hidden"
+                      className="glass rounded-xl border border-border/65 overflow-hidden"
                     >
-                      <div className="p-5 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(124,58,237,0.03)] flex items-center justify-between">
+                      <div className="p-5 border-b border-border/65 bg-primary/3 flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <Server className="w-5 h-5 text-[#A855F7]" />
+                          <Server className="w-5 h-5 text-secondary" />
                           <div>
                             <h3 className="text-sm font-bold text-white">{mod.title}</h3>
-                            <p className="text-[10px] text-[#A855F7] uppercase tracking-wider font-semibold mt-0.5">Priority: {mod.priority}</p>
+                            <p className="text-[10px] text-secondary uppercase tracking-wider font-semibold mt-0.5">Priority: {mod.priority}</p>
                           </div>
                         </div>
                         <div className="text-right">
                           <span className="text-xs text-gray-400 font-semibold">{mod.status === "in-progress" ? "In Progress" : mod.status === "completed" ? "Completed" : "Locked"}</span>
                           <div className="w-24 h-1.5 bg-gray-800 rounded-full mt-1.5 overflow-hidden">
-                            <div className="h-full bg-[#A855F7]" style={{ width: `${mod.progress}%` }}></div>
+                            <div className="h-full bg-secondary" style={{ width: `${mod.progress}%` }}></div>
                           </div>
                         </div>
                       </div>
                       
                       <div className="p-5 space-y-4">
-                        <div className="text-xs text-gray-400 bg-[rgba(255,255,255,0.02)] p-3 rounded-lg border border-[rgba(255,255,255,0.02)] leading-relaxed">
+                        <div className="text-xs text-gray-400 bg-white/2 p-3 rounded-lg border border-[rgba(255,255,255,0.02)] leading-relaxed">
                           <strong className="text-white">Expected Learning Outcome: </strong>
                           {mod.expected_outcome}
                         </div>

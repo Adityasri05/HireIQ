@@ -236,12 +236,12 @@ export function TopNav() {
 
   return (
     <>
-      <header className="h-16 border-b border-[rgba(255,255,255,0.08)] bg-[#09090B]/80 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-6">
+      <header className="h-16 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between px-6">
         <div className="flex-1 flex items-center">
           <button
             id="mobile-menu-btn"
             onClick={() => setShowMobileMenu(true)}
-            className="p-2 -ml-2 mr-2 text-gray-400 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] md:hidden cursor-pointer"
+            className="p-2 -ml-2 mr-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/5 md:hidden cursor-pointer"
             aria-label="Open navigation menu"
           >
             <Menu className="w-6 h-6" />
@@ -252,7 +252,7 @@ export function TopNav() {
           <input 
             type="text" 
             placeholder="Search candidates, skills, or jobs..." 
-            className="w-full bg-[#111827] border border-[rgba(255,255,255,0.05)] rounded-full pl-10 pr-4 py-1.5 text-sm text-gray-300 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all"
+            className="w-full bg-card border border-border/65 rounded-full pl-10 pr-4 py-1.5 text-sm text-gray-300 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
           />
         </div>
       </div>
@@ -263,7 +263,7 @@ export function TopNav() {
           <button 
             id="notification-btn"
             onClick={() => setShowNotifications(!showNotifications)}
-            className={`relative p-2 text-gray-400 hover:text-white transition-colors rounded-full hover:bg-[rgba(255,255,255,0.05)] ${showNotifications ? "bg-[rgba(255,255,255,0.05)] text-white" : ""}`}
+            className={`relative p-2 text-gray-400 hover:text-white transition-colors rounded-full hover:bg-white/5 ${showNotifications ? "bg-white/5 text-white" : ""}`}
           >
             <Bell className="w-5 h-5" />
             {unreadCount > 0 && (
@@ -275,13 +275,13 @@ export function TopNav() {
           {showNotifications && (
             <div 
               id="notification-dropdown"
-              className="absolute right-0 mt-2 w-80 sm:w-96 glass rounded-xl shadow-[0_10px_32px_rgba(0,0,0,0.5)] border border-[rgba(255,255,255,0.08)] z-50 overflow-hidden"
+              className="absolute right-0 mt-2 w-80 sm:w-96 glass rounded-xl shadow-[0_10px_32px_rgba(0,0,0,0.5)] border border-border z-50 overflow-hidden"
             >
-              <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between bg-[#0F0F13]">
+              <div className="p-4 border-b border-border flex items-center justify-between bg-background">
                 <div className="flex items-center space-x-2">
                   <span className="font-semibold text-sm text-white">Notifications</span>
                   {unreadCount > 0 && (
-                    <span className="bg-[#7C3AED]/20 text-[#A855F7] text-xs px-2 py-0.5 rounded-full font-bold">
+                    <span className="bg-primary/20 text-secondary text-xs px-2 py-0.5 rounded-full font-bold">
                       {unreadCount} new
                     </span>
                   )}
@@ -297,20 +297,20 @@ export function TopNav() {
                 )}
               </div>
 
-              <div className="max-h-[300px] overflow-y-auto divide-y divide-[rgba(255,255,255,0.05)] bg-[#09090B]">
+              <div className="max-h-[300px] overflow-y-auto divide-y divide-[rgba(255,255,255,0.05)] bg-background">
                 {notifications.length > 0 ? (
                   notifications.map((n) => (
                     <div 
                       key={n.id} 
                       onClick={() => handleMarkAsRead(n.id)}
-                      className={`p-4 hover:bg-[rgba(255,255,255,0.02)] transition-colors cursor-pointer flex items-start justify-between space-x-3 ${!n.read ? "bg-[rgba(124,58,237,0.03)]" : ""}`}
+                      className={`p-4 hover:bg-white/2 transition-colors cursor-pointer flex items-start justify-between space-x-3 ${!n.read ? "bg-primary/3" : ""}`}
                     >
                       <div className="space-y-1">
                         <div className="flex items-center space-x-2">
-                          <span className={`text-xs font-semibold ${!n.read ? "text-[#A855F7]" : "text-gray-300"}`}>
+                          <span className={`text-xs font-semibold ${!n.read ? "text-secondary" : "text-gray-300"}`}>
                             {n.title}
                           </span>
-                          {!n.read && <span className="w-1.5 h-1.5 bg-[#A855F7] rounded-full"></span>}
+                          {!n.read && <span className="w-1.5 h-1.5 bg-secondary rounded-full"></span>}
                         </div>
                         <p className="text-xs text-gray-400 leading-normal">{n.desc}</p>
                         <span className="text-[10px] text-gray-500 block">{n.time}</span>
@@ -322,7 +322,7 @@ export function TopNav() {
                             e.stopPropagation();
                             handleMarkAsRead(n.id);
                           }}
-                          className="p-1 rounded bg-[rgba(255,255,255,0.05)] hover:bg-[#7C3AED]/20 text-gray-400 hover:text-[#A855F7] transition-colors"
+                          className="p-1 rounded bg-white/5 hover:bg-primary/20 text-gray-400 hover:text-secondary transition-colors"
                           title="Mark as read"
                         >
                           <Check className="w-3.5 h-3.5" />
@@ -342,16 +342,16 @@ export function TopNav() {
           )}
         </div>
         
-        <div className="h-8 w-px bg-[rgba(255,255,255,0.08)] mx-2"></div>
+        <div className="h-8 w-px bg-white/8 mx-2"></div>
 
         {/* Profile Dropdown Toggle */}
         <div className="relative">
           <button 
             id="profile-btn"
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className={`flex items-center space-x-2.5 p-1 pr-3 rounded-full border border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.02)] transition-colors ${showProfileMenu ? "bg-[rgba(255,255,255,0.05)] border-[rgba(255,255,255,0.15)]" : ""}`}
+            className={`flex items-center space-x-2.5 p-1 pr-3 rounded-full border border-border/65 hover:bg-white/2 transition-colors ${showProfileMenu ? "bg-white/5 border-[rgba(255,255,255,0.15)]" : ""}`}
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center shadow-[0_0_10px_rgba(124,58,237,0.3)]">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]">
               <User className="w-4 h-4 text-white" />
             </div>
             <span className="text-sm font-medium text-gray-300 hidden md:inline">{candidateName}</span>
@@ -362,12 +362,12 @@ export function TopNav() {
           {showProfileMenu && (
             <div 
               id="profile-dropdown"
-              className="absolute right-0 mt-2 w-72 glass rounded-xl shadow-[0_10px_32px_rgba(0,0,0,0.5)] border border-[rgba(255,255,255,0.08)] z-50 overflow-hidden"
+              className="absolute right-0 mt-2 w-72 glass rounded-xl shadow-[0_10px_32px_rgba(0,0,0,0.5)] border border-border z-50 overflow-hidden"
             >
               {/* Profile Card Header */}
-              <div className="p-4 bg-[#0F0F13] border-b border-[rgba(255,255,255,0.08)] space-y-2.5">
+              <div className="p-4 bg-background border-b border-border space-y-2.5">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm shadow-[0_0_15px_rgba(124,58,237,0.3)]">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold text-white text-sm shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
                     {candidateName.charAt(0)}
                   </div>
                   <div>
@@ -375,21 +375,21 @@ export function TopNav() {
                     <p className="text-xs text-gray-400">{candidateEmail}</p>
                   </div>
                 </div>
-                <div className="bg-[#7C3AED]/10 border border-[#7C3AED]/20 rounded-lg px-2.5 py-1 text-center">
+                <div className="bg-primary/10 border border-primary/20 rounded-lg px-2.5 py-1 text-center">
                   <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Target Position</p>
-                  <p className="text-xs font-semibold text-[#A855F7]">{candidateRole}</p>
+                  <p className="text-xs font-semibold text-secondary">{candidateRole}</p>
                 </div>
               </div>
 
               {/* Profile Dropdown Actions */}
-              <div className="p-2 bg-[#09090B] space-y-0.5">
+              <div className="p-2 bg-background space-y-0.5">
                 {/* 1. Profile Option */}
                 <button 
                   onClick={() => {
                     setShowProfileMenu(false);
                     setShowProfileModal(true);
                   }}
-                  className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors cursor-pointer"
+                  className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
                 >
                   <User className="w-4 h-4 text-gray-400" />
                   <span>Profile</span>
@@ -401,12 +401,12 @@ export function TopNav() {
                     <Settings className="w-4 h-4 text-gray-400" />
                     <span>Settings</span>
                   </div>
-                  <div className="flex bg-[#111827] p-0.5 rounded-md border border-[rgba(255,255,255,0.05)]">
+                  <div className="flex bg-card p-0.5 rounded-md border border-border/65">
                     <button
                       onClick={() => toggleTheme("light")}
                       className={`p-1 rounded cursor-pointer transition-all ${
                         theme === "light" 
-                          ? "bg-[#7C3AED] text-white" 
+                          ? "bg-primary text-white" 
                           : "text-gray-500 hover:text-gray-300"
                       }`}
                       title="Light Mode"
@@ -417,7 +417,7 @@ export function TopNav() {
                       onClick={() => toggleTheme("dark")}
                       className={`p-1 rounded cursor-pointer transition-all ${
                         theme === "dark" 
-                          ? "bg-[#7C3AED] text-white" 
+                          ? "bg-primary text-white" 
                           : "text-gray-500 hover:text-gray-300"
                       }`}
                       title="Dark Mode"
@@ -433,7 +433,7 @@ export function TopNav() {
                     setShowProfileMenu(false);
                     setShowShareModal(true);
                   }}
-                  className="w-full flex items-center justify-between px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors cursor-pointer"
+                  className="w-full flex items-center justify-between px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
                 >
                   <div className="flex items-center space-x-2.5">
                     <Share2 className="w-4 h-4 text-gray-400" />
@@ -450,7 +450,7 @@ export function TopNav() {
                     setShowProfileMenu(false);
                     setShowAboutModal(true);
                   }}
-                  className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors cursor-pointer"
+                  className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
                 >
                   <Info className="w-4 h-4 text-gray-400" />
                   <span>About</span>
@@ -481,17 +481,17 @@ export function TopNav() {
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 left-0 w-64 h-screen bg-[#09090B] border-r border-[rgba(255,255,255,0.08)] flex flex-col z-[1000] md:hidden"
+            className="fixed top-0 left-0 w-64 h-screen bg-background border-r border-border flex flex-col z-[1000] md:hidden"
           >
             {/* Header */}
-            <div className="h-16 flex items-center justify-between px-6 border-b border-[rgba(255,255,255,0.08)]">
+            <div className="h-16 flex items-center justify-between px-6 border-b border-border">
               <Link href="/" className="flex items-center space-x-2.5 text-2xl font-bold text-gradient-primary tracking-tighter" onClick={() => setShowMobileMenu(false)}>
                 <img src="/logo.png" alt="Hirevium Logo" className="w-7 h-7 object-contain" />
                 <span>HIREVIUM</span>
               </Link>
               <button
                 onClick={() => setShowMobileMenu(false)}
-                className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all cursor-pointer"
+                className="w-8 h-8 rounded-full bg-white/5 border border-border flex items-center justify-center text-gray-400 hover:text-white transition-all cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -510,8 +510,8 @@ export function TopNav() {
                     onClick={() => setShowMobileMenu(false)}
                     className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                       isActive 
-                        ? "bg-[rgba(124,58,237,0.15)] text-[#A855F7] border border-[rgba(124,58,237,0.3)]" 
-                        : "text-gray-400 hover:text-white hover:bg-[#111827]"
+                        ? "bg-primary/15 text-secondary border border-primary/30" 
+                        : "text-gray-400 hover:text-white hover:bg-card"
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -522,9 +522,9 @@ export function TopNav() {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-[rgba(255,255,255,0.08)] space-y-3">
+            <div className="p-4 border-t border-border space-y-3">
               <div className="glass rounded-xl p-4 flex flex-col items-center justify-center text-center">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center mb-2 shadow-[0_0_15px_rgba(124,58,237,0.5)]">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center mb-2 shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]">
                   <span className="font-bold text-white text-sm">IQ</span>
                 </div>
                 <p className="text-xs text-gray-400">Hirevium Score</p>
@@ -552,9 +552,9 @@ export function TopNav() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="w-full max-w-md bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-xl shadow-2xl overflow-hidden text-white"
+            className="w-full max-w-md bg-card border border-border rounded-xl shadow-2xl overflow-hidden text-white"
           >
-            <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#0F0F13]">
+            <div className="p-4 border-b border-border flex justify-between items-center bg-background">
               <h3 className="font-bold text-sm">Edit Candidate Profile</h3>
               <button 
                 onClick={() => setShowProfileModal(false)}
@@ -599,7 +599,7 @@ export function TopNav() {
                   type="text" 
                   name="name" 
                   defaultValue={candidateName}
-                  className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#7C3AED]"
+                  className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
                   required
                 />
               </div>
@@ -609,7 +609,7 @@ export function TopNav() {
                   type="email" 
                   name="email" 
                   defaultValue={candidateEmail}
-                  className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#7C3AED]"
+                  className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
                   required
                 />
               </div>
@@ -619,7 +619,7 @@ export function TopNav() {
                   type="text" 
                   name="role" 
                   defaultValue={candidateRole}
-                  className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#7C3AED]"
+                  className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary"
                   required
                 />
               </div>
@@ -629,7 +629,7 @@ export function TopNav() {
                   name="goals" 
                   defaultValue={candidateGoals}
                   rows={3}
-                  className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#7C3AED] resize-none"
+                  className="w-full bg-background border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary resize-none"
                   placeholder="Describe your career goals..."
                 />
               </div>
@@ -643,7 +643,7 @@ export function TopNav() {
                 </button>
                 <button 
                   type="submit"
-                  className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:opacity-90 shadow-md cursor-pointer"
+                  className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-primary to-secondary hover:opacity-90 shadow-md cursor-pointer"
                 >
                   Save Changes
                 </button>
@@ -662,9 +662,9 @@ export function TopNav() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="w-full max-w-md bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-xl shadow-2xl overflow-hidden text-white"
+            className="w-full max-w-md bg-card border border-border rounded-xl shadow-2xl overflow-hidden text-white"
           >
-            <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#0F0F13]">
+            <div className="p-4 border-b border-border flex justify-between items-center bg-background">
               <h3 className="font-bold text-sm">Share Candidate Profile</h3>
               <button 
                 onClick={() => setShowShareModal(false)}
@@ -675,12 +675,12 @@ export function TopNav() {
             </div>
             <div className="p-5 space-y-5">
               {/* Visual Card Preview */}
-              <div className="glass rounded-xl p-5 border border-[#7C3AED]/20 relative overflow-hidden bg-gradient-to-br from-[#111827] to-[#09090B] shadow-[0_0_20px_rgba(124,58,237,0.05)]">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-[#7C3AED]/10 rounded-full blur-2xl pointer-events-none"></div>
+              <div className="glass rounded-xl p-5 border border-primary/20 relative overflow-hidden bg-gradient-to-br from-card to-background shadow-[0_0_20px_rgba(var(--primary-rgb),0.05)]">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
                 
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#A855F7] bg-[#7C3AED]/10 px-2 py-0.5 rounded border border-[#7C3AED]/20">Hirevium Verified</span>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-secondary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">Hirevium Verified</span>
                     <h4 className="font-bold text-base text-white mt-2 leading-tight">{candidateName}</h4>
                     <p className="text-xs text-gray-400 mt-0.5">{candidateRole}</p>
                   </div>
@@ -693,7 +693,7 @@ export function TopNav() {
                   </div>
                 </div>
 
-                <div className="border-t border-[rgba(255,255,255,0.05)] pt-3 flex justify-between items-center text-[10px] text-gray-500">
+                <div className="border-t border-border/65 pt-3 flex justify-between items-center text-[10px] text-gray-500">
                   <span>Platform: hirevium.ai</span>
                   <span>Verification: Active</span>
                 </div>
@@ -707,11 +707,11 @@ export function TopNav() {
                     type="text" 
                     readOnly
                     value={`Check out ${candidateName}'s Hirevium Profile! Role: ${candidateRole} | Score: ${iqScore}/100`}
-                    className="flex-1 bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-xs text-gray-400 focus:outline-none"
+                    className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-xs text-gray-400 focus:outline-none"
                   />
                   <button 
                     onClick={() => copyProfileToClipboard(`Check out ${candidateName}'s Hirevium Profile!\nRole: ${candidateRole}\nHirevium Score: ${iqScore}/100\nPlatform: ${window.location.origin}`)}
-                    className="px-3 py-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-lg text-xs font-semibold transition-colors flex items-center space-x-1 cursor-pointer flex-shrink-0"
+                    className="px-3 py-2 bg-primary hover:bg-primary-hover text-white rounded-lg text-xs font-semibold transition-colors flex items-center space-x-1 cursor-pointer flex-shrink-0"
                   >
                     {shareCopied ? (
                       <>
@@ -744,7 +744,7 @@ export function TopNav() {
                     href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out my Hirevium verified profile! Role: ${candidateRole} | Score: ${iqScore}/100. Join me at ` + window.location.origin)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-2 px-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-center text-xs text-white font-semibold transition-all animate-none"
+                    className="py-2 px-3 bg-white/5 hover:bg-white/10 border border-border rounded-lg text-center text-xs text-white font-semibold transition-all animate-none"
                   >
                     Twitter / X
                   </a>
@@ -770,9 +770,9 @@ export function TopNav() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="w-full max-w-sm bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-xl shadow-2xl overflow-hidden text-white"
+            className="w-full max-w-sm bg-card border border-border rounded-xl shadow-2xl overflow-hidden text-white"
           >
-            <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#0F0F13]">
+            <div className="p-4 border-b border-border flex justify-between items-center bg-background">
               <h3 className="font-bold text-sm">About Hirevium</h3>
               <button 
                 onClick={() => setShowAboutModal(false)}
@@ -782,12 +782,12 @@ export function TopNav() {
               </button>
             </div>
             <div className="p-6 text-center space-y-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(124,58,237,0.3)]">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]">
                 <GraduationCap className="w-8 h-8 text-white" />
               </div>
               <div className="space-y-1">
                 <h4 className="font-bold text-lg text-white">HIREVIUM Platform</h4>
-                <p className="text-xs text-[#A855F7] font-semibold">Version 2.0.0 (Production)</p>
+                <p className="text-xs text-secondary font-semibold">Version 2.0.0 (Production)</p>
               </div>
               <p className="text-xs text-gray-400 leading-relaxed">
                 Hirevium is an AI-powered hiring intelligence system designed to evaluate candidate resumes, conduct dynamic technical mock interviews, track skill verifications, and recommend tailored learning roadmaps.

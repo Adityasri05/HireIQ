@@ -64,21 +64,21 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090B] text-white flex flex-col items-center justify-center p-6 relative overflow-hidden selection:bg-[#7C3AED] selection:text-white">
+    <div className="min-h-screen bg-background text-white flex flex-col items-center justify-center p-6 relative overflow-hidden selection:bg-primary selection:text-white">
       {/* Background Gradients */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[600px] opacity-10 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#7C3AED] blur-[150px] rounded-full"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary blur-[150px] rounded-full"></div>
       </div>
 
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-md glass rounded-2xl p-8 border border-[rgba(255,255,255,0.05)] relative z-10 space-y-6"
+        className="w-full max-w-md glass rounded-2xl p-8 border border-border/65 relative z-10 space-y-6"
       >
         <div className="text-center space-y-2">
           <div className="flex justify-center mb-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center shadow-[0_0_20px_rgba(124,58,237,0.4)]">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)]">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="alex@developer.com"
                 required
-                className="w-full bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all"
+                className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               />
             </div>
           </div>
@@ -111,7 +111,7 @@ export default function Login() {
           <div className="space-y-1.5">
             <div className="flex items-center justify-between px-1">
               <label className="text-xs text-gray-400 font-semibold">Password</label>
-              <a href="#" className="text-xs text-[#A855F7] hover:underline">Forgot password?</a>
+              <a href="#" className="text-xs text-secondary hover:underline">Forgot password?</a>
             </div>
             <div className="relative">
               <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -121,7 +121,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 required
-                className="w-full bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all"
+                className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
               />
             </div>
           </div>
@@ -129,7 +129,7 @@ export default function Login() {
           <button 
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#6D28D9] hover:to-[#9333EA] disabled:opacity-50 text-white font-medium rounded-xl transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] flex items-center justify-center space-x-2"
+            className="w-full py-3 bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-secondary-hover disabled:opacity-50 text-white font-medium rounded-xl transition-all shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] flex items-center justify-center space-x-2"
           >
             {isLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -144,9 +144,9 @@ export default function Login() {
 
 
 
-        <div className="text-center text-sm text-gray-400 pt-2 border-t border-[rgba(255,255,255,0.05)]">
+        <div className="text-center text-sm text-gray-400 pt-2 border-t border-border/65">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="text-[#A855F7] hover:underline font-semibold">
+          <Link href="/signup" className="text-secondary hover:underline font-semibold">
             Sign up
           </Link>
         </div>

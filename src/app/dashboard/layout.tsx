@@ -5,7 +5,7 @@ import { Copilot } from "@/components/layout/Copilot";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#09090B] flex">
+    <div className="min-h-screen bg-background flex">
       <Sidebar />
       <div className="flex-1 md:ml-64 flex flex-col min-h-screen relative">
         <TopNav />

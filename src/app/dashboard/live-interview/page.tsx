@@ -35,7 +35,7 @@ interface QuestionData {
 }
 
 const COMPANY_THEMES: Record<string, { primary: string; hover: string; text: string; glow: string; bg: string }> = {
-  Standard: { primary: "from-[#7C3AED] to-[#A855F7]", hover: "hover:from-[#6D28D9] hover:to-[#9333EA]", text: "text-[#A855F7]", glow: "rgba(124,58,237,0.3)", bg: "bg-[#7C3AED]" },
+  Standard: { primary: "from-primary to-secondary", hover: "hover:from-primary-hover hover:to-secondary-hover", text: "text-secondary", glow: "rgba(var(--primary-rgb),0.3)", bg: "bg-primary" },
   Google: { primary: "from-[#4285F4] to-[#34A853]", hover: "hover:from-[#357AE8] hover:to-[#2B8E47]", text: "text-[#4285F4]", glow: "rgba(66,133,244,0.3)", bg: "bg-[#4285F4]" },
   Amazon: { primary: "from-[#FF9900] to-[#146EB4]", hover: "hover:from-[#E08800] hover:to-[#115E9B]", text: "text-[#FF9900]", glow: "rgba(255,153,0,0.3)", bg: "bg-[#FF9900]" },
   Meta: { primary: "from-[#0668E1] to-[#00F2FE]", hover: "hover:from-[#055CC7] hover:to-[#00D7E2]", text: "text-[#0668E1]", glow: "rgba(6,104,225,0.3)", bg: "bg-[#0668E1]" },
@@ -374,14 +374,14 @@ export default function LiveInterview() {
   return (
     <div className="min-h-[calc(100vh-120px)] lg:h-[calc(100vh-120px)] flex flex-col space-y-4 relative">
       {/* Top Control Bar */}
-      <div className="flex items-center justify-between bg-[#111827] border border-[rgba(255,255,255,0.05)] p-4 rounded-xl">
+      <div className="flex items-center justify-between bg-card border border-border/65 p-4 rounded-xl">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <div className={`w-3.5 h-3.5 rounded-full ${interviewStatus === "active" ? 'bg-[#EF4444] animate-pulse' : 'bg-gray-500'}`}></div>
             <span className="text-white font-medium flex items-center space-x-1.5">
               <span>AI Adaptive Technical Interview</span>
               {selectedCompany !== "Standard" && (
-                <span className={`text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 font-semibold ${currentTheme.text}`}>
+                <span className={`text-xs px-2 py-0.5 rounded border border-border bg-white/5 font-semibold ${currentTheme.text}`}>
                   {selectedCompany} Mock
                 </span>
               )}
@@ -410,7 +410,7 @@ export default function LiveInterview() {
                 className={`p-2 rounded-lg transition-all cursor-pointer ${
                   micEnabled 
                     ? "bg-[#22C55E]/10 text-[#22C55E] border border-[#22C55E]/30" 
-                    : "bg-[rgba(255,255,255,0.05)] text-gray-400 hover:text-white border border-transparent"
+                    : "bg-white/5 text-gray-400 hover:text-white border border-transparent"
                 }`}
                 title={micEnabled ? "Mute Microphone" : "Unmute Microphone"}
               >
@@ -421,8 +421,8 @@ export default function LiveInterview() {
                 onClick={toggleCamera}
                 className={`p-2 rounded-lg transition-all cursor-pointer ${
                   cameraEnabled 
-                    ? "bg-[#7C3AED]/10 text-[#7C3AED] border border-[#7C3AED]/30 shadow-[0_0_10px_rgba(124,58,237,0.2)]" 
-                    : "bg-[rgba(255,255,255,0.05)] text-gray-400 hover:text-white border border-transparent"
+                    ? "bg-primary/10 text-primary border border-primary/30 shadow-[0_0_10px_rgba(var(--primary-rgb),0.2)]" 
+                    : "bg-white/5 text-gray-400 hover:text-white border border-transparent"
                 }`}
                 title={cameraEnabled ? "Turn Off Camera" : "Turn On Camera"}
               >
@@ -434,7 +434,7 @@ export default function LiveInterview() {
                 className={`p-2 rounded-lg transition-all cursor-pointer ${
                   screenShareEnabled 
                     ? "bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/30 shadow-[0_0_10px_rgba(59,130,246,0.2)]" 
-                    : "bg-[rgba(255,255,255,0.05)] text-gray-400 hover:text-white border border-transparent"
+                    : "bg-white/5 text-gray-400 hover:text-white border border-transparent"
                 }`}
                 title={screenShareEnabled ? "Stop Sharing Screen" : "Share Screen"}
               >
@@ -446,7 +446,7 @@ export default function LiveInterview() {
       </div>
 
       {interviewStatus === "idle" || interviewStatus === "starting" ? (
-        <div className="flex-1 glass rounded-xl border border-[rgba(255,255,255,0.05)] flex flex-col items-center justify-center space-y-6">
+        <div className="flex-1 glass rounded-xl border border-border/65 flex flex-col items-center justify-center space-y-6">
           <div className="relative">
             <div className={`w-24 h-24 rounded-full bg-gradient-to-tr ${currentTheme.primary} flex items-center justify-center`} style={{ boxShadow: `0 0 30px ${currentTheme.glow}` }}>
               <Brain className="w-12 h-12 text-white animate-pulse" />
@@ -463,7 +463,7 @@ export default function LiveInterview() {
             <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest text-center">Select Target Company Simulation</label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {[
-                { name: "Standard", color: "hover:border-gray-500", border: "border-[rgba(255,255,255,0.05)]", text: "text-gray-400" },
+                { name: "Standard", color: "hover:border-gray-500", border: "border-border/65", text: "text-gray-400" },
                 { name: "Google", color: "hover:border-[#4285F4]", border: "border-[#4285F4]/30", text: "text-[#4285F4]" },
                 { name: "Amazon", color: "hover:border-[#FF9900]", border: "border-[#FF9900]/30", text: "text-[#FF9900]" },
                 { name: "Meta", color: "hover:border-[#0668E1]", border: "border-[#0668E1]/30", text: "text-[#0668E1]" },
@@ -481,7 +481,7 @@ export default function LiveInterview() {
                     disabled={interviewStatus === "starting"}
                     className={`py-2 px-3 rounded-lg border text-xs font-semibold transition-all ${
                       isSelected
-                        ? "bg-[rgba(255,255,255,0.05)] border-white text-white shadow-[0_0_10px_rgba(255,255,255,0.1)]"
+                        ? "bg-white/5 border-white text-white shadow-[0_0_10px_rgba(255,255,255,0.1)]"
                         : `${c.border} ${c.text} ${c.color} bg-transparent cursor-pointer`
                     }`}
                   >
@@ -517,15 +517,15 @@ export default function LiveInterview() {
           <div className="flex-1 flex flex-col gap-4 overflow-hidden">
             
             {/* AI Interviewer Component */}
-            <div className="min-h-[250px] lg:flex-1 glass rounded-xl border border-[rgba(255,255,255,0.05)] relative overflow-hidden flex flex-col items-center justify-center bg-[rgba(17,24,39,0.8)] p-6">
-              <div className="absolute top-4 left-4 bg-[rgba(0,0,0,0.5)] px-3 py-1 rounded-full border border-[rgba(255,255,255,0.1)] flex items-center space-x-2">
+            <div className="min-h-[250px] lg:flex-1 glass rounded-xl border border-border/65 relative overflow-hidden flex flex-col items-center justify-center bg-[rgba(17,24,39,0.8)] p-6">
+              <div className="absolute top-4 left-4 bg-[rgba(0,0,0,0.5)] px-3 py-1 rounded-full border border-border flex items-center space-x-2">
                 <Brain className={`w-4 h-4 ${currentTheme.text}`} />
                 <span className="text-xs text-white">Hirevium Adaptive Engine</span>
               </div>
 
               {/* Simulated Avatar / Waveform OR Screen Share */}
               {screenShareEnabled ? (
-                <div className="w-full max-w-xl h-48 sm:h-64 flex items-center justify-center relative bg-black/40 rounded-lg overflow-hidden border border-white/5 z-10 shadow-inner">
+                <div className="w-full max-w-xl h-48 sm:h-64 flex items-center justify-center relative bg-black/40 rounded-lg overflow-hidden border border-border/50 z-10 shadow-inner">
                   <video 
                     ref={screenVideoRef} 
                     autoPlay 
@@ -533,7 +533,7 @@ export default function LiveInterview() {
                     muted 
                     className="w-full h-full object-contain"
                   />
-                  <div className="absolute top-2 right-2 bg-black/60 px-2 py-1 rounded text-[10px] sm:text-xs text-white flex items-center space-x-1.5 border border-white/5 backdrop-blur-md">
+                  <div className="absolute top-2 right-2 bg-black/60 px-2 py-1 rounded text-[10px] sm:text-xs text-white flex items-center space-x-1.5 border border-border/50 backdrop-blur-md">
                     <span className="w-2 h-2 rounded-full bg-[#3B82F6] animate-pulse"></span>
                     <span>Screen Share Active</span>
                   </div>
@@ -569,7 +569,7 @@ export default function LiveInterview() {
 
               {/* Floating Camera Preview */}
               {cameraEnabled && (
-                <div className="absolute right-4 bottom-4 w-32 h-24 sm:w-40 sm:h-28 rounded-lg overflow-hidden border border-white/10 bg-[#09090B] z-20 shadow-xl">
+                <div className="absolute right-4 bottom-4 w-32 h-24 sm:w-40 sm:h-28 rounded-lg overflow-hidden border border-border bg-background z-20 shadow-xl">
                   <video 
                     ref={videoRef} 
                     autoPlay 
@@ -577,7 +577,7 @@ export default function LiveInterview() {
                     muted 
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-1.5 left-1.5 bg-black/60 px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] text-white flex items-center space-x-1 border border-white/5">
+                  <div className="absolute bottom-1.5 left-1.5 bg-black/60 px-1.5 py-0.5 rounded text-[8px] sm:text-[10px] text-white flex items-center space-x-1 border border-border/50">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#EF4444] animate-pulse"></span>
                     <span>You</span>
                   </div>
@@ -586,7 +586,7 @@ export default function LiveInterview() {
             </div>
 
             {/* Candidate View / Code Editor */}
-            <div className="min-h-[250px] lg:h-[45%] glass rounded-xl border border-[rgba(255,255,255,0.05)] p-4 flex flex-col bg-[#09090B]">
+            <div className="min-h-[250px] lg:h-[45%] glass rounded-xl border border-border/65 p-4 flex flex-col bg-background">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Solution Editor / Technical Answer</span>
                 <span className="text-xs text-[#22C55E] flex items-center space-x-1">
@@ -619,7 +619,7 @@ export default function LiveInterview() {
           <div className="w-full lg:w-80 flex flex-col gap-4 overflow-y-auto lg:pr-2 flex-shrink-0">
             
             {/* Adaptive Tracker */}
-            <div className="glass rounded-xl p-4 border border-[rgba(255,255,255,0.05)]">
+            <div className="glass rounded-xl p-4 border border-border/65">
               <h3 className="text-sm font-semibold text-white mb-3">Adaptive Difficulty</h3>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-gray-400">Current Level</span>
@@ -634,7 +634,7 @@ export default function LiveInterview() {
             </div>
 
             {/* Real-Time Metrics Guages */}
-            <div className="glass rounded-xl p-4 border border-[rgba(255,255,255,0.05)]">
+            <div className="glass rounded-xl p-4 border border-border/65">
               <h3 className="text-sm font-semibold text-white mb-4">Live Performance</h3>
               
               <div className="space-y-4">
@@ -644,7 +644,7 @@ export default function LiveInterview() {
                     <span className="text-white font-bold">{Math.round(metrics.technical_score)}%</span>
                   </div>
                   <div className="h-1.5 w-full bg-[rgba(255,255,255,0.1)] rounded-full overflow-hidden">
-                    <div className="h-full bg-[#A855F7] transition-all duration-500" style={{ width: `${metrics.technical_score}%` }}></div>
+                    <div className="h-full bg-secondary transition-all duration-500" style={{ width: `${metrics.technical_score}%` }}></div>
                   </div>
                 </div>
 
@@ -671,13 +671,13 @@ export default function LiveInterview() {
             </div>
 
             {/* Knowledge Graph Snapshot */}
-            <div className="glass rounded-xl p-4 border border-[rgba(255,255,255,0.05)] flex-1">
+            <div className="glass rounded-xl p-4 border border-border/65 flex-1">
               <h3 className="text-sm font-semibold text-white mb-3 flex items-center space-x-2">
                 <Brain className={`w-4 h-4 ${currentTheme.text}`} />
                 <span>Topic Mastery Graph</span>
               </h3>
               
-              <div className="space-y-2 mt-4 relative pl-4 border-l border-[rgba(255,255,255,0.1)]">
+              <div className="space-y-2 mt-4 relative pl-4 border-l border-border">
                 <div className="relative">
                   <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#22C55E]"></div>
                   <p className="text-sm text-gray-300">Topic: {question?.topic || "Technical core"}</p>
@@ -706,7 +706,7 @@ export default function LiveInterview() {
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="max-w-md w-full bg-[#111827] border border-[#EF4444] rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.2)] p-8 text-center"
+              className="max-w-md w-full bg-card border border-[#EF4444] rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.2)] p-8 text-center"
             >
               <div className="w-16 h-16 bg-[rgba(239,68,68,0.1)] rounded-full flex items-center justify-center mx-auto mb-6">
                 <AlertOctagon className="w-8 h-8 text-[#EF4444]" />
@@ -714,7 +714,7 @@ export default function LiveInterview() {
               
               <h2 className="text-2xl font-bold text-white mb-2">Session Terminated</h2>
               
-              <div className="bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-lg p-4 mb-6 text-left">
+              <div className="bg-white/2 border border-border/65 rounded-lg p-4 mb-6 text-left">
                 <p className="text-sm text-gray-300 font-medium mb-1">Reason:</p>
                 <p className="text-sm text-[#EF4444] mb-3">{terminationReason}</p>
                 <p className="text-xs text-gray-400 leading-relaxed">
@@ -724,7 +724,7 @@ export default function LiveInterview() {
 
               <button 
                 onClick={() => window.location.href = '/dashboard/career-coach'}
-                className="w-full py-3 bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-xl font-medium transition-colors flex items-center justify-center space-x-2"
+                className="w-full py-3 bg-primary hover:bg-primary-hover text-white rounded-xl font-medium transition-colors flex items-center justify-center space-x-2"
               >
                 <span>View Career Coach Roadmap</span>
                 <ArrowRight className="w-4 h-4" />
@@ -745,9 +745,9 @@ export default function LiveInterview() {
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-4xl bg-[#09090B] border border-[#22C55E]/30 rounded-2xl shadow-[0_0_80px_rgba(34,197,94,0.15)] p-6 sm:p-8 flex flex-col max-h-[90vh] overflow-y-auto"
+              className="w-full max-w-4xl bg-background border border-[#22C55E]/30 rounded-2xl shadow-[0_0_80px_rgba(34,197,94,0.15)] p-6 sm:p-8 flex flex-col max-h-[90vh] overflow-y-auto"
             >
-              <div className="flex flex-col sm:flex-row items-center sm:justify-between border-b border-[rgba(255,255,255,0.05)] pb-6 mb-6 gap-4">
+              <div className="flex flex-col sm:flex-row items-center sm:justify-between border-b border-border/65 pb-6 mb-6 gap-4">
                 <div className="flex items-center space-x-3 text-center sm:text-left">
                   <div className="w-12 h-12 bg-[rgba(34,197,94,0.1)] rounded-full flex items-center justify-center">
                     <Brain className="w-6 h-6 text-[#22C55E]" />
@@ -759,11 +759,11 @@ export default function LiveInterview() {
                 </div>
 
                 <div className="flex items-center space-x-4">
-                  <div className="bg-[#111827] px-4 py-2 rounded-xl border border-[rgba(255,255,255,0.05)] text-center">
+                  <div className="bg-card px-4 py-2 rounded-xl border border-border/65 text-center">
                     <p className="text-[10px] text-gray-500 uppercase font-bold">Final Hirevium Score</p>
                     <p className="text-xl font-bold text-white mt-0.5">{Math.round(metrics.hirevium_score)}</p>
                   </div>
-                  <div className="bg-[#111827] px-4 py-2 rounded-xl border border-[rgba(255,255,255,0.05)] text-center">
+                  <div className="bg-card px-4 py-2 rounded-xl border border-border/65 text-center">
                     <p className="text-[10px] text-gray-500 uppercase font-bold">AI Verdict</p>
                     <p className="text-xs font-semibold text-[#22C55E] mt-2">{metrics.recommendation}</p>
                   </div>
@@ -771,7 +771,7 @@ export default function LiveInterview() {
               </div>
 
               {/* Report Tabs */}
-              <div className="flex border-b border-[rgba(255,255,255,0.05)] mb-6 bg-[#111827]/50 rounded-lg overflow-hidden">
+              <div className="flex border-b border-border/65 mb-6 bg-card/50 rounded-lg overflow-hidden">
                 <button 
                   onClick={() => setReportTab("verdict")}
                   className={`flex-1 py-3 text-xs sm:text-sm font-semibold transition-all ${
@@ -798,11 +798,11 @@ export default function LiveInterview() {
                       Object.entries(evaluationReport.war_room).map(([key, value]: [string, any]) => {
                         const nameMap: any = {
                           technical_lead: { name: "Technical Lead", color: "text-[#3B82F6]", border: "border-[#3B82F6]/20", bg: "bg-[#3B82F6]/5" },
-                          engineering_manager: { name: "Engineering Manager", color: "text-[#A855F7]", border: "border-[#A855F7]/20", bg: "bg-[#A855F7]/5" },
+                          engineering_manager: { name: "Engineering Manager", color: "text-secondary", border: "border-secondary/20", bg: "bg-secondary/5" },
                           recruiter: { name: "Lead Recruiter", color: "text-[#22C55E]", border: "border-[#22C55E]/20", bg: "bg-[#22C55E]/5" },
                           vp_engineering: { name: "VP of Engineering", color: "text-[#F59E0B]", border: "border-[#F59E0B]/20", bg: "bg-[#F59E0B]/5" }
                         };
-                        const info = nameMap[key] || { name: key, color: "text-white", border: "border-[rgba(255,255,255,0.05)]", bg: "bg-[rgba(255,255,255,0.02)]" };
+                        const info = nameMap[key] || { name: key, color: "text-white", border: "border-border/65", bg: "bg-white/2" };
                         return (
                           <div key={key} className={`p-4 rounded-xl border ${info.border} ${info.bg} space-y-3`}>
                             <div className="flex items-center justify-between">
@@ -828,7 +828,7 @@ export default function LiveInterview() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Success Predictions */}
-                    <div className="glass rounded-xl p-5 border border-[rgba(255,255,255,0.05)] space-y-4">
+                    <div className="glass rounded-xl p-5 border border-border/65 space-y-4">
                       <h4 className="font-semibold text-white text-xs flex items-center space-x-2">
                         <Activity className="w-4 h-4 text-[#3B82F6]" />
                         <span>Dynamic Career Success Metrics</span>
@@ -837,14 +837,14 @@ export default function LiveInterview() {
                         {[
                           { title: "Offer Probability", value: evaluationReport?.predictions?.offer_probability || Math.round(metrics.hire_probability), color: "bg-[#22C55E]" },
                           { title: "90-Day Success", value: evaluationReport?.predictions?.success_90_day || Math.round(metrics.hirevium_score * 0.95), color: "bg-[#3B82F6]" },
-                          { title: "Retention probability", value: evaluationReport?.predictions?.retention_probability || 84, color: "bg-[#A855F7]" }
+                          { title: "Retention probability", value: evaluationReport?.predictions?.retention_probability || 84, color: "bg-secondary" }
                         ].map((pred) => (
                           <div key={pred.title} className="space-y-1">
                             <div className="flex justify-between text-xs text-gray-400">
                               <span>{pred.title}</span>
                               <span className="font-bold text-white">{pred.value}%</span>
                             </div>
-                            <div className="w-full bg-[#111827] h-2 rounded-full overflow-hidden border border-[rgba(255,255,255,0.05)]">
+                            <div className="w-full bg-card h-2 rounded-full overflow-hidden border border-border/65">
                               <div className={`${pred.color} h-full rounded-full`} style={{ width: `${pred.value}%` }} />
                             </div>
                           </div>
@@ -853,7 +853,7 @@ export default function LiveInterview() {
                     </div>
 
                     {/* Talent Benchmarks */}
-                    <div className="glass p-5 rounded-xl border border-[rgba(255,255,255,0.05)] space-y-3">
+                    <div className="glass p-5 rounded-xl border border-border/65 space-y-3">
                       <h4 className="font-semibold text-white text-xs flex items-center space-x-2">
                         <Brain className="w-4 h-4 text-[#22C55E]" />
                         <span>Global Market Benchmarks</span>
@@ -862,11 +862,11 @@ export default function LiveInterview() {
                         Your performance ranked relative to global peers screened for identical roles:
                       </p>
                       <div className="space-y-3 text-xs">
-                        <div className="p-3 bg-[#111827] rounded-lg border border-[rgba(255,255,255,0.03)] flex justify-between items-center">
+                        <div className="p-3 bg-card rounded-lg border border-[rgba(255,255,255,0.03)] flex justify-between items-center">
                           <span className="text-gray-400">Technical Depth Rank</span>
                           <span className="font-bold text-white">Top {evaluationReport?.benchmarks?.technical_rank || 15}%</span>
                         </div>
-                        <div className="p-3 bg-[#111827] rounded-lg border border-[rgba(255,255,255,0.03)] flex justify-between items-center">
+                        <div className="p-3 bg-card rounded-lg border border-[rgba(255,255,255,0.03)] flex justify-between items-center">
                           <span className="text-gray-400">System Design Mastery</span>
                           <span className="font-bold text-white">Top {evaluationReport?.benchmarks?.system_design_rank || 18}%</span>
                         </div>

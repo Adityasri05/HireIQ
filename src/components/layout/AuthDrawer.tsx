@@ -237,7 +237,7 @@ export default function AuthDrawer({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 h-full w-full sm:w-[440px] bg-[#09090B] border-l border-[rgba(255,255,255,0.08)] z-[999] shadow-2xl flex flex-col justify-between overflow-y-auto selection:bg-[#7C3AED] selection:text-white"
+            className="fixed right-0 top-0 h-full w-full sm:w-[440px] bg-background border-l border-border z-[999] shadow-2xl flex flex-col justify-between overflow-y-auto selection:bg-primary selection:text-white"
           >
             {/* Upper Section */}
             <div className="p-6 md:p-8 flex-1 flex flex-col justify-start">
@@ -245,7 +245,7 @@ export default function AuthDrawer({
               {/* Header */}
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center space-x-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center shadow-[0_0_12px_rgba(124,58,237,0.4)]">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-[0_0_12px_rgba(var(--primary-rgb),0.4)]">
                     <Sparkles className="w-4 h-4 text-white" />
                   </div>
                   <span className="text-xl font-bold tracking-tight text-gradient-primary">HIREVIUM AUTH</span>
@@ -253,7 +253,7 @@ export default function AuthDrawer({
                 
                 <button 
                   onClick={onClose}
-                  className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
+                  className="w-9 h-9 rounded-full bg-white/5 border border-border flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all cursor-pointer"
                   aria-label="Close auth panel"
                 >
                   <X className="w-5 h-5" />
@@ -261,7 +261,7 @@ export default function AuthDrawer({
               </div>
 
               {/* Toggle Tabs */}
-              <div className="grid grid-cols-2 bg-[#111827] p-1 rounded-xl border border-white/5 mb-8 relative">
+              <div className="grid grid-cols-2 bg-card p-1 rounded-xl border border-border/50 mb-8 relative">
                 <button
                   type="button"
                   onClick={() => setActiveTab("signin")}
@@ -283,7 +283,7 @@ export default function AuthDrawer({
                 
                 {/* Slid-over Background Indicator */}
                 <motion.div
-                  className="absolute bottom-1 top-1 left-1 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] rounded-lg shadow-sm"
+                  className="absolute bottom-1 top-1 left-1 bg-gradient-to-r from-primary to-secondary rounded-lg shadow-sm"
                   style={{ width: "calc(50% - 4px)" }}
                   animate={{ x: activeTab === "signin" ? 0 : "100%" }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -333,7 +333,7 @@ export default function AuthDrawer({
                           placeholder="name@example.com"
                           required
                           disabled={isLoading}
-                          className="w-full bg-[#111827] border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all disabled:opacity-50"
+                          className="w-full bg-card border border-border rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50"
                         />
                       </div>
                     </div>
@@ -341,7 +341,7 @@ export default function AuthDrawer({
                     <div className="space-y-1.5">
                       <div className="flex items-center justify-between px-1">
                         <label className="text-xs text-gray-400 font-semibold">Password</label>
-                        <a href="#" className="text-xs text-[#A855F7] hover:underline transition-colors">Forgot password?</a>
+                        <a href="#" className="text-xs text-secondary hover:underline transition-colors">Forgot password?</a>
                       </div>
                       <div className="relative">
                         <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-500" />
@@ -352,7 +352,7 @@ export default function AuthDrawer({
                           placeholder="••••••••"
                           required
                           disabled={isLoading}
-                          className="w-full bg-[#111827] border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all disabled:opacity-50"
+                          className="w-full bg-card border border-border rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50"
                         />
                       </div>
                     </div>
@@ -360,7 +360,7 @@ export default function AuthDrawer({
                     <button 
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-4 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#6D28D9] hover:to-[#9333EA] disabled:opacity-60 text-white font-medium rounded-xl transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] flex items-center justify-center space-x-2 cursor-pointer mt-6"
+                      className="w-full py-4 bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-secondary-hover disabled:opacity-60 text-white font-medium rounded-xl transition-all shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] flex items-center justify-center space-x-2 cursor-pointer mt-6"
                     >
                       {isLoading ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -388,7 +388,7 @@ export default function AuthDrawer({
                           placeholder="Alex Mercer"
                           required
                           disabled={isLoading}
-                          className="w-full bg-[#111827] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all disabled:opacity-50"
+                          className="w-full bg-card border border-border rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50"
                         />
                       </div>
                     </div>
@@ -404,7 +404,7 @@ export default function AuthDrawer({
                           placeholder="alex@example.com"
                           required
                           disabled={isLoading}
-                          className="w-full bg-[#111827] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all disabled:opacity-50"
+                          className="w-full bg-card border border-border rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50"
                         />
                       </div>
                     </div>
@@ -420,7 +420,7 @@ export default function AuthDrawer({
                           placeholder="Minimum 6 characters"
                           required
                           disabled={isLoading}
-                          className="w-full bg-[#111827] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all disabled:opacity-50"
+                          className="w-full bg-card border border-border rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50"
                         />
                       </div>
                     </div>
@@ -436,7 +436,7 @@ export default function AuthDrawer({
                           placeholder="Re-type your password"
                           required
                           disabled={isLoading}
-                          className="w-full bg-[#111827] border border-white/10 rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all disabled:opacity-50"
+                          className="w-full bg-card border border-border rounded-xl pl-11 pr-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all disabled:opacity-50"
                         />
                       </div>
                     </div>
@@ -444,7 +444,7 @@ export default function AuthDrawer({
                     <button 
                       type="submit"
                       disabled={isLoading}
-                      className="w-full py-4 bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:from-[#6D28D9] hover:to-[#9333EA] disabled:opacity-60 text-white font-medium rounded-xl transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] flex items-center justify-center space-x-2 cursor-pointer mt-4"
+                      className="w-full py-4 bg-gradient-to-r from-primary to-secondary hover:from-primary-hover hover:to-secondary-hover disabled:opacity-60 text-white font-medium rounded-xl transition-all shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] hover:shadow-[0_0_20px_rgba(var(--primary-rgb),0.4)] flex items-center justify-center space-x-2 cursor-pointer mt-4"
                     >
                       {isLoading ? (
                         <Loader2 className="w-5 h-5 animate-spin" />
@@ -463,7 +463,7 @@ export default function AuthDrawer({
             </div>
 
             {/* Footer / Guest disclaimer */}
-            <div className="p-6 md:p-8 bg-[#111827]/40 border-t border-white/5 text-center text-xs text-gray-500 space-y-1">
+            <div className="p-6 md:p-8 bg-card/40 border-t border-border/50 text-center text-xs text-gray-500 space-y-1">
               <p>By proceeding, you agree to Hirevium&apos;s Terms & Privacy Policy.</p>
               <p className="text-gray-600 font-mono">Secure TLS 1.3 / API Auth Handshake</p>
             </div>

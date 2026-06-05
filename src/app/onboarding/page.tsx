@@ -182,19 +182,19 @@ export default function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090B] flex flex-col items-center justify-center p-6 text-white">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-white">
       {/* Progress Bar */}
       <div className="w-full max-w-2xl mb-12">
         <div className="flex justify-between mb-2">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className={`text-sm font-medium ${step >= i ? "text-[#A855F7]" : "text-gray-500"}`}>
+            <div key={i} className={`text-sm font-medium ${step >= i ? "text-secondary" : "text-gray-500"}`}>
               {i === 1 ? "Role" : i === 2 ? "Experience" : i === 3 ? "Resume" : "Goals"}
             </div>
           ))}
         </div>
-        <div className="h-2 w-full bg-[#111827] rounded-full overflow-hidden">
+        <div className="h-2 w-full bg-card rounded-full overflow-hidden">
           <motion.div 
-            className="h-full bg-gradient-to-r from-[#7C3AED] to-[#A855F7]"
+            className="h-full bg-gradient-to-r from-primary to-secondary"
             initial={{ width: 0 }}
             animate={{ width: `${(step / 4) * 100}%` }}
             transition={{ duration: 0.3 }}
@@ -234,11 +234,11 @@ export default function Onboarding() {
                       onClick={() => setRole(r.id)}
                       className={`p-4 rounded-xl border flex items-center space-x-4 transition-all ${
                         isSelected 
-                          ? "bg-[rgba(124,58,237,0.1)] border-[#A855F7] shadow-[0_0_15px_rgba(124,58,237,0.2)]" 
-                          : "border-[rgba(255,255,255,0.05)] hover:border-[rgba(255,255,255,0.2)] hover:bg-[#111827]"
+                          ? "bg-primary/10 border-secondary shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" 
+                          : "border-border/65 hover:border-[rgba(255,255,255,0.2)] hover:bg-card"
                       }`}
                     >
-                      <div className={`p-3 rounded-lg ${isSelected ? "bg-[#7C3AED] text-white" : "bg-[#1F2937] text-gray-400"}`}>
+                      <div className={`p-3 rounded-lg ${isSelected ? "bg-primary text-white" : "bg-[#1F2937] text-gray-400"}`}>
                         <Icon className="w-6 h-6" />
                       </div>
                       <span className="font-medium text-base text-left">{r.name}</span>
@@ -271,18 +271,18 @@ export default function Onboarding() {
                       onClick={() => setExperience(level.id)}
                       className={`w-full p-4 rounded-xl border flex items-center justify-between transition-all ${
                         isSelected 
-                          ? "bg-[rgba(124,58,237,0.1)] border-[#A855F7]" 
-                          : "border-[rgba(255,255,255,0.05)] hover:border-[rgba(255,255,255,0.2)] hover:bg-[#111827]"
+                          ? "bg-primary/10 border-secondary" 
+                          : "border-border/65 hover:border-[rgba(255,255,255,0.2)] hover:bg-card"
                       }`}
                     >
                       <div className="flex items-center space-x-4">
-                        <GraduationCap className={`w-6 h-6 ${isSelected ? "text-[#A855F7]" : "text-gray-500"}`} />
+                        <GraduationCap className={`w-6 h-6 ${isSelected ? "text-secondary" : "text-gray-500"}`} />
                         <div className="text-left">
                           <p className="font-medium">{level.name}</p>
                           <p className="text-xs text-gray-400">{level.desc}</p>
                         </div>
                       </div>
-                      {isSelected && <CheckCircle2 className="w-5 h-5 text-[#A855F7]" />}
+                      {isSelected && <CheckCircle2 className="w-5 h-5 text-secondary" />}
                     </button>
                   );
                 })}
@@ -316,25 +316,25 @@ export default function Onboarding() {
                   onClick={() => !isUploading && fileInputRef.current?.click()}
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
-                  className="border-2 border-dashed border-[rgba(255,255,255,0.1)] rounded-2xl p-10 flex flex-col items-center justify-center bg-[rgba(17,24,39,0.5)] hover:bg-[rgba(17,24,39,0.8)] transition-all cursor-pointer group relative overflow-hidden min-h-[220px]"
+                  className="border-2 border-dashed border-border rounded-2xl p-10 flex flex-col items-center justify-center bg-[rgba(17,24,39,0.5)] hover:bg-[rgba(17,24,39,0.8)] transition-all cursor-pointer group relative overflow-hidden min-h-[220px]"
                 >
                   {isUploading ? (
                     <div className="flex flex-col items-center space-y-4">
-                      <div className="w-12 h-12 rounded-full border-4 border-[rgba(124,58,237,0.2)] border-t-[#A855F7] animate-spin"></div>
+                      <div className="w-12 h-12 rounded-full border-4 border-primary/20 border-t-secondary animate-spin"></div>
                       <div className="text-center">
-                        <p className="text-[#A855F7] font-medium animate-pulse">Extracting Resume Intelligence...</p>
+                        <p className="text-secondary font-medium animate-pulse">Extracting Resume Intelligence...</p>
                         {uploadedFileName && <p className="text-xs text-gray-400 mt-1">{uploadedFileName}</p>}
                       </div>
                     </div>
                   ) : (
                     <>
-                      <div className="w-16 h-16 rounded-full bg-[rgba(124,58,237,0.1)] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                        <UploadCloud className="w-8 h-8 text-[#A855F7]" />
+                      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                        <UploadCloud className="w-8 h-8 text-secondary" />
                       </div>
                       <p className="text-base font-semibold">Drag & Drop Resume here</p>
                       <p className="text-xs text-gray-500 mt-1">or click to browse PDF, DOCX or TXT files (Max 5MB)</p>
                       {uploadedFileName && (
-                        <div className="mt-3 flex items-center space-x-1.5 text-xs text-[#A855F7] bg-[rgba(124,58,237,0.1)] px-2.5 py-1 rounded-full">
+                        <div className="mt-3 flex items-center space-x-1.5 text-xs text-secondary bg-primary/10 px-2.5 py-1 rounded-full">
                           <FileText className="w-3.5 h-3.5" />
                           <span>{uploadedFileName}</span>
                         </div>
@@ -361,7 +361,7 @@ export default function Onboarding() {
 
               <div className="mt-6 space-y-6">
                 <div className="flex justify-center mb-4">
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center shadow-[0_0_30px_rgba(124,58,237,0.4)]">
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center shadow-[0_0_30px_rgba(var(--primary-rgb),0.4)]">
                     <Target className="w-10 h-10 text-white" />
                   </div>
                 </div>
@@ -372,7 +372,7 @@ export default function Onboarding() {
                     value={goal}
                     onChange={(e) => setGoal(e.target.value)}
                     placeholder="e.g. Land a Senior Frontend Engineer role at a top-tier tech company within 3 months..."
-                    className="w-full bg-[#111827] border border-[rgba(255,255,255,0.1)] rounded-xl p-4 text-white focus:outline-none focus:border-[#A855F7] focus:ring-1 focus:ring-[#A855F7] transition-all min-h-[120px] resize-none"
+                    className="w-full bg-card border border-border rounded-xl p-4 text-white focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all min-h-[120px] resize-none"
                   ></textarea>
                 </div>
               </div>
@@ -381,7 +381,7 @@ export default function Onboarding() {
         </AnimatePresence>
 
         {/* Navigation Buttons */}
-        <div className="mt-8 flex justify-between items-center border-t border-[rgba(255,255,255,0.08)] pt-5">
+        <div className="mt-8 flex justify-between items-center border-t border-border pt-5">
           {step > 1 ? (
             <button 
               onClick={prevStep}
@@ -398,7 +398,7 @@ export default function Onboarding() {
               disabled={step === 1 ? !role : !experience}
               className={`flex items-center space-x-2 px-6 py-2 rounded-lg transition-all text-sm ${
                 (step === 1 && role) || (step === 2 && experience)
-                  ? "bg-gradient-to-r from-[#7C3AED] to-[#A855F7] text-white hover:shadow-[0_0_15px_rgba(124,58,237,0.4)]"
+                  ? "bg-gradient-to-r from-primary to-secondary text-white hover:shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)]"
                   : "bg-gray-800 text-gray-500 cursor-not-allowed"
               }`}
             >

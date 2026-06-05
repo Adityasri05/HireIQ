@@ -128,7 +128,7 @@ export default function JDAnalyzer() {
               setGapData(null);
               setJdContent("");
             }}
-            className="px-4 py-2 bg-[#7C3AED] hover:bg-[#6D28D9] rounded-lg text-sm text-white transition-colors flex items-center space-x-2"
+            className="px-4 py-2 bg-primary hover:bg-primary-hover rounded-lg text-sm text-white transition-colors flex items-center space-x-2"
           >
             <FileSearch className="w-4 h-4" />
             <span>Analyze New JD</span>
@@ -144,20 +144,20 @@ export default function JDAnalyzer() {
       )}
 
       {showInput ? (
-        <div className="glass rounded-xl border border-[rgba(255,255,255,0.05)] p-6 space-y-4">
+        <div className="glass rounded-xl border border-border/65 p-6 space-y-4">
           <h3 className="text-sm font-semibold text-white">Paste Job Description</h3>
           <textarea
             value={jdContent}
             onChange={(e) => setJdContent(e.target.value)}
             disabled={isAnalyzing}
             placeholder="We are looking for a Software Engineer proficient in React, Node, Python, and GraphQL. Experience with database design and AWS deployments is highly preferred..."
-            className="w-full bg-[#111827] border border-[rgba(255,255,255,0.1)] rounded-xl p-4 text-white text-sm focus:outline-none focus:border-[#7C3AED] transition-all min-h-[220px]"
+            className="w-full bg-card border border-border rounded-xl p-4 text-white text-sm focus:outline-none focus:border-primary transition-all min-h-[220px]"
           />
           <div className="flex justify-end">
             <button
               onClick={handleAnalyzeJD}
               disabled={isAnalyzing || !jdContent.trim()}
-              className="px-6 py-3 bg-[#7C3AED] hover:bg-[#6D28D9] disabled:opacity-50 text-white font-medium rounded-xl text-sm transition-all shadow-[0_0_15px_rgba(124,58,237,0.3)] flex items-center space-x-2"
+              className="px-6 py-3 bg-primary hover:bg-primary-hover disabled:opacity-50 text-white font-medium rounded-xl text-sm transition-all shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)] flex items-center space-x-2"
             >
               {isAnalyzing ? (
                 <>
@@ -181,7 +181,7 @@ export default function JDAnalyzer() {
             animate={{ opacity: 1, scale: 1 }}
             className="lg:col-span-1 space-y-6"
           >
-            <div className="glass p-6 rounded-xl border border-[rgba(255,255,255,0.05)] text-center flex flex-col items-center justify-center min-h-[250px]">
+            <div className="glass p-6 rounded-xl border border-border/65 text-center flex flex-col items-center justify-center min-h-[250px]">
               <h3 className="font-semibold text-gray-400 mb-4">Overall Match Score</h3>
               <div className="relative w-32 h-32 flex items-center justify-center">
                 <svg className="w-full h-full transform -rotate-90">
@@ -202,15 +202,15 @@ export default function JDAnalyzer() {
                   <span className="text-3xl font-bold text-white">{gapData?.match_score}%</span>
                 </div>
               </div>
-              <p className="text-sm text-[#A855F7] mt-4 font-medium">
+              <p className="text-sm text-secondary mt-4 font-medium">
                 {gapData?.match_score && gapData.match_score > 80 ? "Excellent Match" : gapData?.match_score && gapData.match_score > 60 ? "Good Match" : "Bridging Required"}
               </p>
             </div>
 
-            <div className="glass p-6 rounded-xl border border-[rgba(255,255,255,0.05)]">
+            <div className="glass p-6 rounded-xl border border-border/65">
               <h3 className="font-semibold text-white mb-4">Role Requirements</h3>
               <div className="space-y-4">
-                <div className="text-xs text-gray-400 bg-[rgba(255,255,255,0.02)] p-3 rounded-lg border border-[rgba(255,255,255,0.02)] leading-relaxed">
+                <div className="text-xs text-gray-400 bg-white/2 p-3 rounded-lg border border-[rgba(255,255,255,0.02)] leading-relaxed">
                   <strong className="text-white">AI Verdict: </strong>
                   {gapData?.summary}
                 </div>
@@ -223,11 +223,11 @@ export default function JDAnalyzer() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="lg:col-span-2 glass rounded-xl border border-[rgba(255,255,255,0.05)] overflow-hidden flex flex-col"
+            className="lg:col-span-2 glass rounded-xl border border-border/65 overflow-hidden flex flex-col"
           >
-            <div className="p-6 border-b border-[rgba(255,255,255,0.05)] bg-[#111827]">
+            <div className="p-6 border-b border-border/65 bg-card">
               <h3 className="font-semibold text-white text-lg flex items-center space-x-2">
-                <Target className="w-5 h-5 text-[#A855F7]" />
+                <Target className="w-5 h-5 text-secondary" />
                 <span>Skill Gap Analysis</span>
               </h3>
             </div>
@@ -261,7 +261,7 @@ export default function JDAnalyzer() {
                   </h4>
                   <div className="space-y-3">
                     {gapData.skills_to_improve.map((imp, idx) => (
-                      <div key={idx} className="p-3 rounded-lg border border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.02)]">
+                      <div key={idx} className="p-3 rounded-lg border border-border/65 bg-white/2">
                         <div className="flex justify-between items-center mb-2">
                           <p className="text-white font-medium text-sm">{imp.skill}</p>
                           <span className="text-xs text-[#F59E0B]">Gap: {imp.gap}%</span>
@@ -275,10 +275,10 @@ export default function JDAnalyzer() {
                 </div>
               )}
 
-              <div className="mt-auto pt-6 border-t border-[rgba(255,255,255,0.05)]">
+              <div className="mt-auto pt-6 border-t border-border/65">
                 <button 
                   onClick={() => window.location.href = '/dashboard/career-coach'}
-                  className="w-full py-3 bg-[rgba(124,58,237,0.1)] hover:bg-[rgba(124,58,237,0.2)] border border-[rgba(124,58,237,0.3)] text-[#A855F7] rounded-xl font-medium transition-colors flex items-center justify-center space-x-2"
+                  className="w-full py-3 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-secondary rounded-xl font-medium transition-colors flex items-center justify-center space-x-2"
                 >
                   <BookOpen className="w-4 h-4" />
                   <span>Generate Learning Roadmap</span>

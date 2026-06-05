@@ -79,7 +79,7 @@ export default function Dashboard() {
 
   const [metrics, setMetrics] = useState<MetricSummary[]>([
     { title: "Hire Probability", value: "91%", icon: TrendingUp, color: "text-[#22C55E]" },
-    { title: "Technical Competency", value: "90%", icon: Brain, color: "text-[#A855F7]" },
+    { title: "Technical Competency", value: "90%", icon: Brain, color: "text-secondary" },
     { title: "Communication Mastery", value: "88%", icon: MessageSquare, color: "text-[#3B82F6]" },
     { title: "Pressure Stability", value: "84%", icon: Activity, color: "text-[#F59E0B]" },
   ]);
@@ -123,7 +123,7 @@ export default function Dashboard() {
           
           setMetrics([
             { title: "Hire Probability", value: `${Math.round(prob)}%`, icon: TrendingUp, color: "text-[#22C55E]" },
-            { title: "Technical Competency", value: `${Math.round(data.technical_score || score)}%`, icon: Brain, color: "text-[#A855F7]" },
+            { title: "Technical Competency", value: `${Math.round(data.technical_score || score)}%`, icon: Brain, color: "text-secondary" },
             { title: "Communication Mastery", value: `${Math.round(data.communication_score || score * 0.95)}%`, icon: MessageSquare, color: "text-[#3B82F6]" },
             { title: "Pressure Stability", value: `${Math.round(data.pressure_score || score * 0.9)}%`, icon: Activity, color: "text-[#F59E0B]" },
           ]);
@@ -165,7 +165,7 @@ export default function Dashboard() {
   if (isLoading) {
     return (
       <div className="h-[60vh] flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="w-10 h-10 text-[#A855F7] animate-spin" />
+        <Loader2 className="w-10 h-10 text-secondary animate-spin" />
         <p className="text-gray-400 text-sm">Gathering Candidate Intelligence Profile...</p>
       </div>
     );
@@ -215,14 +215,14 @@ export default function Dashboard() {
         <div className="flex items-center space-x-3">
           <button 
             onClick={() => window.location.href = "/dashboard/resumes"}
-            className="px-4 py-2 glass hover:bg-[rgba(255,255,255,0.05)] rounded-lg text-sm text-white transition-colors flex items-center space-x-2"
+            className="px-4 py-2 glass hover:bg-white/5 rounded-lg text-sm text-white transition-colors flex items-center space-x-2"
           >
             <FileText className="w-4 h-4 text-gray-400" />
             <span>View Resume</span>
           </button>
           <button 
             onClick={() => window.location.href = "/dashboard/live-interview"}
-            className="px-4 py-2 bg-[#7C3AED] hover:bg-[#6D28D9] rounded-lg text-sm text-white transition-colors flex items-center space-x-2 cursor-pointer font-semibold shadow-[0_0_15px_rgba(124,58,237,0.3)]"
+            className="px-4 py-2 bg-primary hover:bg-primary-hover rounded-lg text-sm text-white transition-colors flex items-center space-x-2 cursor-pointer font-semibold shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]"
           >
             <Target className="w-4 h-4 animate-pulse" />
             <span>New Interview Mock</span>
@@ -241,14 +241,14 @@ export default function Dashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="glass p-5 rounded-xl border border-[rgba(255,255,255,0.05)] hover:border-[rgba(124,58,237,0.3)] transition-colors"
+              className="glass p-5 rounded-xl border border-border/65 hover:border-primary/30 transition-colors"
             >
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-gray-400 text-sm mb-1">{metric.title}</p>
                   <h3 className="text-2xl font-bold text-white">{metric.value}</h3>
                 </div>
-                <div className={`p-2 rounded-lg bg-[rgba(255,255,255,0.05)] ${metric.color}`}>
+                <div className={`p-2 rounded-lg bg-white/5 ${metric.color}`}>
                   <Icon className="w-5 h-5" />
                 </div>
               </div>
@@ -258,12 +258,12 @@ export default function Dashboard() {
       </div>
 
       {/* Advanced Telemetry Tabbed Container */}
-      <div className="glass rounded-xl border border-[rgba(255,255,255,0.05)] overflow-hidden">
-        <div className="flex border-b border-[rgba(255,255,255,0.05)] bg-[#111827]">
+      <div className="glass rounded-xl border border-border/65 overflow-hidden">
+        <div className="flex border-b border-border/65 bg-card">
           <button 
             onClick={() => setActiveTelemetryTab("twin")}
             className={`flex-1 py-4 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center space-x-2 ${
-              activeTelemetryTab === "twin" ? "bg-[rgba(124,58,237,0.05)] text-white border-b-2 border-[#A855F7]" : "text-gray-400 hover:text-white"
+              activeTelemetryTab === "twin" ? "bg-primary/5 text-white border-b-2 border-secondary" : "text-gray-400 hover:text-white"
             }`}
           >
             <Cpu className="w-4 h-4" />
@@ -272,7 +272,7 @@ export default function Dashboard() {
           <button 
             onClick={() => setActiveTelemetryTab("predictions")}
             className={`flex-1 py-4 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center space-x-2 ${
-              activeTelemetryTab === "predictions" ? "bg-[rgba(124,58,237,0.05)] text-white border-b-2 border-[#A855F7]" : "text-gray-400 hover:text-white"
+              activeTelemetryTab === "predictions" ? "bg-primary/5 text-white border-b-2 border-secondary" : "text-gray-400 hover:text-white"
             }`}
           >
             <PieChart className="w-4 h-4" />
@@ -281,7 +281,7 @@ export default function Dashboard() {
           <button 
             onClick={() => setActiveTelemetryTab("benchmarks")}
             className={`flex-1 py-4 text-xs sm:text-sm font-semibold transition-all flex items-center justify-center space-x-2 ${
-              activeTelemetryTab === "benchmarks" ? "bg-[rgba(124,58,237,0.05)] text-white border-b-2 border-[#A855F7]" : "text-gray-400 hover:text-white"
+              activeTelemetryTab === "benchmarks" ? "bg-primary/5 text-white border-b-2 border-secondary" : "text-gray-400 hover:text-white"
             }`}
           >
             <Globe className="w-4 h-4" />
@@ -323,15 +323,15 @@ export default function Dashboard() {
                 <div className="lg:col-span-2 space-y-4">
                   <h4 className="font-semibold text-white text-xs">AI Candidate Twin Insights</h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="p-4 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl space-y-2">
-                      <h5 className="text-xs font-bold text-[#A855F7] uppercase tracking-wider">Problem-Solving Profile</h5>
+                    <div className="p-4 bg-white/2 border border-border/65 rounded-xl space-y-2">
+                      <h5 className="text-xs font-bold text-secondary uppercase tracking-wider">Problem-Solving Profile</h5>
                       <p className="text-sm text-white font-medium">{learningVelocity.profile || `Adaptive ${candidateRole}`}</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
                         Demonstrated strong technical logic and capability using {topSkillsList.slice(0, 4).join(", ") || "core frameworks"}. Highly flexible at shifting algorithm design architectures.
                       </p>
                     </div>
 
-                    <div className="p-4 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl space-y-2">
+                    <div className="p-4 bg-white/2 border border-border/65 rounded-xl space-y-2">
                       <h5 className="text-xs font-bold text-[#22C55E] uppercase tracking-wider">Communication Vector</h5>
                       <p className="text-sm text-white font-medium">Structured & Clear Architectural Flow</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
@@ -339,7 +339,7 @@ export default function Dashboard() {
                       </p>
                     </div>
 
-                    <div className="p-4 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl space-y-2">
+                    <div className="p-4 bg-white/2 border border-border/65 rounded-xl space-y-2">
                       <h5 className="text-xs font-bold text-[#3B82F6] uppercase tracking-wider">Learning Velocity Coefficient</h5>
                       <p className="text-sm text-white font-medium">High Growth Rate verified (+{learningVelocity.growth_rate || 18.5}%)</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
@@ -347,7 +347,7 @@ export default function Dashboard() {
                       </p>
                     </div>
 
-                    <div className="p-4 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-xl space-y-2">
+                    <div className="p-4 bg-white/2 border border-border/65 rounded-xl space-y-2">
                       <h5 className="text-xs font-bold text-[#F59E0B] uppercase tracking-wider">Historical Performance Vector</h5>
                       <p className="text-sm text-white font-medium">Steady Progression</p>
                       <p className="text-xs text-gray-400 leading-relaxed">
@@ -370,9 +370,9 @@ export default function Dashboard() {
                 {[
                   { title: "Offer Probability", value: predictions.offer_probability, color: "text-[#22C55E]", desc: "Likelihood of receiving an offer from a top-tier tech screening pipeline." },
                   { title: "90-Day Success Rate", value: predictions.success_90_day, color: "text-[#3B82F6]", desc: "Projected team delivery performance and operational success in the first quarter." },
-                  { title: "Retention probability", value: predictions.retention_probability, color: "text-[#A855F7]", desc: "Likelihood of long-term cultural alignment and contribution vector." }
+                  { title: "Retention probability", value: predictions.retention_probability, color: "text-secondary", desc: "Likelihood of long-term cultural alignment and contribution vector." }
                 ].map((pred) => (
-                  <div key={pred.title} className="glass p-6 rounded-xl border border-[rgba(255,255,255,0.05)] text-center flex flex-col justify-between space-y-4">
+                  <div key={pred.title} className="glass p-6 rounded-xl border border-border/65 text-center flex flex-col justify-between space-y-4">
                     <div>
                       <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">{pred.title}</h4>
                       <p className={`text-5xl font-extrabold mt-4 ${pred.color}`}>{pred.value}%</p>
@@ -401,7 +401,7 @@ export default function Dashboard() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                   {[
-                    { label: "Technical Competency", val: `Top ${benchmarks.technical_rank || 12}%`, color: "border-[#A855F7]/30 bg-[#A855F7]/5 text-[#A855F7]" },
+                    { label: "Technical Competency", val: `Top ${benchmarks.technical_rank || 12}%`, color: "border-secondary/30 bg-secondary/5 text-secondary" },
                     { label: "Communication Flow", val: `Top ${benchmarks.communication_rank || 15}%`, color: "border-[#3B82F6]/30 bg-[#3B82F6]/5 text-[#3B82F6]" },
                     { label: "System Architecture", val: `Top ${benchmarks.system_design_rank || 20}%`, color: "border-[#F59E0B]/30 bg-[#F59E0B]/5 text-[#F59E0B]" },
                     { label: "Problem Solving Speed", val: `Top ${benchmarks.problem_solving_rank || 8}%`, color: "border-[#22C55E]/30 bg-[#22C55E]/5 text-[#22C55E]" }
@@ -425,7 +425,7 @@ export default function Dashboard() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5 }}
-          className="lg:col-span-3 glass rounded-xl p-6 border border-[rgba(255,255,255,0.05)]"
+          className="lg:col-span-3 glass rounded-xl p-6 border border-border/65"
         >
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-semibold text-white flex items-center space-x-2">
@@ -439,7 +439,7 @@ export default function Dashboard() {
                 <XAxis dataKey="name" stroke="#4B5563" tick={{ fill: '#9CA3AF' }} />
                 <YAxis stroke="#4B5563" tick={{ fill: '#9CA3AF' }} domain={[0, 100]} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#111827', borderColor: 'rgba(124,58,237,0.3)', borderRadius: '8px' }}
+                  contentStyle={{ backgroundColor: '#111827', borderColor: 'rgba(var(--primary-rgb),0.3)', borderRadius: '8px' }}
                   itemStyle={{ color: '#F8FAFC' }}
                 />
                 <Line 
@@ -461,21 +461,21 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="glass rounded-xl p-6 border border-[rgba(255,255,255,0.05)]"
+        className="glass rounded-xl p-6 border border-border/65"
       >
         <h3 className="font-semibold text-white mb-6">Recent Interviews</h3>
         <div className="space-y-4">
           {dashboardData?.recent_interviews && dashboardData.recent_interviews.length > 0 ? (
             dashboardData.recent_interviews.map((interview: any, i: number) => (
-              <div key={interview.id || i} className="flex items-center justify-between p-4 rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.04)] transition-colors">
+              <div key={interview.id || i} className="flex items-center justify-between p-4 rounded-lg bg-white/2 border border-border/65 hover:bg-[rgba(255,255,255,0.04)] transition-colors">
                 <div className="flex items-start space-x-4">
-                  <div className="p-2 rounded-lg bg-[rgba(124,58,237,0.1)] text-[#A855F7]">
+                  <div className="p-2 rounded-lg bg-primary/10 text-secondary">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
                     <h4 className="font-medium text-white flex items-center space-x-2">
                       <span>Practice Screen</span>
-                      <span className="text-xs px-2 py-0.5 rounded border border-white/10 bg-white/5 font-semibold text-[#A855F7]">
+                      <span className="text-xs px-2 py-0.5 rounded border border-border bg-white/5 font-semibold text-secondary">
                         {interview.type}
                       </span>
                     </h4>
@@ -485,7 +485,7 @@ export default function Dashboard() {
                 <div className="flex items-center space-x-6">
                   <div className="text-right hidden sm:block">
                     <p className="font-bold text-white">{interview.score}/100</p>
-                    <p className={`text-xs ${interview.score > 85 ? 'text-[#22C55E]' : interview.score > 75 ? 'text-[#A855F7]' : 'text-[#F59E0B]'}`}>
+                    <p className={`text-xs ${interview.score > 85 ? 'text-[#22C55E]' : interview.score > 75 ? 'text-secondary' : 'text-[#F59E0B]'}`}>
                       {interview.recommendation}
                     </p>
                   </div>
@@ -501,9 +501,9 @@ export default function Dashboard() {
               { role: "Frontend Developer", type: "Behavioral", date: "5 days ago", score: 84, status: "Hire" },
               { role: "Full Stack Engineer", type: "System Design", date: "1 week ago", score: 72, status: "Borderline" },
             ].map((interview, i) => (
-              <div key={i} className="flex items-center justify-between p-4 rounded-lg bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.04)] transition-colors">
+              <div key={i} className="flex items-center justify-between p-4 rounded-lg bg-white/2 border border-border/65 hover:bg-[rgba(255,255,255,0.04)] transition-colors">
                 <div className="flex items-start space-x-4">
-                  <div className="p-2 rounded-lg bg-[rgba(124,58,237,0.1)] text-[#A855F7]">
+                  <div className="p-2 rounded-lg bg-primary/10 text-secondary">
                     <Clock className="w-5 h-5" />
                   </div>
                   <div>
@@ -514,7 +514,7 @@ export default function Dashboard() {
                 <div className="flex items-center space-x-6">
                   <div className="text-right hidden sm:block">
                     <p className="font-bold text-white">{interview.score}/100</p>
-                    <p className={`text-xs ${interview.score > 85 ? 'text-[#22C55E]' : interview.score > 75 ? 'text-[#A855F7]' : 'text-[#F59E0B]'}`}>
+                    <p className={`text-xs ${interview.score > 85 ? 'text-[#22C55E]' : interview.score > 75 ? 'text-secondary' : 'text-[#F59E0B]'}`}>
                       {interview.status}
                     </p>
                   </div>

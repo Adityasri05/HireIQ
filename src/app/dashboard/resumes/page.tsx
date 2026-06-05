@@ -214,7 +214,7 @@ export default function ResumeIntelligence() {
           <button 
             onClick={() => fileInputRef.current?.click()}
             disabled={isLoading}
-            className="px-4 py-2 bg-[#7C3AED] hover:bg-[#6D28D9] rounded-lg text-sm text-white transition-colors flex items-center space-x-2 disabled:opacity-50"
+            className="px-4 py-2 bg-primary hover:bg-primary-hover rounded-lg text-sm text-white transition-colors flex items-center space-x-2 disabled:opacity-50"
           >
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -234,8 +234,8 @@ export default function ResumeIntelligence() {
       )}
 
       {isLoading ? (
-        <div className="glass p-12 rounded-xl border border-[rgba(255,255,255,0.05)] flex flex-col items-center justify-center space-y-4">
-          <div className="w-16 h-16 rounded-full border-4 border-[rgba(124,58,237,0.2)] border-t-[#A855F7] animate-spin"></div>
+        <div className="glass p-12 rounded-xl border border-border/65 flex flex-col items-center justify-center space-y-4">
+          <div className="w-16 h-16 rounded-full border-4 border-primary/20 border-t-secondary animate-spin"></div>
           <div className="text-center">
             <h3 className="text-lg font-semibold text-white">AI Extracting Resume Intelligence</h3>
             <p className="text-sm text-gray-400 mt-1">Cross-referencing technical skills, timeline validation, and project complexity...</p>
@@ -249,14 +249,14 @@ export default function ResumeIntelligence() {
             animate={{ opacity: 1, scale: 1 }}
             className="lg:col-span-1 space-y-6"
           >
-            <div className="glass p-6 rounded-xl border border-[rgba(255,255,255,0.05)]">
+            <div className="glass p-6 rounded-xl border border-border/65">
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center text-xl font-bold text-white shadow-[0_0_15px_rgba(124,58,237,0.4)]">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-xl font-bold text-white shadow-[0_0_15px_rgba(var(--primary-rgb),0.4)]">
                   {data.name.split(" ").map(n => n[0]).join("")}
                 </div>
                 <div>
                   <h2 className="text-xl font-bold text-white">{data.name}</h2>
-                  <p className="text-sm text-[#A855F7]">{data.target_role}</p>
+                  <p className="text-sm text-secondary">{data.target_role}</p>
                 </div>
               </div>
 
@@ -276,9 +276,9 @@ export default function ResumeIntelligence() {
               </div>
             </div>
 
-            <div className="glass p-6 rounded-xl border border-[rgba(255,255,255,0.05)] bg-[rgba(124,58,237,0.05)] border-[#A855F7]/30">
+            <div className="glass p-6 rounded-xl border border-border/65 bg-primary/5 border-secondary/30">
               <h3 className="font-semibold text-white mb-2 flex items-center space-x-2">
-                <ShieldCheck className="w-5 h-5 text-[#A855F7]" />
+                <ShieldCheck className="w-5 h-5 text-secondary" />
                 <span>Overall Trust Score</span>
               </h3>
               <div className="flex items-end space-x-2">
@@ -298,15 +298,15 @@ export default function ResumeIntelligence() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="lg:col-span-2 glass rounded-xl border border-[rgba(255,255,255,0.05)] overflow-hidden flex flex-col"
+            className="lg:col-span-2 glass rounded-xl border border-border/65 overflow-hidden flex flex-col"
           >
-            <div className="p-6 border-b border-[rgba(255,255,255,0.05)] bg-[#111827]">
+            <div className="p-6 border-b border-border/65 bg-card">
               <h3 className="font-semibold text-white text-lg">Skill Verification Matrix</h3>
             </div>
             
             <div className="overflow-x-auto flex-1">
               <table className="w-full text-sm text-left">
-                <thead className="text-xs text-gray-400 uppercase bg-[#09090B]">
+                <thead className="text-xs text-gray-400 uppercase bg-background">
                   <tr>
                     <th className="px-6 py-4 font-medium">Skill</th>
                     <th className="px-6 py-4 font-medium">Claimed</th>
@@ -317,7 +317,7 @@ export default function ResumeIntelligence() {
                 </thead>
                 <tbody className="divide-y divide-[rgba(255,255,255,0.05)]">
                   {data.skills.map((item, i) => (
-                    <tr key={i} className="hover:bg-[rgba(255,255,255,0.02)] transition-colors">
+                    <tr key={i} className="hover:bg-white/2 transition-colors">
                       <td className="px-6 py-4 font-medium text-white">{item.skill}</td>
                       <td className="px-6 py-4">
                         {item.claimed ? <CheckCircle2 className="w-4 h-4 text-gray-400" /> : "-"}

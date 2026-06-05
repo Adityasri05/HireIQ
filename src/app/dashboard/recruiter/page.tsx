@@ -49,7 +49,7 @@ interface ReportDetails {
   };
   evaluations: Array<{
     interview_id: string;
-    hireiq_score: number;
+    hirevium_score: number;
     technical_score: number;
     communication_score: number;
     pressure_score: number;
@@ -91,10 +91,10 @@ export default function RecruiterWorkspace() {
         const mapped = candidateList.map((cand: any, idx: number) => ({
           id: cand.id || `c-${idx}`,
           name: cand.name || "Candidate",
-          email: cand.email || "candidate@hireiq.ai",
+          email: cand.email || "candidate@hirevium.ai",
           role: cand.target_role || "Software Engineer",
           experience_level: cand.experience_level || "Not specified",
-          score: cand.hireiq_score !== undefined ? Math.round(cand.hireiq_score) : 75,
+          score: cand.hirevium_score !== undefined ? Math.round(cand.hirevium_score) : 75,
           status: cand.recommendation || "Borderline",
           verified: cand.skill_verification_score !== undefined ? Math.round(cand.skill_verification_score) : 70,
           applied: "Just now"
@@ -104,10 +104,10 @@ export default function RecruiterWorkspace() {
         console.warn("Failed fetching recruiter candidate ranking pipeline, using high-fidelity fallbacks", e);
         
         setCandidates([
-          { id: "c1", name: "Alex Developer", email: "alex@hireiq.ai", role: "Senior Frontend Engineer", score: 91, status: "Strong Hire", verified: 92, applied: "2d ago", experience_level: "Senior" },
-          { id: "c2", name: "Sarah Miller", email: "sarah@hireiq.ai", role: "Full Stack Developer", score: 85, status: "Hire", verified: 88, applied: "3d ago", experience_level: "Mid-level" },
-          { id: "c3", name: "David K.", email: "david@hireiq.ai", role: "Backend Engineer", score: 72, status: "Borderline", verified: 65, applied: "1w ago", experience_level: "Junior" },
-          { id: "c4", name: "Emily Watson", email: "emily@hireiq.ai", role: "Data Scientist", score: 94, status: "Strong Hire", verified: 96, applied: "1w ago", experience_level: "Lead" }
+          { id: "c1", name: "Alex Developer", email: "alex@hirevium.ai", role: "Senior Frontend Engineer", score: 91, status: "Strong Hire", verified: 92, applied: "2d ago", experience_level: "Senior" },
+          { id: "c2", name: "Sarah Miller", email: "sarah@hirevium.ai", role: "Full Stack Developer", score: 85, status: "Hire", verified: 88, applied: "3d ago", experience_level: "Mid-level" },
+          { id: "c3", name: "David K.", email: "david@hirevium.ai", role: "Backend Engineer", score: 72, status: "Borderline", verified: 65, applied: "1w ago", experience_level: "Junior" },
+          { id: "c4", name: "Emily Watson", email: "emily@hirevium.ai", role: "Data Scientist", score: 94, status: "Strong Hire", verified: 96, applied: "1w ago", experience_level: "Lead" }
         ]);
       } finally {
         setIsLoading(false);
@@ -136,7 +136,7 @@ export default function RecruiterWorkspace() {
         // Dynamic premium mock report matching candidates list
         const cand = candidates.find(c => c.id === selectedCandId);
         const name = cand?.name || "Candidate";
-        const email = cand?.email || "candidate@hireiq.ai";
+        const email = cand?.email || "candidate@hirevium.ai";
         const role = cand?.role || "Software Engineer";
         const score = cand?.score || 75;
         const rec = cand?.status || "Hire";
@@ -151,7 +151,7 @@ export default function RecruiterWorkspace() {
           evaluations: [
             {
               interview_id: "int-mock",
-              hireiq_score: score,
+              hirevium_score: score,
               technical_score: Math.round(score * 0.98),
               communication_score: Math.round(score * 0.95),
               pressure_score: Math.round(score * 0.92),
@@ -324,7 +324,7 @@ export default function RecruiterWorkspace() {
                   <tr>
                     <th className="px-6 py-4 font-medium">Candidate</th>
                     <th className="px-6 py-4 font-medium">Target Role</th>
-                    <th className="px-6 py-4 font-medium">HireIQ Score</th>
+                    <th className="px-6 py-4 font-medium">Hirevium Score</th>
                     <th className="px-6 py-4 font-medium">Recommendation</th>
                     <th className="px-6 py-4 font-medium">Skill Verification</th>
                     <th className="px-6 py-4 font-medium text-right">Actions</th>
@@ -421,8 +421,8 @@ export default function RecruiterWorkspace() {
                       <h2 className="text-xl font-bold text-white flex items-center space-x-2">
                         <span>{reportDetails.candidate.name}</span>
                         <span className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                          (reportDetails.evaluations[0]?.hireiq_score || 75) > 90 ? "bg-[rgba(34,197,94,0.15)] text-[#22C55E]" :
-                          (reportDetails.evaluations[0]?.hireiq_score || 75) > 80 ? "bg-[rgba(168,85,247,0.15)] text-[#A855F7]" :
+                          (reportDetails.evaluations[0]?.hirevium_score || 75) > 90 ? "bg-[rgba(34,197,94,0.15)] text-[#22C55E]" :
+                          (reportDetails.evaluations[0]?.hirevium_score || 75) > 80 ? "bg-[rgba(168,85,247,0.15)] text-[#A855F7]" :
                           "bg-[rgba(245,158,11,0.15)] text-[#F59E0B]"
                         }`}>
                           {reportDetails.evaluations[0]?.recommendation || "Borderline"}

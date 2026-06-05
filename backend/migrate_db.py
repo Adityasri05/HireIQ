@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 def migrate():
-    db_path = os.path.join(os.path.dirname(__file__), 'hireiq.db')
+    db_path = os.path.join(os.path.dirname(__file__), 'hirevium.db')
     print(f"Opening database at {db_path}...")
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()

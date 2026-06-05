@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "HIREIQ | AI Hiring Intelligence Platform",
+  title: "HIREVIUM | AI Hiring Intelligence Platform",
   description: "Ace Every Interview with AI-powered hiring intelligence.",
 };
 

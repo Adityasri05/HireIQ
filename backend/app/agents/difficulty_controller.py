@@ -1,6 +1,6 @@
 from app.agents.base_agent import call_gemini
 
-SYSTEM_PROMPT = """You are the Difficulty Controller Agent for HireIQ.
+SYSTEM_PROMPT = """You are the Difficulty Controller Agent for Hirevium.
 
 Based on the candidate's running performance, decide whether to adjust the interview difficulty.
 

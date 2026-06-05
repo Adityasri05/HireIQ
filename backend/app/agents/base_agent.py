@@ -821,7 +821,7 @@ def _generate_mock_response(system_prompt: str, user_prompt: str) -> dict:
         elif any(w in msg_lower for w in ["difficulty", "hard", "interview", "practice"]):
             response_text = (
                 "### Interview Difficulty Configurations\n\n"
-                "We can configure your HireIQ interviews to be **Hard** level difficulty. Here is what changes:\n\n"
+                "We can configure your Hirevium interviews to be **Hard** level difficulty. Here is what changes:\n\n"
                 "- **System Design Focus**: Queries will emphasize database sharding, replication lag, CAP theorem, and CDN caching.\n"
                 "- **Deep Technical Concepts**: Python memory management, GIL, async task starvation, and metaclasses.\n"
                 "- **Time Constraints**: Shorter answering windows with adaptive follow-ups analyzing code complexity.\n\n"
@@ -834,13 +834,13 @@ def _generate_mock_response(system_prompt: str, user_prompt: str) -> dict:
             ]
         elif any(w in msg_lower for w in ["hello", "hi", "hey"]):
             response_text = (
-                "Hello! I am your HireIQ AI Copilot. I can help you understand your resume analysis, career path options, "
+                "Hello! I am your Hirevium AI Copilot. I can help you understand your resume analysis, career path options, "
                 "or explain concepts from your mock interviews. What would you like to explore today?"
             )
         else:
             response_text = (
                 f"Regarding your query: *\"{user_msg[:100] + '...' if len(user_msg) > 100 else user_msg}\"*\n\n"
-                "To increase your HireIQ score, focus on **Asynchronous Python** and **Database Optimization**! "
+                "To increase your Hirevium score, focus on **Asynchronous Python** and **Database Optimization**! "
                 "Based on your latest interview, you scored an impressive 83% on Core Python but had minor gaps in handling blocking database queries in async handlers. "
                 "I suggest checking out the **SQLAlchemy 2.0 Async Guide** in your personalized learning roadmap."
             )

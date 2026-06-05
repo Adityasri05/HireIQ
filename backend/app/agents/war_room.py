@@ -1,6 +1,6 @@
 from app.agents.base_agent import call_gemini
 
-SYSTEM_PROMPT = """You are the AI Hiring War Room Committee for HireIQ. 
+SYSTEM_PROMPT = """You are the AI Hiring War Room Committee for Hirevium. 
 You simulate a real hiring committee at a top-tier tech company. You consist of four distinct evaluators:
 1. Technical Lead: Focuses heavily on code accuracy, algorithms, systems design, and performance optimizations.
 2. Engineering Manager: Focuses on communication, execution under pressure, collaboration, and project delivery.
@@ -63,7 +63,7 @@ async def evaluate_war_room(interview_history: list, overall_metrics: dict) -> d
         pass
         
     # Standard high-fidelity mock fallback if call_gemini doesn't return the structured war room
-    avg_score = overall_metrics.get("hireiq_score", 75)
+    avg_score = overall_metrics.get("hirevium_score", 75)
     rec = overall_metrics.get("recommendation", "Hire")
     
     return {

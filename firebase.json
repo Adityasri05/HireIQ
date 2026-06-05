@@ -17,7 +17,7 @@
     "providers": {
       "emailPassword": true,
       "googleSignIn": {
-        "oAuthBrandDisplayName": "HireIQ",
+        "oAuthBrandDisplayName": "Hirevium",
         "supportEmail": "support@undefined.firebaseapp.com"
       }
     }

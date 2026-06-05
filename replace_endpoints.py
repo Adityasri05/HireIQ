@@ -13,7 +13,7 @@ files = [
     "src/app/login/page.tsx"
 ]
 
-base_dir = "d:/Hackathon Projects/HireIQ"
+base_dir = "d:/Hackathon Projects/Hirevium"
 
 for rel_path in files:
     full_path = os.path.join(base_dir, rel_path)

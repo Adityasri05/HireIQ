@@ -81,8 +81,8 @@ export default function Onboarding() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          localStorage.removeItem("hireiq_token");
-          localStorage.removeItem("hireiq_user");
+          localStorage.removeItem("hirevium_token");
+          localStorage.removeItem("hirevium_user");
           router.push("/login");
           return;
         }
@@ -102,13 +102,13 @@ export default function Onboarding() {
         }
         if (parsed.name && parsed.name !== "Candidate's Full Name") {
           const parsedName = parsed.name;
-          const stored = localStorage.getItem("hireiq_user");
+          const stored = localStorage.getItem("hirevium_user");
           if (stored) {
             const parsedUser = JSON.parse(stored);
             parsedUser.name = parsedName;
-            localStorage.setItem("hireiq_user", JSON.stringify(parsedUser));
+            localStorage.setItem("hirevium_user", JSON.stringify(parsedUser));
           } else {
-            localStorage.setItem("hireiq_user", JSON.stringify({ name: parsedName }));
+            localStorage.setItem("hirevium_user", JSON.stringify({ name: parsedName }));
           }
         }
       }
@@ -163,8 +163,8 @@ export default function Onboarding() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          localStorage.removeItem("hireiq_token");
-          localStorage.removeItem("hireiq_user");
+          localStorage.removeItem("hirevium_token");
+          localStorage.removeItem("hirevium_user");
           router.push("/login");
           return;
         }
@@ -172,7 +172,7 @@ export default function Onboarding() {
       }
 
       const updatedUser = await response.json();
-      localStorage.setItem("hireiq_user", JSON.stringify(updatedUser));
+      localStorage.setItem("hirevium_user", JSON.stringify(updatedUser));
 
       router.push("/dashboard");
     } catch (err) {

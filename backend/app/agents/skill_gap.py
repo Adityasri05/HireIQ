@@ -1,6 +1,6 @@
 from app.agents.base_agent import call_gemini
 
-SYSTEM_PROMPT = """You are the Skill Gap Analysis Agent for HireIQ.
+SYSTEM_PROMPT = """You are the Skill Gap Analysis Agent for Hirevium.
 
 Compare a candidate's profile against a job description and identify gaps.
 

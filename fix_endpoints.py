@@ -13,7 +13,7 @@ files = [
     "src/app/login/page.tsx"
 ]
 
-base_dir = "d:/Hackathon Projects/HireIQ"
+base_dir = "d:/Hackathon Projects/Hirevium"
 
 # Double quote pattern: "{API_BASE_URL}/api/something"
 dq_pattern = re.compile(r'"{API_BASE_URL}(/api/[^"]*)"')

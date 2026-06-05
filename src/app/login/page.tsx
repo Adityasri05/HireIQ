@@ -17,7 +17,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (localStorage.getItem("hireiq_token")) {
+    if (localStorage.getItem("hirevium_token")) {
       router.push("/dashboard");
     }
   }, [router]);
@@ -52,8 +52,8 @@ export default function Login() {
       const data = await response.json();
       
       // Store token
-      localStorage.setItem("hireiq_token", data.access_token);
-      localStorage.setItem("hireiq_user", JSON.stringify(data.user));
+      localStorage.setItem("hirevium_token", data.access_token);
+      localStorage.setItem("hirevium_user", JSON.stringify(data.user));
 
       router.push("/dashboard");
     } catch (err) {
@@ -82,7 +82,7 @@ export default function Login() {
               <Sparkles className="w-6 h-6 text-white" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold tracking-tight">Welcome to HIREIQ</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Welcome to HIREVIUM</h2>
           <p className="text-sm text-gray-400">Log in to continue your AI interview journey</p>
         </div>
 

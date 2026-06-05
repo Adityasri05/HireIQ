@@ -82,7 +82,7 @@ export default function LiveInterview() {
     pressure_score: 70,
     time_efficiency_score: 70,
     skill_verification_score: 70,
-    hireiq_score: 70,
+    hirevium_score: 70,
     hire_probability: 70,
     recommendation: "Borderline"
   });
@@ -322,7 +322,7 @@ export default function LiveInterview() {
       
       if (data.updated_metrics) {
         setMetrics(data.updated_metrics);
-        setAverageScore(data.updated_metrics.hireiq_score);
+        setAverageScore(data.updated_metrics.hirevium_score);
       }
 
       setQuestionsAnswered(prev => prev + 1);
@@ -520,7 +520,7 @@ export default function LiveInterview() {
             <div className="min-h-[250px] lg:flex-1 glass rounded-xl border border-[rgba(255,255,255,0.05)] relative overflow-hidden flex flex-col items-center justify-center bg-[rgba(17,24,39,0.8)] p-6">
               <div className="absolute top-4 left-4 bg-[rgba(0,0,0,0.5)] px-3 py-1 rounded-full border border-[rgba(255,255,255,0.1)] flex items-center space-x-2">
                 <Brain className={`w-4 h-4 ${currentTheme.text}`} />
-                <span className="text-xs text-white">HireIQ Adaptive Engine</span>
+                <span className="text-xs text-white">Hirevium Adaptive Engine</span>
               </div>
 
               {/* Simulated Avatar / Waveform OR Screen Share */}
@@ -718,7 +718,7 @@ export default function LiveInterview() {
                 <p className="text-sm text-gray-300 font-medium mb-1">Reason:</p>
                 <p className="text-sm text-[#EF4444] mb-3">{terminationReason}</p>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  The HireIQ early termination guard triggered automatically due to consecutive answer scores falling below threshold metrics. Let&apos;s build a customized learning plan to strengthen these areas.
+                  The Hirevium early termination guard triggered automatically due to consecutive answer scores falling below threshold metrics. Let&apos;s build a customized learning plan to strengthen these areas.
                 </p>
               </div>
 
@@ -760,8 +760,8 @@ export default function LiveInterview() {
 
                 <div className="flex items-center space-x-4">
                   <div className="bg-[#111827] px-4 py-2 rounded-xl border border-[rgba(255,255,255,0.05)] text-center">
-                    <p className="text-[10px] text-gray-500 uppercase font-bold">Final HireIQ Score</p>
-                    <p className="text-xl font-bold text-white mt-0.5">{Math.round(metrics.hireiq_score)}</p>
+                    <p className="text-[10px] text-gray-500 uppercase font-bold">Final Hirevium Score</p>
+                    <p className="text-xl font-bold text-white mt-0.5">{Math.round(metrics.hirevium_score)}</p>
                   </div>
                   <div className="bg-[#111827] px-4 py-2 rounded-xl border border-[rgba(255,255,255,0.05)] text-center">
                     <p className="text-[10px] text-gray-500 uppercase font-bold">AI Verdict</p>
@@ -836,7 +836,7 @@ export default function LiveInterview() {
                       <div className="space-y-3">
                         {[
                           { title: "Offer Probability", value: evaluationReport?.predictions?.offer_probability || Math.round(metrics.hire_probability), color: "bg-[#22C55E]" },
-                          { title: "90-Day Success", value: evaluationReport?.predictions?.success_90_day || Math.round(metrics.hireiq_score * 0.95), color: "bg-[#3B82F6]" },
+                          { title: "90-Day Success", value: evaluationReport?.predictions?.success_90_day || Math.round(metrics.hirevium_score * 0.95), color: "bg-[#3B82F6]" },
                           { title: "Retention probability", value: evaluationReport?.predictions?.retention_probability || 84, color: "bg-[#A855F7]" }
                         ].map((pred) => (
                           <div key={pred.title} className="space-y-1">

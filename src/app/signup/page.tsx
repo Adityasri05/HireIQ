@@ -18,7 +18,7 @@ export default function Signup() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (localStorage.getItem("hireiq_token")) {
+    if (localStorage.getItem("hirevium_token")) {
       router.push("/dashboard");
     }
   }, [router]);
@@ -71,8 +71,8 @@ export default function Signup() {
       const data = await loginResponse.json();
       
       // Store token
-      localStorage.setItem("hireiq_token", data.access_token);
-      localStorage.setItem("hireiq_user", JSON.stringify(data.user));
+      localStorage.setItem("hirevium_token", data.access_token);
+      localStorage.setItem("hirevium_user", JSON.stringify(data.user));
 
       router.push("/onboarding");
     } catch (err) {

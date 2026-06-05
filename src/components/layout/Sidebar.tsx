@@ -40,7 +40,7 @@ export function Sidebar() {
         if (!response.ok) return;
         const data = await response.json();
         
-        // Dynamically set HireIQ score from the parsed resume quality
+        // Dynamically set Hirevium score from the parsed resume quality
         if (data.resume_score) {
           setIqScore(Math.round(data.resume_score));
         }
@@ -58,8 +58,8 @@ export function Sidebar() {
     } catch (e) {
       console.warn("Sign out: Firebase sign out failed", e);
     }
-    localStorage.removeItem("hireiq_token");
-    localStorage.removeItem("hireiq_user");
+    localStorage.removeItem("hirevium_token");
+    localStorage.removeItem("hirevium_user");
     window.location.href = "/";
   };
 
@@ -67,7 +67,7 @@ export function Sidebar() {
     <aside className="w-64 h-screen bg-[#09090B] border-r border-[rgba(255,255,255,0.08)] flex flex-col hidden md:flex fixed left-0 top-0">
       <div className="h-16 flex items-center px-6 border-b border-[rgba(255,255,255,0.08)]">
         <Link href="/" className="text-2xl font-bold text-gradient-primary tracking-tighter">
-          HIREIQ
+          HIREVIUM
         </Link>
       </div>
 
@@ -98,7 +98,7 @@ export function Sidebar() {
           <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center mb-2 shadow-[0_0_15px_rgba(124,58,237,0.5)]">
             <span className="font-bold text-white text-sm">IQ</span>
           </div>
-          <p className="text-xs text-gray-400">HireIQ Score</p>
+          <p className="text-xs text-gray-400">Hirevium Score</p>
           <p className="text-xl font-bold text-white">{iqScore}<span className="text-sm text-gray-500">/100</span></p>
         </div>
         

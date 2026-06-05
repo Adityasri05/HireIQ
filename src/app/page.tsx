@@ -36,8 +36,8 @@ export default function LandingPage() {
 
   const checkAuthStatus = () => {
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("hireiq_token");
-      const userStr = localStorage.getItem("hireiq_user");
+      const token = localStorage.getItem("hirevium_token");
+      const userStr = localStorage.getItem("hirevium_user");
       if (token && token !== "guest-token-12345") {
         setIsLoggedIn(true);
         if (userStr) {
@@ -59,14 +59,14 @@ export default function LandingPage() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("hireiq_token");
-    localStorage.removeItem("hireiq_user");
+    localStorage.removeItem("hirevium_token");
+    localStorage.removeItem("hirevium_user");
     // Re-initialize guest credentials so pages don't break
-    localStorage.setItem("hireiq_token", "guest-token-12345");
-    localStorage.setItem("hireiq_user", JSON.stringify({
+    localStorage.setItem("hirevium_token", "guest-token-12345");
+    localStorage.setItem("hirevium_user", JSON.stringify({
       id: "guest-id",
       name: "Alex D.",
-      email: "guest@hireiq.ai",
+      email: "guest@hirevium.ai",
       role: "candidate",
       target_role: "Frontend Engineer",
       experience_level: "Fresher",
@@ -94,7 +94,7 @@ export default function LandingPage() {
           <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.4)]">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
-          <span className="text-2xl font-bold tracking-tighter text-gradient-primary">HIREIQ</span>
+          <span className="text-2xl font-bold tracking-tighter text-gradient-primary">HIREVIUM</span>
         </Link>
 
         <nav className="flex items-center space-x-4">
@@ -154,12 +154,12 @@ export default function LandingPage() {
           >
             <div className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-6 border-[rgba(124,58,237,0.3)]">
               <span className="w-2 h-2 rounded-full bg-[#A855F7] animate-pulse"></span>
-              <span className="text-sm text-gray-300">HireIQ Engine v2.0 is Live</span>
+              <span className="text-sm text-gray-300">Hirevium Engine v2.0 is Live</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
               Ace Every Interview with <br />
-              <span className="text-gradient-primary">HIREIQ</span>
+              <span className="text-gradient-primary">HIREVIUM</span>
             </h1>
           </motion.div>
 

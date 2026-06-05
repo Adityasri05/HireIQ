@@ -32,7 +32,7 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="HireIQ API",
+    title="Hirevium API",
     description="AI Hiring Intelligence Operating System Backend",
     version="1.0.0",
     lifespan=lifespan,
@@ -53,7 +53,7 @@ async def health_check():
     """Health check endpoint."""
     return {
         "status": "healthy",
-        "service": "HireIQ Backend",
+        "service": "Hirevium Backend",
         "database": "connected",
     }
 

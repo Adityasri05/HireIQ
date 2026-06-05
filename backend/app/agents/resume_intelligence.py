@@ -1,6 +1,6 @@
 from app.agents.base_agent import call_gemini
 
-SYSTEM_PROMPT = """You are an expert Resume Intelligence Agent for HireIQ, an AI Hiring Intelligence Platform.
+SYSTEM_PROMPT = """You are an expert Resume Intelligence Agent for Hirevium, an AI Hiring Intelligence Platform.
 
 Analyze the provided resume text and extract structured information. Be thorough and precise.
 

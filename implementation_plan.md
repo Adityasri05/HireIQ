@@ -1,6 +1,6 @@
-# HIREIQ 2.0 — AI Hiring Intelligence Operating System Implementation Plan
+# HIREVIUM 2.0 — AI Hiring Intelligence Operating System Implementation Plan
 
-We will transform HIREIQ into a fully integrated, state-of-the-art **AI Hiring Intelligence Operating System**. We will implement high-fidelity dashboard views, recruiter workspaces, and detailed backend decision-making components to enable candidate twin profiling, war room committee evaluation, early termination, skill verification, career roadmap navigation, and global market comparisons.
+We will transform HIREVIUM into a fully integrated, state-of-the-art **AI Hiring Intelligence Operating System**. We will implement high-fidelity dashboard views, recruiter workspaces, and detailed backend decision-making components to enable candidate twin profiling, war room committee evaluation, early termination, skill verification, career roadmap navigation, and global market comparisons.
 
 ## User Review Required
 
@@ -20,7 +20,7 @@ We are introducing the following major upgrades:
 
 ### Component 1: Database & Backend Schemas
 
-#### [MODIFY] [evaluation.py](file:///d:/Hackathon%20Projects/HireIQ/backend/app/models/evaluation.py)
+#### [MODIFY] [evaluation.py](file:///d:/Hackathon%20Projects/Hirevium/backend/app/models/evaluation.py)
 - Extend the model to store company-specific settings and advanced matrices.
 - Keep backwards-compatibility with existing fields while adding JSON properties for:
   - `company_context` (e.g. company name, weightages used)
@@ -30,10 +30,10 @@ We are introducing the following major upgrades:
   - `benchmarks` (e.g. relative percentiles for React, System Design, Problem Solving)
   - `learning_velocity` (e.g. historical and projected learning rates)
 
-#### [MODIFY] [interview.py](file:///d:/Hackathon%20Projects/HireIQ/backend/app/models/interview.py)
+#### [MODIFY] [interview.py](file:///d:/Hackathon%20Projects/Hirevium/backend/app/models/interview.py)
 - Add a `company` field (e.g., "Google", "Stripe", "Amazon") so the interview session is customized according to the selected target company.
 
-#### [MODIFY] [schemas.py](file:///d:/Hackathon%20Projects/HireIQ/backend/app/schemas/schemas.py)
+#### [MODIFY] [schemas.py](file:///d:/Hackathon%20Projects/Hirevium/backend/app/schemas/schemas.py)
 - Update `InterviewStartRequest` to accept an optional `company: str = "Standard"`.
 - Update `EvaluationResponse` and `DashboardResponse` to return the new fields.
 
@@ -41,10 +41,10 @@ We are introducing the following major upgrades:
 
 ### Component 2: Core Backend Engine & AI Agents
 
-#### [NEW] [war_room.py](file:///d:/Hackathon%20Projects/HireIQ/backend/app/agents/war_room.py)
+#### [NEW] [war_room.py](file:///d:/Hackathon%20Projects/Hirevium/backend/app/agents/war_room.py)
 - Implement a dedicated agent that takes full interview evaluation logs and simulates four distinct personas (Tech Lead, Engineering Manager, Recruiter, VP Engineering) generating scores, strengths, concerns, and recommendations.
 
-#### [MODIFY] [interview_engine.py](file:///d:/Hackathon%20Projects/HireIQ/backend/app/services/interview_engine.py)
+#### [MODIFY] [interview_engine.py](file:///d:/Hackathon%20Projects/Hirevium/backend/app/services/interview_engine.py)
 - Incorporate `company` parameters in `start_interview` and `process_answer`.
 - Apply strict adaptive rules:
   - **Strong Answer** ($\ge 85$): Escalate difficulty, ask deep architectural follow-up questions.
@@ -56,26 +56,26 @@ We are introducing the following major upgrades:
   - `market_benchmarks` (global percentiles).
   - `learning_velocity` based on performance trajectory across answers.
 
-#### [MODIFY] [base_agent.py](file:///d:/Hackathon%20Projects/HireIQ/backend/app/agents/base_agent.py)
+#### [MODIFY] [base_agent.py](file:///d:/Hackathon%20Projects/Hirevium/backend/app/agents/base_agent.py)
 - Expand mock fallback logic to generate highly realistic datasets for the War Room, benchmarking, learning velocity, and success predictions when API key is not configured or fails.
 
 ---
 
 ### Component 3: Frontend Interfaces & Visualization
 
-#### [MODIFY] [recruiter/page.tsx](file:///d:/Hackathon%20Projects/HireIQ/src/app/dashboard/recruiter/page.tsx)
+#### [MODIFY] [recruiter/page.tsx](file:///d:/Hackathon%20Projects/Hirevium/src/app/dashboard/recruiter/page.tsx)
 - **Fix API data parsing bug** where candidate array was mapped incorrectly (referencing `data.map` instead of `data.candidates.map`).
 - Enhance recruiter panel to display:
   - Skill Verification Accuracy.
   - Risk Warnings with indicator badges (Red/Amber/Green).
   - War Room Committee recommendation summaries.
 
-#### [MODIFY] [live-interview/page.tsx](file:///d:/Hackathon%20Projects/HireIQ/src/app/dashboard/live-interview/page.tsx)
+#### [MODIFY] [live-interview/page.tsx](file:///d:/Hackathon%20Projects/Hirevium/src/app/dashboard/live-interview/page.tsx)
 - Enable selecting a target company (Google, Amazon, Meta, Stripe, Netflix, Microsoft) during interview setup.
 - Style cards with brand accents matching the selected company.
 - Implement the "War Room Committee Verdict" tab when the interview is completed, showcasing the four evaluator cards and a beautiful breakdown of the success predictions.
 
-#### [MODIFY] [dashboard/page.tsx](file:///d:/Hackathon%20Projects/HireIQ/src/app/dashboard/page.tsx)
+#### [MODIFY] [dashboard/page.tsx](file:///d:/Hackathon%20Projects/Hirevium/src/app/dashboard/page.tsx)
 - Render the **Digital Candidate Twin** tab showing interactive metrics (Learning velocity, problem-solving style, communication patterns, and career trajectory).
 - Render **Success Predictions** (Offer Prob, 90-Day success, retention, leadership potential) with circular progress indicators.
 - Display a interactive **Global Benchmark Engine** showing candidate rank compared to global peers.

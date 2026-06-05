@@ -16,13 +16,13 @@ export function Copilot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hi Alex! I'm your HireIQ Copilot. I have access to your resume and interview history. How can I help you prepare today?",
+      content: "Hi Alex! I'm your Hirevium Copilot. I have access to your resume and interview history. How can I help you prepare today?",
     },
   ]);
   const [suggestions, setSuggestions] = useState<string[]>([
     "Why was my score low?",
     "What companies am I ready for?",
-    "How can I increase my HireIQ Score?",
+    "How can I increase my Hirevium Score?",
   ]);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -76,7 +76,7 @@ export function Copilot() {
         ...prev,
         {
           role: "assistant" as const,
-          content: `Sorry, I ran into an error connecting to the HireIQ Copilot Engine. Make sure the backend server is running at ${API_BASE_URL}!`,
+          content: `Sorry, I ran into an error connecting to the Hirevium Copilot Engine. Make sure the backend server is running at ${API_BASE_URL}!`,
         },
       ]);
     } finally {

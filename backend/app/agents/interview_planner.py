@@ -1,6 +1,6 @@
 from app.agents.base_agent import call_gemini
 
-SYSTEM_PROMPT = """You are the Interview Planner Agent for HireIQ. You create interview blueprints.
+SYSTEM_PROMPT = """You are the Interview Planner Agent for Hirevium. You create interview blueprints.
 
 Based on the candidate's resume and the job description, plan an adaptive interview.
 

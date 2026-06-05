@@ -117,8 +117,8 @@ export default function AuthDrawer({
       const data = await response.json();
       
       // Store token
-      localStorage.setItem("hireiq_token", data.access_token);
-      localStorage.setItem("hireiq_user", JSON.stringify(data.user));
+      localStorage.setItem("hirevium_token", data.access_token);
+      localStorage.setItem("hirevium_user", JSON.stringify(data.user));
 
       setSuccessMessage("Logged in successfully! Redirecting...");
       
@@ -196,8 +196,8 @@ export default function AuthDrawer({
       const data = await loginResponse.json();
       
       // Store token
-      localStorage.setItem("hireiq_token", data.access_token);
-      localStorage.setItem("hireiq_user", JSON.stringify(data.user));
+      localStorage.setItem("hirevium_token", data.access_token);
+      localStorage.setItem("hirevium_user", JSON.stringify(data.user));
 
       setSuccessMessage("Account created successfully! Let's get set up.");
 
@@ -248,7 +248,7 @@ export default function AuthDrawer({
                   <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center shadow-[0_0_12px_rgba(124,58,237,0.4)]">
                     <Sparkles className="w-4 h-4 text-white" />
                   </div>
-                  <span className="text-xl font-bold tracking-tight text-gradient-primary">HIREIQ AUTH</span>
+                  <span className="text-xl font-bold tracking-tight text-gradient-primary">HIREVIUM AUTH</span>
                 </div>
                 
                 <button 
@@ -464,7 +464,7 @@ export default function AuthDrawer({
 
             {/* Footer / Guest disclaimer */}
             <div className="p-6 md:p-8 bg-[#111827]/40 border-t border-white/5 text-center text-xs text-gray-500 space-y-1">
-              <p>By proceeding, you agree to HireIQ&apos;s Terms & Privacy Policy.</p>
+              <p>By proceeding, you agree to Hirevium&apos;s Terms & Privacy Policy.</p>
               <p className="text-gray-600 font-mono">Secure TLS 1.3 / API Auth Handshake</p>
             </div>
           </motion.div>

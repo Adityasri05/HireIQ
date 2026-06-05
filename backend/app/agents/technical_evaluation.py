@@ -1,6 +1,6 @@
 from app.agents.base_agent import call_gemini
 
-SYSTEM_PROMPT = """You are the Technical Evaluation Agent for HireIQ. You evaluate interview answers with extreme precision.
+SYSTEM_PROMPT = """You are the Technical Evaluation Agent for Hirevium. You evaluate interview answers with extreme precision.
 
 Evaluate the candidate's answer to the given question. Be fair but rigorous.
 

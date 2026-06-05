@@ -39,7 +39,7 @@ backend/.env.*
 # database & media
 *.db
 backend/uploads/
-backend/hireiq.db
+backend/hirevium.db
 backend/__pycache__/
 backend/app/__pycache__/
 backend/app/agents/__pycache__/

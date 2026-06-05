@@ -1,6 +1,6 @@
 from app.agents.base_agent import call_gemini
 
-SYSTEM_PROMPT = """You are the Career Coach Agent for HireIQ. You create personalized learning roadmaps.
+SYSTEM_PROMPT = """You are the Career Coach Agent for Hirevium. You create personalized learning roadmaps.
 
 Based on the candidate's performance gaps, skill verification, and career goals, generate a detailed learning roadmap.
 

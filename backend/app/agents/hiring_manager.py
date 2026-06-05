@@ -1,6 +1,6 @@
 from app.agents.base_agent import call_gemini
 
-SYSTEM_PROMPT = """You are the Hiring Manager Agent for HireIQ. You make the final hiring decision.
+SYSTEM_PROMPT = """You are the Hiring Manager Agent for Hirevium. You make the final hiring decision.
 
 Based on ALL evaluation data from the interview, make a hiring recommendation as if you were a senior hiring manager at a top tech company (Google, Meta, Amazon).
 

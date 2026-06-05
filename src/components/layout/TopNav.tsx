@@ -31,7 +31,7 @@ export function TopNav() {
   const router = useRouter();
   const pathname = usePathname();
   const [candidateName, setCandidateName] = useState<string>("Alex D.");
-  const [candidateEmail, setCandidateEmail] = useState<string>("guest@hireiq.ai");
+  const [candidateEmail, setCandidateEmail] = useState<string>("guest@hirevium.ai");
   const [candidateRole, setCandidateRole] = useState<string>("Frontend Engineer");
   
   const [showNotifications, setShowNotifications] = useState(false);
@@ -50,7 +50,7 @@ export function TopNav() {
   // Load and apply theme
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const storedTheme = localStorage.getItem("hireiq_theme") as "dark" | "light" | null;
+      const storedTheme = localStorage.getItem("hirevium_theme") as "dark" | "light" | null;
       if (storedTheme) {
         setTheme(storedTheme);
         document.documentElement.setAttribute("data-theme", storedTheme);
@@ -66,7 +66,7 @@ export function TopNav() {
   const toggleTheme = (newTheme: "dark" | "light") => {
     setTheme(newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("hireiq_theme", newTheme);
+    localStorage.setItem("hirevium_theme", newTheme);
   };
 
   const copyProfileToClipboard = (text: string) => {
@@ -103,7 +103,7 @@ export function TopNav() {
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("hireiq_notifications");
+      const stored = localStorage.getItem("hirevium_notifications");
       if (stored) {
         try {
           return JSON.parse(stored);
@@ -114,7 +114,7 @@ export function TopNav() {
       {
         id: "1",
         title: "Resume Analyzed",
-        desc: "Your resume was parsed successfully. HireIQ Score set to 87/100.",
+        desc: "Your resume was parsed successfully. Hirevium Score set to 87/100.",
         time: "2 mins ago",
         read: false,
       },
@@ -138,7 +138,7 @@ export function TopNav() {
   // Sync notifications to localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("hireiq_notifications", JSON.stringify(notifications));
+      localStorage.setItem("hirevium_notifications", JSON.stringify(notifications));
     }
   }, [notifications]);
 
@@ -159,7 +159,7 @@ export function TopNav() {
 
   useEffect(() => {
     // Load local storage profile data initially
-    const stored = localStorage.getItem("hireiq_user");
+    const stored = localStorage.getItem("hirevium_user");
     if (stored) {
       try {
         const parsedUser = JSON.parse(stored);
@@ -193,12 +193,12 @@ export function TopNav() {
             setCandidateName(parsedName);
             
             // Sync local storage user model
-            const storedUser = localStorage.getItem("hireiq_user");
+            const storedUser = localStorage.getItem("hirevium_user");
             if (storedUser) {
               const parsedUser = JSON.parse(storedUser);
               parsedUser.name = parsedName;
               if (data.target_role) parsedUser.target_role = data.target_role;
-              localStorage.setItem("hireiq_user", JSON.stringify(parsedUser));
+              localStorage.setItem("hirevium_user", JSON.stringify(parsedUser));
             }
           }
         }
@@ -227,8 +227,8 @@ export function TopNav() {
     } catch (e) {
       console.warn("Sign out: Firebase sign out failed", e);
     }
-    localStorage.removeItem("hireiq_token");
-    localStorage.removeItem("hireiq_user");
+    localStorage.removeItem("hirevium_token");
+    localStorage.removeItem("hirevium_user");
     window.location.href = "/";
   };
 
@@ -486,7 +486,7 @@ export function TopNav() {
             {/* Header */}
             <div className="h-16 flex items-center justify-between px-6 border-b border-[rgba(255,255,255,0.08)]">
               <Link href="/" className="text-2xl font-bold text-gradient-primary tracking-tighter" onClick={() => setShowMobileMenu(false)}>
-                HIREIQ
+                HIREVIUM
               </Link>
               <button
                 onClick={() => setShowMobileMenu(false)}
@@ -526,7 +526,7 @@ export function TopNav() {
                 <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center mb-2 shadow-[0_0_15px_rgba(124,58,237,0.5)]">
                   <span className="font-bold text-white text-sm">IQ</span>
                 </div>
-                <p className="text-xs text-gray-400">HireIQ Score</p>
+                <p className="text-xs text-gray-400">Hirevium Score</p>
                 <p className="text-xl font-bold text-white">{iqScore}<span className="text-sm text-gray-500">/100</span></p>
               </div>
               
@@ -577,14 +577,14 @@ export function TopNav() {
                 setCandidateRole(role);
                 setCandidateGoals(goals);
 
-                const storedUser = localStorage.getItem("hireiq_user") || "{}";
+                const storedUser = localStorage.getItem("hirevium_user") || "{}";
                 try {
                   const parsedUser = JSON.parse(storedUser);
                   parsedUser.name = name;
                   parsedUser.email = email;
                   parsedUser.target_role = role;
                   parsedUser.career_goals = goals;
-                  localStorage.setItem("hireiq_user", JSON.stringify(parsedUser));
+                  localStorage.setItem("hirevium_user", JSON.stringify(parsedUser));
                 } catch (err) {
                   console.error(err);
                 }
@@ -679,7 +679,7 @@ export function TopNav() {
                 
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#A855F7] bg-[#7C3AED]/10 px-2 py-0.5 rounded border border-[#7C3AED]/20">HireIQ Verified</span>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#A855F7] bg-[#7C3AED]/10 px-2 py-0.5 rounded border border-[#7C3AED]/20">Hirevium Verified</span>
                     <h4 className="font-bold text-base text-white mt-2 leading-tight">{candidateName}</h4>
                     <p className="text-xs text-gray-400 mt-0.5">{candidateRole}</p>
                   </div>
@@ -688,12 +688,12 @@ export function TopNav() {
                     <div className="w-12 h-12 rounded-full border-2 border-[#22C55E] flex items-center justify-center bg-[#22C55E]/5 shadow-[0_0_15px_rgba(34,197,94,0.15)]">
                       <span className="font-bold text-sm text-white">{iqScore}</span>
                     </div>
-                    <span className="text-[8px] text-gray-400 mt-1 uppercase font-semibold">HireIQ Score</span>
+                    <span className="text-[8px] text-gray-400 mt-1 uppercase font-semibold">Hirevium Score</span>
                   </div>
                 </div>
 
                 <div className="border-t border-[rgba(255,255,255,0.05)] pt-3 flex justify-between items-center text-[10px] text-gray-500">
-                  <span>Platform: hireiq.ai</span>
+                  <span>Platform: hirevium.ai</span>
                   <span>Verification: Active</span>
                 </div>
               </div>
@@ -705,11 +705,11 @@ export function TopNav() {
                   <input 
                     type="text" 
                     readOnly
-                    value={`Check out ${candidateName}'s HireIQ Profile! Role: ${candidateRole} | Score: ${iqScore}/100`}
+                    value={`Check out ${candidateName}'s Hirevium Profile! Role: ${candidateRole} | Score: ${iqScore}/100`}
                     className="flex-1 bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-xs text-gray-400 focus:outline-none"
                   />
                   <button 
-                    onClick={() => copyProfileToClipboard(`Check out ${candidateName}'s HireIQ Profile!\nRole: ${candidateRole}\nHireIQ Score: ${iqScore}/100\nPlatform: ${window.location.origin}`)}
+                    onClick={() => copyProfileToClipboard(`Check out ${candidateName}'s Hirevium Profile!\nRole: ${candidateRole}\nHirevium Score: ${iqScore}/100\nPlatform: ${window.location.origin}`)}
                     className="px-3 py-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-lg text-xs font-semibold transition-colors flex items-center space-x-1 cursor-pointer flex-shrink-0"
                   >
                     {shareCopied ? (
@@ -740,7 +740,7 @@ export function TopNav() {
                     LinkedIn
                   </a>
                   <a 
-                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out my HireIQ verified profile! Role: ${candidateRole} | Score: ${iqScore}/100. Join me at ` + window.location.origin)}`}
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out my Hirevium verified profile! Role: ${candidateRole} | Score: ${iqScore}/100. Join me at ` + window.location.origin)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="py-2 px-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-center text-xs text-white font-semibold transition-all animate-none"
@@ -748,7 +748,7 @@ export function TopNav() {
                     Twitter / X
                   </a>
                   <a 
-                    href={`mailto:?subject=${encodeURIComponent("My HireIQ Candidate Profile")}&body=${encodeURIComponent(`Check out my HireIQ verified profile!\n\nCandidate: ${candidateName}\nRole: ${candidateRole}\nHireIQ Score: ${iqScore}/100\n\nLink: ` + window.location.origin)}`}
+                    href={`mailto:?subject=${encodeURIComponent("My Hirevium Candidate Profile")}&body=${encodeURIComponent(`Check out my Hirevium verified profile!\n\nCandidate: ${candidateName}\nRole: ${candidateRole}\nHirevium Score: ${iqScore}/100\n\nLink: ` + window.location.origin)}`}
                     className="py-2 px-3 bg-[#EF4444]/10 hover:bg-[#EF4444]/20 border border-[#EF4444]/20 rounded-lg text-center text-xs text-[#EF4444] font-semibold transition-all"
                   >
                     Email
@@ -772,7 +772,7 @@ export function TopNav() {
             className="w-full max-w-sm bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-xl shadow-2xl overflow-hidden text-white"
           >
             <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#0F0F13]">
-              <h3 className="font-bold text-sm">About HireIQ</h3>
+              <h3 className="font-bold text-sm">About Hirevium</h3>
               <button 
                 onClick={() => setShowAboutModal(false)}
                 className="p-1 rounded hover:bg-white/5 text-gray-400 hover:text-white cursor-pointer"
@@ -785,14 +785,14 @@ export function TopNav() {
                 <GraduationCap className="w-8 h-8 text-white" />
               </div>
               <div className="space-y-1">
-                <h4 className="font-bold text-lg text-white">HIREIQ Platform</h4>
+                <h4 className="font-bold text-lg text-white">HIREVIUM Platform</h4>
                 <p className="text-xs text-[#A855F7] font-semibold">Version 2.0.0 (Production)</p>
               </div>
               <p className="text-xs text-gray-400 leading-relaxed">
-                HireIQ is an AI-powered hiring intelligence system designed to evaluate candidate resumes, conduct dynamic technical mock interviews, track skill verifications, and recommend tailored learning roadmaps.
+                Hirevium is an AI-powered hiring intelligence system designed to evaluate candidate resumes, conduct dynamic technical mock interviews, track skill verifications, and recommend tailored learning roadmaps.
               </p>
               <div className="pt-2 text-[10px] text-gray-500">
-                &copy; {new Date().getFullYear()} HireIQ Systems. All rights reserved.
+                &copy; {new Date().getFullYear()} Hirevium Systems. All rights reserved.
               </div>
             </div>
           </motion.div>

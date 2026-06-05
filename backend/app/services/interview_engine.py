@@ -18,7 +18,7 @@ from app.agents import (
     hiring_manager,
     war_room,
 )
-from app.services.scoring_engine import calculate_hireiq_score, calculate_hire_probability, get_recommendation
+from app.services.scoring_engine import calculate_hirevium_score, calculate_hire_probability, get_recommendation
 from app.services.early_termination import should_terminate
 
 COMPANY_WEIGHTS = {
@@ -246,7 +246,7 @@ async def process_answer(
 
         # Get custom company evaluation weights or use standard ones
         weights = COMPANY_WEIGHTS.get(interview.company or "Standard", COMPANY_WEIGHTS["Standard"])
-        hireiq = (
+        hirevium = (
             eval_record.technical_score * weights["technical"]
             + eval_record.knowledge_depth_score * weights["knowledge_depth"]
             + eval_record.communication_score * weights["communication"]
@@ -255,10 +255,10 @@ async def process_answer(
             + eval_record.time_efficiency_score * weights["time_efficiency"]
             + eval_record.confidence_score * weights["confidence"]
         )
-        hireiq = round(min(max(hireiq, 0), 100), 1)
-        eval_record.hireiq_score = hireiq
-        eval_record.hire_probability = calculate_hire_probability(hireiq)
-        eval_record.recommendation = get_recommendation(hireiq)
+        hirevium = round(min(max(hirevium, 0), 100), 1)
+        eval_record.hirevium_score = hirevium
+        eval_record.hire_probability = calculate_hire_probability(hirevium)
+        eval_record.recommendation = get_recommendation(hirevium)
 
     # Check early termination
     terminate, reason = should_terminate(all_scores, avg_score)
@@ -287,15 +287,15 @@ async def process_answer(
                 "pressure_score": eval_record.pressure_score,
                 "knowledge_depth_score": eval_record.knowledge_depth_score,
                 "skill_verification_score": eval_record.skill_verification_score,
-                "hireiq_score": eval_record.hireiq_score,
+                "hirevium_score": eval_record.hirevium_score,
                 "recommendation": eval_record.recommendation,
                 "company": interview.company or "Standard"
             }
             war_room_eval = await war_room.evaluate_war_room(history_qa, overall_metrics)
             
-            pass_prob = round(min(max(eval_record.hireiq_score * 0.9, 0), 99), 1)
-            offer_prob = round(min(max(eval_record.hireiq_score * 0.8, 0), 99), 1)
-            success_90 = round(min(max(eval_record.hireiq_score * 0.85, 0), 100), 1)
+            pass_prob = round(min(max(eval_record.hirevium_score * 0.9, 0), 99), 1)
+            offer_prob = round(min(max(eval_record.hirevium_score * 0.8, 0), 99), 1)
+            success_90 = round(min(max(eval_record.hirevium_score * 0.85, 0), 100), 1)
             retention = round(min(max(70, 0), 100), 1)
             
             predictions = {
@@ -322,13 +322,13 @@ async def process_answer(
             }]
             
             learning_trend = [
-                {"month": "Month 1", "score": round(eval_record.hireiq_score * 0.6, 1)},
-                {"month": "Month 2", "score": round(eval_record.hireiq_score * 0.8, 1)},
-                {"month": "Month 3", "score": round(eval_record.hireiq_score, 1)},
+                {"month": "Month 1", "score": round(eval_record.hirevium_score * 0.6, 1)},
+                {"month": "Month 2", "score": round(eval_record.hirevium_score * 0.8, 1)},
+                {"month": "Month 3", "score": round(eval_record.hirevium_score, 1)},
             ]
             velocity_engine = {
                 "trend": learning_trend,
-                "growth_rate": round(eval_record.hireiq_score * 0.1, 1),
+                "growth_rate": round(eval_record.hirevium_score * 0.1, 1),
                 "level": "Low"
             }
             
@@ -397,26 +397,26 @@ async def process_answer(
                 "pressure_score": eval_record.pressure_score,
                 "knowledge_depth_score": eval_record.knowledge_depth_score,
                 "skill_verification_score": eval_record.skill_verification_score,
-                "hireiq_score": eval_record.hireiq_score,
+                "hirevium_score": eval_record.hirevium_score,
                 "recommendation": eval_record.recommendation,
                 "company": interview.company or "Standard"
             }
             war_room_eval = await war_room.evaluate_war_room(history_qa, overall_metrics)
             
             # 3. Calculate Success Predictions
-            pass_prob = round(min(max(eval_record.hireiq_score * 1.05 if eval_record.hireiq_score >= 80 else eval_record.hireiq_score * 0.95, 0), 99), 1)
-            offer_prob = round(min(max(eval_record.hireiq_score * 1.08 if eval_record.hireiq_score >= 85 else eval_record.hireiq_score * 0.9, 0), 99), 1)
-            success_90 = round(min(max(eval_record.hireiq_score * 0.92, 0), 100), 1)
-            retention = round(min(max(80 + (eval_record.hireiq_score - 70) * 0.5 if eval_record.hireiq_score >= 70 else 80 - (70 - eval_record.hireiq_score) * 0.8, 0), 100), 1)
+            pass_prob = round(min(max(eval_record.hirevium_score * 1.05 if eval_record.hirevium_score >= 80 else eval_record.hirevium_score * 0.95, 0), 99), 1)
+            offer_prob = round(min(max(eval_record.hirevium_score * 1.08 if eval_record.hirevium_score >= 85 else eval_record.hirevium_score * 0.9, 0), 99), 1)
+            success_90 = round(min(max(eval_record.hirevium_score * 0.92, 0), 100), 1)
+            retention = round(min(max(80 + (eval_record.hirevium_score - 70) * 0.5 if eval_record.hirevium_score >= 70 else 80 - (70 - eval_record.hirevium_score) * 0.8, 0), 100), 1)
             
             predictions = {
                 "interview_pass_probability": pass_prob,
                 "offer_probability": offer_prob,
                 "success_90_day": success_90,
                 "retention_probability": retention,
-                "leadership_potential": "High" if eval_record.hireiq_score >= 85 else "Medium" if eval_record.hireiq_score >= 70 else "Low",
-                "promotion_potential": "High" if eval_record.hireiq_score >= 87 else "Medium" if eval_record.hireiq_score >= 73 else "Low",
-                "learning_velocity": "High" if eval_record.hireiq_score >= 82 else "Medium" if eval_record.hireiq_score >= 68 else "Low",
+                "leadership_potential": "High" if eval_record.hirevium_score >= 85 else "Medium" if eval_record.hirevium_score >= 70 else "Low",
+                "promotion_potential": "High" if eval_record.hirevium_score >= 87 else "Medium" if eval_record.hirevium_score >= 73 else "Low",
+                "learning_velocity": "High" if eval_record.hirevium_score >= 82 else "Medium" if eval_record.hirevium_score >= 68 else "Low",
             }
             
             # 4. Calculate Benchmarks (percentiles)
@@ -456,14 +456,14 @@ async def process_answer(
                 
             # 6. Calculate Learning Velocity Trend
             learning_trend = [
-                {"month": "Month 1", "score": round(eval_record.hireiq_score * 0.8, 1)},
-                {"month": "Month 2", "score": round(eval_record.hireiq_score * 0.9, 1)},
-                {"month": "Month 3", "score": round(eval_record.hireiq_score, 1)},
+                {"month": "Month 1", "score": round(eval_record.hirevium_score * 0.8, 1)},
+                {"month": "Month 2", "score": round(eval_record.hirevium_score * 0.9, 1)},
+                {"month": "Month 3", "score": round(eval_record.hirevium_score, 1)},
             ]
             velocity_engine = {
                 "trend": learning_trend,
-                "growth_rate": round(eval_record.hireiq_score * 0.2, 1),
-                "level": "High" if eval_record.hireiq_score >= 80 else "Medium" if eval_record.hireiq_score >= 60 else "Low"
+                "growth_rate": round(eval_record.hirevium_score * 0.2, 1),
+                "level": "High" if eval_record.hirevium_score >= 80 else "Medium" if eval_record.hirevium_score >= 60 else "Low"
             }
             
             # 7. Call standard hiring manager agent
@@ -474,7 +474,7 @@ async def process_answer(
                 "pressure_score": eval_record.pressure_score,
                 "knowledge_depth_score": eval_record.knowledge_depth_score,
                 "skill_verification_score": eval_record.skill_verification_score,
-                "hireiq_score": eval_record.hireiq_score,
+                "hirevium_score": eval_record.hirevium_score,
                 "total_questions": interview.question_count,
                 "average_score": avg_score,
                 "company": interview.company or "Standard"
@@ -599,7 +599,7 @@ def _build_metrics(eval_record: Evaluation) -> dict:
         "knowledge_depth_score": round(eval_record.knowledge_depth_score, 1),
         "time_efficiency_score": round(eval_record.time_efficiency_score, 1),
         "skill_verification_score": round(eval_record.skill_verification_score, 1),
-        "hireiq_score": round(eval_record.hireiq_score, 1),
+        "hirevium_score": round(eval_record.hirevium_score, 1),
         "hire_probability": round(eval_record.hire_probability, 1),
         "recommendation": eval_record.recommendation,
         "company_context": eval_record.company_context,

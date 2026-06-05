@@ -1,4 +1,4 @@
-# 🧠 HIREIQ — AI Hiring Intelligence Operating System
+# 🧠 HIREVIUM — AI Hiring Intelligence Operating System
 
 > **Grand Winner Entry** • Engineered for modern recruitment pipelines, simulating real-world elite hiring practices (like Google, Amazon, and Meta). Powered by **Gemini 2.5 Flash Lite** & **FastAPI** & **Next.js 16**.
 
@@ -6,7 +6,7 @@
 
 ## 🌟 Pitch & Vision
 
-HIREIQ transforms traditional static interview preparation and talent screening from simple **"Question $\rightarrow$ Answer $\rightarrow$ Feedback"** chat loops into a highly comprehensive, fully automated **AI Hiring Intelligence Operating System**. 
+HIREVIUM transforms traditional static interview preparation and talent screening from simple **"Question $\rightarrow$ Answer $\rightarrow$ Feedback"** chat loops into a highly comprehensive, fully automated **AI Hiring Intelligence Operating System**. 
 
 It serves two target demographics:
 1. **For Candidates**: Provides hyper-personalized, adaptive technical simulations, live pressure metrics, communication reviews, and dynamic coach roadmaps that guide targeted improvement sprints.
@@ -40,7 +40,7 @@ It serves two target demographics:
 ## 📂 Architecture Overview
 
 ```text
-HireIQ/
+Hirevium/
 ├── src/                          # Next.js Frontend
 │   ├── app/                      # App Router Views (Dashboard, Live Room, JD, Coach, Recruiter, Auth)
 │   ├── components/               # Layout elements (Sticky Navigation Header, Sidebar, AI Copilot)
@@ -123,12 +123,12 @@ HireIQ/
 
 ## 🚀 Production Deployment to Railway
 
-HIREIQ is designed for out-of-the-box deployment to **Railway** using a double-service monorepo configuration (Next.js frontend + FastAPI backend).
+HIREVIUM is designed for out-of-the-box deployment to **Railway** using a double-service monorepo configuration (Next.js frontend + FastAPI backend).
 
 ### 1. Deploy the Backend Service (FastAPI)
 
 1. Log into your [Railway Dashboard](https://railway.app) and click **New Project** $\rightarrow$ **Deploy from GitHub repo**.
-2. Select your `HireIQ` repository.
+2. Select your `Hirevium` repository.
 3. Once the service is created, go to its **Settings** and modify:
    * **Root Directory**: Set this to `backend`.
    * **Custom Start Command**: Railway will automatically detect the `Procfile` containing:
@@ -145,7 +145,7 @@ HIREIQ is designed for out-of-the-box deployment to **Railway** using a double-s
 
 ### 2. Deploy the Frontend Service (Next.js)
 
-1. In the same Railway project, click **New** $\rightarrow$ **GitHub Repo** and select `HireIQ` again.
+1. In the same Railway project, click **New** $\rightarrow$ **GitHub Repo** and select `Hirevium` again.
 2. Once created, go to **Settings** and keep the **Root Directory** as `/` (default).
 3. Go to **Variables** and add:
    * `NEXT_PUBLIC_API_URL`: Paste the public backend domain URL you copied in the previous step.

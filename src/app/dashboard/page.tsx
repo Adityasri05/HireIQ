@@ -89,7 +89,7 @@ export default function Dashboard() {
       setIsLoading(true);
       
       // Determine user name and target role
-      const storedUser = localStorage.getItem("hireiq_user");
+      const storedUser = localStorage.getItem("hirevium_user");
       if (storedUser) {
         try {
           const userObj = JSON.parse(storedUser);
@@ -117,8 +117,8 @@ export default function Dashboard() {
           setTopSkillsList(skills);
         }
         
-        if (data.hireiq_score !== undefined && data.hireiq_score !== null) {
-          const score = data.hireiq_score;
+        if (data.hirevium_score !== undefined && data.hirevium_score !== null) {
+          const score = data.hirevium_score;
           const prob = data.hire_probability;
           
           setMetrics([
@@ -396,7 +396,7 @@ export default function Dashboard() {
                   <h4 className="font-semibold text-white text-xs">Global Talent Percentile Breakdown</h4>
                 </div>
                 <p className="text-xs text-gray-400 max-w-xl leading-relaxed">
-                  Your mock scores compared relative to the top 20% global engineering benchmarks compiled across HireIQ screens:
+                  Your mock scores compared relative to the top 20% global engineering benchmarks compiled across Hirevium screens:
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
@@ -430,7 +430,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-6">
             <h3 className="font-semibold text-white flex items-center space-x-2">
               <TrendingUp className="w-5 h-5 text-[#22C55E]" />
-              <span>HireIQ Score Trend</span>
+              <span>Hirevium Score Trend</span>
             </h3>
           </div>
           <div className="h-[300px] w-full">

@@ -1,6 +1,6 @@
 from app.agents.base_agent import call_gemini
 
-SYSTEM_PROMPT = """You are a JD Intelligence Agent for HireIQ. Analyze Job Descriptions with precision.
+SYSTEM_PROMPT = """You are a JD Intelligence Agent for Hirevium. Analyze Job Descriptions with precision.
 
 Extract structured information from the provided job description.
 

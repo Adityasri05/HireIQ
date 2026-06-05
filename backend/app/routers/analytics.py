@@ -53,7 +53,7 @@ async def get_dashboard(
             "type": interview.interview_type,
             "status": interview.status,
             "difficulty": interview.difficulty,
-            "score": evaluation.hireiq_score if evaluation else 0,
+            "score": evaluation.hirevium_score if evaluation else 0,
             "recommendation": evaluation.recommendation if evaluation else "N/A",
             "date": interview.created_at.isoformat() if interview.created_at else "",
         })
@@ -84,12 +84,12 @@ async def get_dashboard(
     )
     trend_evals = trend_result.scalars().all()
     trend_data = [
-        {"name": f"Session {i+1}", "score": round(e.hireiq_score, 1)}
+        {"name": f"Session {i+1}", "score": round(e.hirevium_score, 1)}
         for i, e in enumerate(trend_evals)
     ]
 
     # Initialize dashboard metrics
-    hireiq_score = 0
+    hirevium_score = 0
     hire_prob = 0
     technical_score = 0
     communication_score = 0
@@ -102,7 +102,7 @@ async def get_dashboard(
     learning_velocity = None
 
     if latest_eval:
-        hireiq_score = latest_eval.hireiq_score
+        hirevium_score = latest_eval.hirevium_score
         hire_prob = latest_eval.hire_probability
         technical_score = latest_eval.technical_score
         communication_score = latest_eval.communication_score
@@ -121,21 +121,21 @@ async def get_dashboard(
         learning_velocity = db_breakdown.get("learning_velocity")
     elif resume:
         # Seed dashboard with initial resume evaluation score
-        hireiq_score = resume.resume_score or 75.0
-        hire_prob = min(99.0, max(10.0, hireiq_score * 1.05))
-        technical_score = hireiq_score
-        communication_score = hireiq_score * 0.95
-        pressure_score = hireiq_score * 0.9
-        recommendation = "Strong Hire" if hireiq_score >= 80 else "Hire" if hireiq_score >= 65 else "Borderline"
+        hirevium_score = resume.resume_score or 75.0
+        hire_prob = min(99.0, max(10.0, hirevium_score * 1.05))
+        technical_score = hirevium_score
+        communication_score = hirevium_score * 0.95
+        pressure_score = hirevium_score * 0.9
+        recommendation = "Strong Hire" if hirevium_score >= 80 else "Hire" if hirevium_score >= 65 else "Borderline"
         
         # Seed dynamic predictions & benchmarks
         predictions = {
             "offer_probability": round(hire_prob),
-            "success_90_day": round(hireiq_score * 0.96),
+            "success_90_day": round(hirevium_score * 0.96),
             "retention_probability": round(hire_prob * 1.02),
-            "leadership_potential": "High" if hireiq_score >= 80 else "Medium",
-            "promotion_potential": "High" if hireiq_score >= 80 else "Medium",
-            "learning_velocity": "Exponential Developer" if hireiq_score >= 80 else "Linear Growth"
+            "leadership_potential": "High" if hirevium_score >= 80 else "Medium",
+            "promotion_potential": "High" if hirevium_score >= 80 else "Medium",
+            "learning_velocity": "Exponential Developer" if hirevium_score >= 80 else "Linear Growth"
         }
         benchmarks = {
             "technical_rank": round(100 - technical_score),
@@ -144,23 +144,23 @@ async def get_dashboard(
             "problem_solving_rank": 15
         }
         learning_velocity = {
-            "level": "High" if hireiq_score >= 80 else "Medium",
+            "level": "High" if hirevium_score >= 80 else "Medium",
             "growth_rate": 15.0,
             "profile": f"Adaptive {user.target_role or 'Developer'}",
             "trend": [
-                {"month": "Month 1", "score": round(hireiq_score * 0.85)},
-                {"month": "Month 2", "score": round(hireiq_score * 0.95)},
-                {"month": "Month 3", "score": round(hireiq_score)}
+                {"month": "Month 1", "score": round(hirevium_score * 0.85)},
+                {"month": "Month 2", "score": round(hirevium_score * 0.95)},
+                {"month": "Month 3", "score": round(hirevium_score)}
             ]
         }
         risks = [
             {"category": "Experience Depth", "description": "Candidate demonstrates theoretical knowledge but practical bounds need verification."}
         ]
 
-    readiness = "Strong Hire" if hireiq_score >= 85 else "Hire" if hireiq_score >= 70 else "Borderline" if hireiq_score >= 55 else "Needs Improvement"
+    readiness = "Strong Hire" if hirevium_score >= 85 else "Hire" if hirevium_score >= 70 else "Borderline" if hirevium_score >= 55 else "Needs Improvement"
 
     return DashboardResponse(
-        hireiq_score=round(hireiq_score, 1),
+        hirevium_score=round(hirevium_score, 1),
         hire_probability=round(hire_prob, 1),
         readiness=readiness,
         technical_score=round(technical_score, 1),
@@ -191,7 +191,7 @@ async def get_trends(
     evaluations = result.scalars().all()
 
     return {
-        "hireiq_trend": [{"session": i+1, "score": round(e.hireiq_score, 1)} for i, e in enumerate(evaluations)],
+        "hirevium_trend": [{"session": i+1, "score": round(e.hirevium_score, 1)} for i, e in enumerate(evaluations)],
         "technical_trend": [{"session": i+1, "score": round(e.technical_score, 1)} for i, e in enumerate(evaluations)],
         "communication_trend": [{"session": i+1, "score": round(e.communication_score, 1)} for i, e in enumerate(evaluations)],
         "pressure_trend": [{"session": i+1, "score": round(e.pressure_score, 1)} for i, e in enumerate(evaluations)],

@@ -151,7 +151,7 @@ class EvaluationResponse(BaseModel):
     time_efficiency_score: float
     skill_verification_score: float
     knowledge_depth_score: float
-    hireiq_score: float
+    hirevium_score: float
     hire_probability: float
     recommendation: Optional[str] = None
     detailed_breakdown: Optional[dict] = None
@@ -169,7 +169,7 @@ class EvaluationResponse(BaseModel):
 class ReportResponse(BaseModel):
     id: str
     interview_id: str
-    hireiq_score: float
+    hirevium_score: float
     recommendation: Optional[str] = None
     strengths: Optional[list] = None
     weaknesses: Optional[list] = None
@@ -191,7 +191,7 @@ class CopilotChatResponse(BaseModel):
 
 # ── Analytics ─────────────────────────────────────
 class DashboardResponse(BaseModel):
-    hireiq_score: float
+    hirevium_score: float
     hire_probability: float
     readiness: str
     technical_score: float

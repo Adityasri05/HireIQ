@@ -15,7 +15,7 @@ async def get_ranked_candidates(
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Get all candidates ranked by HireIQ score. Recruiter-only endpoint."""
+    """Get all candidates ranked by Hirevium score. Recruiter-only endpoint."""
     # Get all users with their latest evaluation
     users_result = await db.execute(
         select(User).where(User.role == "candidate")
@@ -45,7 +45,7 @@ async def get_ranked_candidates(
             "email": candidate.email,
             "target_role": candidate.target_role or "Not specified",
             "experience_level": candidate.experience_level or "Not specified",
-            "hireiq_score": round(latest_eval.hireiq_score, 1) if latest_eval else 0,
+            "hirevium_score": round(latest_eval.hirevium_score, 1) if latest_eval else 0,
             "hire_probability": round(latest_eval.hire_probability, 1) if latest_eval else 0,
             "recommendation": latest_eval.recommendation if latest_eval else "N/A",
             "technical_score": round(latest_eval.technical_score, 1) if latest_eval else 0,
@@ -54,8 +54,8 @@ async def get_ranked_candidates(
             "interviews_completed": len(interviews),
         })
 
-    # Sort by HireIQ score descending
-    ranked.sort(key=lambda x: x["hireiq_score"], reverse=True)
+    # Sort by Hirevium score descending
+    ranked.sort(key=lambda x: x["hirevium_score"], reverse=True)
     return {"candidates": ranked, "total": len(ranked)}
 
 
@@ -88,7 +88,7 @@ async def get_candidate_report(
         "evaluations": [
             {
                 "interview_id": e.interview_id,
-                "hireiq_score": round(e.hireiq_score, 1),
+                "hirevium_score": round(e.hirevium_score, 1),
                 "technical_score": round(e.technical_score, 1),
                 "communication_score": round(e.communication_score, 1),
                 "pressure_score": round(e.pressure_score, 1),

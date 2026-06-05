@@ -3,9 +3,9 @@ import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCy2LN94AyjLHCV3mjWOu5nuR71AVDkrDc",
-  authDomain: "hireiq-c1d7a.firebaseapp.com",
-  projectId: "hireiq-c1d7a",
-  storageBucket: "hireiq-c1d7a.firebasestorage.app",
+  authDomain: "hirevium-c1d7a.firebaseapp.com",
+  projectId: "hirevium-c1d7a",
+  storageBucket: "hirevium-c1d7a.firebasestorage.app",
   messagingSenderId: "775844734769",
   appId: "1:775844734769:web:e08eac8607bcaeecf57210",
   measurementId: "G-EWGHBVPQW9"

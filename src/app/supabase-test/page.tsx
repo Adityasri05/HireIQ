@@ -42,7 +42,7 @@ export default function Page() {
           <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.4)]">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
-          <span className="text-2xl font-bold tracking-tighter text-gradient-primary">HIREIQ</span>
+          <span className="text-2xl font-bold tracking-tighter text-gradient-primary">HIREVIUM</span>
         </Link>
       </header>
 

@@ -18,7 +18,7 @@ class Evaluation(Base):
     time_efficiency_score: Mapped[float] = mapped_column(Float, default=0.0)
     skill_verification_score: Mapped[float] = mapped_column(Float, default=0.0)
     knowledge_depth_score: Mapped[float] = mapped_column(Float, default=0.0)
-    hireiq_score: Mapped[float] = mapped_column(Float, default=0.0)
+    hirevium_score: Mapped[float] = mapped_column(Float, default=0.0)
     hire_probability: Mapped[float] = mapped_column(Float, default=0.0)
     recommendation: Mapped[str | None] = mapped_column(String(50), nullable=True)  # Strong Hire | Hire | Borderline | Needs Improvement | Reject
     detailed_breakdown: Mapped[dict | None] = mapped_column(JSON, nullable=True)

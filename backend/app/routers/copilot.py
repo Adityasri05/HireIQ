@@ -53,11 +53,11 @@ async def copilot_chat(
         "name": user.name,
         "target_role": user.target_role,
         "career_goals": user.career_goals,
-        "hireiq_score": recent_evals[0].hireiq_score if recent_evals else None,
+        "hirevium_score": recent_evals[0].hirevium_score if recent_evals else None,
         "skills": skills,
         "recent_scores": [
             {
-                "hireiq": e.hireiq_score,
+                "hirevium": e.hirevium_score,
                 "technical": e.technical_score,
                 "communication": e.communication_score,
                 "recommendation": e.recommendation,

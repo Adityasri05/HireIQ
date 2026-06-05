@@ -21,7 +21,7 @@ export function getAuthHeaders(contentType: string | null = "application/json"):
     headers["Content-Type"] = contentType;
   }
   if (typeof window !== "undefined") {
-    const token = localStorage.getItem("hireiq_token");
+    const token = localStorage.getItem("hirevium_token");
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
     }
@@ -31,12 +31,12 @@ export function getAuthHeaders(contentType: string | null = "application/json"):
 
 // Auto-initialize guest credentials on module load in the browser
 if (typeof window !== "undefined") {
-  if (!localStorage.getItem("hireiq_token")) {
-    localStorage.setItem("hireiq_token", "guest-token-12345");
-    localStorage.setItem("hireiq_user", JSON.stringify({
+  if (!localStorage.getItem("hirevium_token")) {
+    localStorage.setItem("hirevium_token", "guest-token-12345");
+    localStorage.setItem("hirevium_user", JSON.stringify({
       id: "guest-id",
       name: "Alex D.",
-      email: "guest@hireiq.ai",
+      email: "guest@hirevium.ai",
       role: "candidate",
       target_role: "Frontend Engineer",
       experience_level: "Fresher",

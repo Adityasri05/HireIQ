@@ -31,7 +31,7 @@ export default function CareerCoach() {
   const [isLoading, setIsLoading] = useState(true);
   const [targetGoal, setTargetGoal] = useState<string>(() => {
     if (typeof window !== "undefined") {
-      const storedUser = localStorage.getItem("hireiq_user");
+      const storedUser = localStorage.getItem("hirevium_user");
       if (storedUser) {
         try {
           const userObj = JSON.parse(storedUser);

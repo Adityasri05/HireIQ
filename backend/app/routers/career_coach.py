@@ -36,7 +36,7 @@ async def get_roadmap(
             "communication_score": latest_eval.communication_score,
             "pressure_score": latest_eval.pressure_score,
             "knowledge_depth_score": latest_eval.knowledge_depth_score,
-            "hireiq_score": latest_eval.hireiq_score,
+            "hirevium_score": latest_eval.hirevium_score,
             "recommendation": latest_eval.recommendation,
         }
         db_breakdown = latest_eval.detailed_breakdown

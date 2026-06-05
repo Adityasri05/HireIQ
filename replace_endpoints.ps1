@@ -13,7 +13,7 @@ $files = @(
 )
 
 foreach ($file in $files) {
-    $path = "d:/Hackathon Projects/HireIQ/$file"
+    $path = "d:/Hackathon Projects/Hirevium/$file"
     if (Test-Path $path) {
         $content = Get-Content $path -Raw
         

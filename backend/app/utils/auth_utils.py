@@ -54,7 +54,7 @@ async def get_current_user(
 
     # If no valid token or user found, resolve to the default guest user
     if user is None:
-        guest_email = "guest@hireiq.ai"
+        guest_email = "guest@hirevium.ai"
         result = await db.execute(select(User).where(User.email == guest_email))
         user = result.scalar_one_or_none()
         if user is None:

@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Search, User, Check, Trash2, FileText, Trophy, GraduationCap, ChevronDown, Menu, X, LayoutDashboard, Video, Users, LogOut } from "lucide-react";
+import { Bell, Search, User, Check, Trash2, FileText, Trophy, GraduationCap, ChevronDown, Menu, X, LayoutDashboard, Video, Users, LogOut, Settings, Share2, Info, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { API_BASE_URL, getAuthHeaders } from "@/utils/api";
 import Link from "next/link";
@@ -38,6 +38,42 @@ export function TopNav() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [iqScore, setIqScore] = useState<number>(87);
+
+  // Modal and theme states
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [candidateGoals, setCandidateGoals] = useState<string>("Not specified");
+
+  // Load and apply theme
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedTheme = localStorage.getItem("hireiq_theme") as "dark" | "light" | null;
+      if (storedTheme) {
+        setTheme(storedTheme);
+        document.documentElement.setAttribute("data-theme", storedTheme);
+      } else {
+        const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+        const initialTheme = prefersLight ? "light" : "dark";
+        setTheme(initialTheme);
+        document.documentElement.setAttribute("data-theme", initialTheme);
+      }
+    }
+  }, []);
+
+  const toggleTheme = (newTheme: "dark" | "light") => {
+    setTheme(newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("hireiq_theme", newTheme);
+  };
+
+  const handleShareProfile = () => {
+    const shareText = `Check out ${candidateName}'s HireIQ Profile!\nRole: ${candidateRole}\nHireIQ Score: ${iqScore}/100\nPlatform: ${window.location.origin}`;
+    navigator.clipboard.writeText(shareText);
+    setShareCopied(true);
+    setTimeout(() => setShareCopied(false), 2000);
+  };
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => {
     if (typeof window !== "undefined") {
@@ -104,6 +140,7 @@ export function TopNav() {
         if (parsedUser.name) setCandidateName(parsedUser.name);
         if (parsedUser.email) setCandidateEmail(parsedUser.email);
         if (parsedUser.target_role) setCandidateRole(parsedUser.target_role);
+        if (parsedUser.career_goals) setCandidateGoals(parsedUser.career_goals);
       } catch {}
     }
 
@@ -318,32 +355,80 @@ export function TopNav() {
                 </div>
               </div>
 
-              {/* Navigation Shortcuts */}
+              {/* Profile Dropdown Actions */}
               <div className="p-2 bg-[#09090B] space-y-0.5">
-                <Link 
-                  href="/dashboard/resumes"
-                  onClick={() => setShowProfileMenu(false)}
-                  className="flex items-center space-x-2.5 px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                {/* 1. Profile Option */}
+                <button 
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    setShowProfileModal(true);
+                  }}
+                  className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors cursor-pointer"
                 >
-                  <FileText className="w-4 h-4 text-gray-400" />
-                  <span>Resume Intelligence</span>
-                </Link>
-                <Link 
-                  href="/dashboard/achievements"
-                  onClick={() => setShowProfileMenu(false)}
-                  className="flex items-center space-x-2.5 px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                  <User className="w-4 h-4 text-gray-400" />
+                  <span>Profile</span>
+                </button>
+
+                {/* 2. Settings (Light / Dark mode toggle) */}
+                <div className="flex items-center justify-between px-3 py-2 text-xs text-gray-300 rounded-lg bg-transparent">
+                  <div className="flex items-center space-x-2.5">
+                    <Settings className="w-4 h-4 text-gray-400" />
+                    <span>Settings</span>
+                  </div>
+                  <div className="flex bg-[#111827] p-0.5 rounded-md border border-[rgba(255,255,255,0.05)]">
+                    <button
+                      onClick={() => toggleTheme("light")}
+                      className={`p-1 rounded cursor-pointer transition-all ${
+                        theme === "light" 
+                          ? "bg-[#7C3AED] text-white" 
+                          : "text-gray-500 hover:text-gray-300"
+                      }`}
+                      title="Light Mode"
+                    >
+                      <Sun className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => toggleTheme("dark")}
+                      className={`p-1 rounded cursor-pointer transition-all ${
+                        theme === "dark" 
+                          ? "bg-[#7C3AED] text-white" 
+                          : "text-gray-500 hover:text-gray-300"
+                      }`}
+                      title="Dark Mode"
+                    >
+                      <Moon className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* 3. Share Profile Option */}
+                <button 
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    handleShareProfile();
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors cursor-pointer"
                 >
-                  <Trophy className="w-4 h-4 text-gray-400" />
-                  <span>Achievements</span>
-                </Link>
-                <Link 
-                  href="/dashboard/career-coach"
-                  onClick={() => setShowProfileMenu(false)}
-                  className="flex items-center space-x-2.5 px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors"
+                  <div className="flex items-center space-x-2.5">
+                    <Share2 className="w-4 h-4 text-gray-400" />
+                    <span>Share profile</span>
+                  </div>
+                  {shareCopied && (
+                    <span className="text-[10px] text-[#22C55E] font-semibold animate-pulse">Copied!</span>
+                  )}
+                </button>
+
+                {/* 4. About Option */}
+                <button 
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    setShowAboutModal(true);
+                  }}
+                  className="w-full flex items-center space-x-2.5 px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors cursor-pointer"
                 >
-                  <GraduationCap className="w-4 h-4 text-gray-400" />
-                  <span>Career Coaching</span>
-                </Link>
+                  <Info className="w-4 h-4 text-gray-400" />
+                  <span>About</span>
+                </button>
               </div>
             </div>
           )}
@@ -429,6 +514,155 @@ export function TopNav() {
             </div>
           </motion.div>
         </>
+      )}
+    </AnimatePresence>
+
+    {/* Profile Modal */}
+    <AnimatePresence>
+      {showProfileModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="w-full max-w-md bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-xl shadow-2xl overflow-hidden text-white"
+          >
+            <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#0F0F13]">
+              <h3 className="font-bold text-sm">Edit Candidate Profile</h3>
+              <button 
+                onClick={() => setShowProfileModal(false)}
+                className="p-1 rounded hover:bg-white/5 text-gray-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const name = fd.get("name") as string;
+                const email = fd.get("email") as string;
+                const role = fd.get("role") as string;
+                const goals = fd.get("goals") as string;
+                
+                // Save
+                setCandidateName(name);
+                setCandidateEmail(email);
+                setCandidateRole(role);
+                setCandidateGoals(goals);
+
+                const storedUser = localStorage.getItem("hireiq_user") || "{}";
+                try {
+                  const parsedUser = JSON.parse(storedUser);
+                  parsedUser.name = name;
+                  parsedUser.email = email;
+                  parsedUser.target_role = role;
+                  parsedUser.career_goals = goals;
+                  localStorage.setItem("hireiq_user", JSON.stringify(parsedUser));
+                } catch (err) {
+                  console.error(err);
+                }
+                setShowProfileModal(false);
+              }}
+              className="p-4 space-y-4"
+            >
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Full Name</label>
+                <input 
+                  type="text" 
+                  name="name" 
+                  defaultValue={candidateName}
+                  className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#7C3AED]"
+                  required
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Email Address</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  defaultValue={candidateEmail}
+                  className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#7C3AED]"
+                  required
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Target Role</label>
+                <input 
+                  type="text" 
+                  name="role" 
+                  defaultValue={candidateRole}
+                  className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#7C3AED]"
+                  required
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Career Goals</label>
+                <textarea 
+                  name="goals" 
+                  defaultValue={candidateGoals}
+                  rows={3}
+                  className="w-full bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#7C3AED] resize-none"
+                  placeholder="Describe your career goals..."
+                />
+              </div>
+              <div className="flex justify-end space-x-2 pt-2">
+                <button 
+                  type="button"
+                  onClick={() => setShowProfileModal(false)}
+                  className="px-4 py-2 rounded-lg text-xs font-semibold text-gray-400 hover:text-white bg-transparent border border-transparent hover:bg-white/5 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  className="px-4 py-2 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-[#7C3AED] to-[#A855F7] hover:opacity-90 shadow-md cursor-pointer"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+
+    {/* About Modal */}
+    <AnimatePresence>
+      {showAboutModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="w-full max-w-sm bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-xl shadow-2xl overflow-hidden text-white"
+          >
+            <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#0F0F13]">
+              <h3 className="font-bold text-sm">About HireIQ</h3>
+              <button 
+                onClick={() => setShowAboutModal(false)}
+                className="p-1 rounded hover:bg-white/5 text-gray-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-6 text-center space-y-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center mx-auto shadow-[0_0_20px_rgba(124,58,237,0.3)]">
+                <GraduationCap className="w-8 h-8 text-white" />
+              </div>
+              <div className="space-y-1">
+                <h4 className="font-bold text-lg text-white">HIREIQ Platform</h4>
+                <p className="text-xs text-[#A855F7] font-semibold">Version 2.0.0 (Production)</p>
+              </div>
+              <p className="text-xs text-gray-400 leading-relaxed">
+                HireIQ is an AI-powered hiring intelligence system designed to evaluate candidate resumes, conduct dynamic technical mock interviews, track skill verifications, and recommend tailored learning roadmaps.
+              </p>
+              <div className="pt-2 text-[10px] text-gray-500">
+                &copy; {new Date().getFullYear()} HireIQ Systems. All rights reserved.
+              </div>
+            </div>
+          </motion.div>
+        </div>
       )}
     </AnimatePresence>
   </>

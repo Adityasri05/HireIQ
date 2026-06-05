@@ -75,3 +75,44 @@ body {
   animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Light Theme Variables */
+:root[data-theme="light"] {
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --primary: #7C3AED;
+  --secondary: #A855F7;
+  --success: #16A34A;
+  --warning: #D97706;
+  --danger: #DC2626;
+  --border: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+:root[data-theme="light"] .glass {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .text-gradient {
+  background: linear-gradient(135deg, #0F172A 0%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
+

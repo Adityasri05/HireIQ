@@ -66,8 +66,9 @@ export function Sidebar() {
   return (
     <aside className="w-64 h-screen bg-[#09090B] border-r border-[rgba(255,255,255,0.08)] flex flex-col hidden md:flex fixed left-0 top-0">
       <div className="h-16 flex items-center px-6 border-b border-[rgba(255,255,255,0.08)]">
-        <Link href="/" className="text-2xl font-bold text-gradient-primary tracking-tighter">
-          HIREVIUM
+        <Link href="/" className="flex items-center space-x-2.5 text-2xl font-bold text-gradient-primary tracking-tighter">
+          <img src="/logo.png" alt="Hirevium Logo" className="w-7 h-7 object-contain" />
+          <span>HIREVIUM</span>
         </Link>
       </div>
 

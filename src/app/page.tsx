@@ -91,9 +91,7 @@ export default function LandingPage() {
       {/* Premium Sticky Navigation Header */}
       <header className="fixed top-0 left-0 w-full h-20 border-b border-[rgba(255,255,255,0.05)] bg-[#09090B]/60 backdrop-blur-lg z-50 flex items-center px-6 md:px-12 justify-between">
         <Link href="/" className="flex items-center space-x-2.5">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#7C3AED] to-[#A855F7] flex items-center justify-center shadow-[0_0_15px_rgba(124,58,237,0.4)]">
-            <Sparkles className="w-5 h-5 text-white" />
-          </div>
+          <img src="/logo.png" alt="Hirevium Logo" className="w-9 h-9 object-contain" />
           <span className="text-2xl font-bold tracking-tighter text-gradient-primary">HIREVIUM</span>
         </Link>
 

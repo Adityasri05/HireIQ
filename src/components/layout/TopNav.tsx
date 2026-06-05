@@ -485,8 +485,9 @@ export function TopNav() {
           >
             {/* Header */}
             <div className="h-16 flex items-center justify-between px-6 border-b border-[rgba(255,255,255,0.08)]">
-              <Link href="/" className="text-2xl font-bold text-gradient-primary tracking-tighter" onClick={() => setShowMobileMenu(false)}>
-                HIREVIUM
+              <Link href="/" className="flex items-center space-x-2.5 text-2xl font-bold text-gradient-primary tracking-tighter" onClick={() => setShowMobileMenu(false)}>
+                <img src="/logo.png" alt="Hirevium Logo" className="w-7 h-7 object-contain" />
+                <span>HIREVIUM</span>
               </Link>
               <button
                 onClick={() => setShowMobileMenu(false)}

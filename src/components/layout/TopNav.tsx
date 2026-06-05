@@ -42,6 +42,7 @@ export function TopNav() {
   // Modal and theme states
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [candidateGoals, setCandidateGoals] = useState<string>("Not specified");
@@ -68,11 +69,36 @@ export function TopNav() {
     localStorage.setItem("hireiq_theme", newTheme);
   };
 
-  const handleShareProfile = () => {
-    const shareText = `Check out ${candidateName}'s HireIQ Profile!\nRole: ${candidateRole}\nHireIQ Score: ${iqScore}/100\nPlatform: ${window.location.origin}`;
-    navigator.clipboard.writeText(shareText);
-    setShareCopied(true);
-    setTimeout(() => setShareCopied(false), 2000);
+  const copyProfileToClipboard = (text: string) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        setShareCopied(true);
+        setTimeout(() => setShareCopied(false), 2000);
+      }).catch(() => {
+        fallbackCopyText(text);
+      });
+    } else {
+      fallbackCopyText(text);
+    }
+  };
+
+  const fallbackCopyText = (text: string) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
+    document.body.removeChild(textArea);
   };
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => {
@@ -405,7 +431,7 @@ export function TopNav() {
                 <button 
                   onClick={() => {
                     setShowProfileMenu(false);
-                    handleShareProfile();
+                    setShowShareModal(true);
                   }}
                   className="w-full flex items-center justify-between px-3 py-2 text-xs text-gray-300 hover:text-white rounded-lg hover:bg-[rgba(255,255,255,0.05)] transition-colors cursor-pointer"
                 >
@@ -622,6 +648,114 @@ export function TopNav() {
                 </button>
               </div>
             </form>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+
+    {/* Share Profile Modal */}
+    <AnimatePresence>
+      {showShareModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="w-full max-w-md bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-xl shadow-2xl overflow-hidden text-white"
+          >
+            <div className="p-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#0F0F13]">
+              <h3 className="font-bold text-sm">Share Candidate Profile</h3>
+              <button 
+                onClick={() => setShowShareModal(false)}
+                className="p-1 rounded hover:bg-white/5 text-gray-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-5 space-y-5">
+              {/* Visual Card Preview */}
+              <div className="glass rounded-xl p-5 border border-[#7C3AED]/20 relative overflow-hidden bg-gradient-to-br from-[#111827] to-[#09090B] shadow-[0_0_20px_rgba(124,58,237,0.05)]">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-[#7C3AED]/10 rounded-full blur-2xl pointer-events-none"></div>
+                
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#A855F7] bg-[#7C3AED]/10 px-2 py-0.5 rounded border border-[#7C3AED]/20">HireIQ Verified</span>
+                    <h4 className="font-bold text-base text-white mt-2 leading-tight">{candidateName}</h4>
+                    <p className="text-xs text-gray-400 mt-0.5">{candidateRole}</p>
+                  </div>
+                  
+                  <div className="flex flex-col items-center">
+                    <div className="w-12 h-12 rounded-full border-2 border-[#22C55E] flex items-center justify-center bg-[#22C55E]/5 shadow-[0_0_15px_rgba(34,197,94,0.15)]">
+                      <span className="font-bold text-sm text-white">{iqScore}</span>
+                    </div>
+                    <span className="text-[8px] text-gray-400 mt-1 uppercase font-semibold">HireIQ Score</span>
+                  </div>
+                </div>
+
+                <div className="border-t border-[rgba(255,255,255,0.05)] pt-3 flex justify-between items-center text-[10px] text-gray-500">
+                  <span>Platform: hireiq.ai</span>
+                  <span>Verification: Active</span>
+                </div>
+              </div>
+
+              {/* Sharing URL / Message */}
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Shareable Summary</label>
+                <div className="flex items-center space-x-2">
+                  <input 
+                    type="text" 
+                    readOnly
+                    value={`Check out ${candidateName}'s HireIQ Profile! Role: ${candidateRole} | Score: ${iqScore}/100`}
+                    className="flex-1 bg-[#09090B] border border-[rgba(255,255,255,0.08)] rounded-lg px-3 py-2 text-xs text-gray-400 focus:outline-none"
+                  />
+                  <button 
+                    onClick={() => copyProfileToClipboard(`Check out ${candidateName}'s HireIQ Profile!\nRole: ${candidateRole}\nHireIQ Score: ${iqScore}/100\nPlatform: ${window.location.origin}`)}
+                    className="px-3 py-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-lg text-xs font-semibold transition-colors flex items-center space-x-1 cursor-pointer flex-shrink-0"
+                  >
+                    {shareCopied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-3.5 h-3.5 opacity-0 absolute pointer-events-none" />
+                        <span>Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Social Quick Share links */}
+              <div className="space-y-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 block">Quick Share</span>
+                <div className="grid grid-cols-3 gap-2">
+                  <a 
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 px-3 bg-[#0077B5]/10 hover:bg-[#0077B5]/20 border border-[#0077B5]/20 rounded-lg text-center text-xs text-[#0077B5] font-semibold transition-all"
+                  >
+                    LinkedIn
+                  </a>
+                  <a 
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Check out my HireIQ verified profile! Role: ${candidateRole} | Score: ${iqScore}/100. Join me at ` + window.location.origin)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 px-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-center text-xs text-white font-semibold transition-all animate-none"
+                  >
+                    Twitter / X
+                  </a>
+                  <a 
+                    href={`mailto:?subject=${encodeURIComponent("My HireIQ Candidate Profile")}&body=${encodeURIComponent(`Check out my HireIQ verified profile!\n\nCandidate: ${candidateName}\nRole: ${candidateRole}\nHireIQ Score: ${iqScore}/100\n\nLink: ` + window.location.origin)}`}
+                    className="py-2 px-3 bg-[#EF4444]/10 hover:bg-[#EF4444]/20 border border-[#EF4444]/20 rounded-lg text-center text-xs text-[#EF4444] font-semibold transition-all"
+                  >
+                    Email
+                  </a>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </div>
       )}

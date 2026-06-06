@@ -38,6 +38,7 @@ interface Candidate {
   applied: string;
   email: string;
   experience_level: string;
+  skills?: string[];
 }
 
 interface ReportDetails {
@@ -97,7 +98,8 @@ export default function RecruiterWorkspace() {
           score: cand.hirevium_score !== undefined ? Math.round(cand.hirevium_score) : 75,
           status: cand.recommendation || "Borderline",
           verified: cand.skill_verification_score !== undefined ? Math.round(cand.skill_verification_score) : 70,
-          applied: "Just now"
+          applied: "Just now",
+          skills: cand.skills || []
         }));
         setCandidates(mapped);
       } catch (e) {
@@ -234,7 +236,8 @@ export default function RecruiterWorkspace() {
 
   const filteredCandidates = candidates.filter(cand => 
     cand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    cand.role.toLowerCase().includes(searchTerm.toLowerCase())
+    cand.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (cand.skills && cand.skills.some((s: string) => s.toLowerCase().includes(searchTerm.toLowerCase())))
   );
 
   const radarData = reportDetails?.evaluations[0] 

@@ -5,6 +5,7 @@ from app.database import get_db
 from app.models.user import User
 from app.models.evaluation import Evaluation
 from app.models.interview import Interview
+from app.models.resume import Resume
 from app.utils.auth_utils import get_current_user
 
 router = APIRouter(prefix="/api/recruiter", tags=["Recruiter"])
@@ -39,6 +40,14 @@ async def get_ranked_candidates(
         )
         interviews = interview_count_result.scalars().all()
 
+        resume_result = await db.execute(
+            select(Resume)
+            .where(Resume.user_id == candidate.id)
+            .order_by(Resume.created_at.desc())
+            .limit(1)
+        )
+        latest_resume = resume_result.scalar_one_or_none()
+
         ranked.append({
             "id": candidate.id,
             "name": candidate.name,
@@ -52,6 +61,7 @@ async def get_ranked_candidates(
             "communication_score": round(latest_eval.communication_score, 1) if latest_eval else 0,
             "skill_verification_score": round(latest_eval.skill_verification_score, 1) if latest_eval else 0,
             "interviews_completed": len(interviews),
+            "skills": latest_resume.skills if latest_resume and latest_resume.skills else [],
         })
 
     # Sort by Hirevium score descending

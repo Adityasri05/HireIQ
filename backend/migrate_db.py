@@ -25,6 +25,10 @@ def migrate():
             print(f"Adding column {col} to evaluations table...")
             cursor.execute(f"ALTER TABLE evaluations ADD COLUMN {col} JSON")
             
+    if 'hireiq_score' in columns and 'hirevium_score' not in columns:
+        print("Renaming hireiq_score to hirevium_score...")
+        cursor.execute("ALTER TABLE evaluations RENAME COLUMN hireiq_score TO hirevium_score")
+            
     conn.commit()
     conn.close()
     print("Migration finished successfully.")
